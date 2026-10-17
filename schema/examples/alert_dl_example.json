@@ -4,7 +4,7 @@
     "flow_id": "FLW-20261017-09827",
     "detector_family": "dl_ensemble",
     "timestamp": "2026-10-17T14:32:00Z",
-    "dataset": "IoT-23-Generic-Benchmark",
+    "dataset": "ACI-IoT-Network-2023",
     "split": "pilot"
   },
   "prediction": {

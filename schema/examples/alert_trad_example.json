@@ -4,7 +4,7 @@
     "flow_id": "FLW-20261017-09827",
     "detector_family": "traditional_ml",
     "timestamp": "2026-10-17T14:32:00Z",
-    "dataset": "IoT-23-Generic-Benchmark",
+    "dataset": "ACI-IoT-Network-2023",
     "split": "pilot"
   },
   "prediction": {
@@ -20,6 +20,11 @@
         "learner_name": "XGBoost",
         "voted_label": "DDoS_SYN_Flood",
         "learner_confidence": 0.923
+      },
+      {
+        "learner_name": "MLP",
+        "voted_label": "DDoS_SYN_Flood",
+        "learner_confidence": 0.942
       }
     ]
   },

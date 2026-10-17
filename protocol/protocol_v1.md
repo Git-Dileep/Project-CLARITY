@@ -2,7 +2,7 @@
 
 **Study Lead:** Dileep (Lead Systems / ML)  
 **Status:** FROZEN  
-**Date:** October 17, 2026  
+**Date:** October 17, 2026 (Updated with ACI IoT 2023 & DIL-02 Rubric)  
 **Document ID:** DIL-01-PROT-V1  
 
 ---
@@ -14,8 +14,10 @@
 
 ### Controlled Variable Strategy
 To preserve strict experimental validity, this study enforces **exactly one manipulated variable**:
-- **Independent Variable:** The detector subsystem producing the alert payload (Traditional ML vs. Deep Learning Ensemble).
-- **Control Invariants:** Flow metadata, retrieval engine, knowledge base corpus, retrieval budget ($k$), LLM model version, prompt template, decoding temperature ($0.0$), and random seed ($42$).
+- **Independent Variable:** The detector subsystem producing the alert payload:
+  - **Traditional ML (Paper's 3-Model Baseline):** Random Forest + XGBoost + Multilayer Perceptron (MLP) with majority hard voting.
+  - **DL Ensemble:** 1D-CNN + Bi-LSTM + Transformer Encoder with majority hard voting.
+- **Control Invariants:** Flow metadata, primary dataset, retrieval engine, knowledge base corpus, retrieval budget ($k=5$), LLM model version (`meta-llama/Llama-3.1-8b-instant`), prompt template, decoding temperature ($0.0$), and random seed ($42$).
 
 ---
 
@@ -23,7 +25,9 @@ To preserve strict experimental validity, this study enforces **exactly one mani
 
 | Constant | Value | Description / Scope | Owner Confirmation |
 | :--- | :--- | :--- | :--- |
-| **LLM Model** | Gemini 1.5 Pro / GPT-4o (`fixed version`) | Generator LLM producing incident report | `TODO-Sneha` |
+| **Primary Dataset** | **ACI IoT Network Dataset 2023** | 1,170,570 flow records, 71 features, 11 classes (IEEE DataPort) | Confirmed (Dileep / Paper) |
+| **Backup Datasets** | TON_IoT, IoT-23, BoT-IoT | Secondary fallback datasets if cross-domain test is run | Confirmed (Dileep) |
+| **Target LLM Model**| `meta-llama/Llama-3.1-8b-instant` | Generator LLM (matching paper's 0.6391 faithfulness reference baseline) | Confirmed (Dileep) |
 | **LLM Temperature** | `0.0` | Deterministic decoding mode | Confirmed (Dileep) |
 | **Top-$k$ Retrieval** | `5` | Retrieved chunks from vector KB | Confirmed (Dileep) |
 | **Top-$N$ SHAP Features**| `10` | Features passed into incident prompt | Confirmed (Dileep) |
@@ -31,7 +35,7 @@ To preserve strict experimental validity, this study enforces **exactly one mani
 | **Embedding Model** | `text-embedding-3-small` / equivalent | Embedding engine for knowledge base chunks | `TODO-Sneha` |
 | **Vector DB** | ChromaDB (`chromadb>=0.4.22`) | Vector search database for local KB | Confirmed (Dileep) |
 | **External Search** | Tavily Search API | Live verification cache / web lookup | `TODO-Sneha` |
-| **Feature Extraction** | 10 generic flow-derived features | Standardized tabular representation | `TODO-Koushik` |
+| **Feature Extraction** | 71 flow features (ACI IoT 2023) | Standardized tabular representation | `TODO-Koushik` |
 
 ---
 
@@ -39,41 +43,43 @@ To preserve strict experimental validity, this study enforces **exactly one mani
 
 ```
                      ┌──────────────────────────────────────────────┐
-                     │            Raw Network Flow (PCAP)           │
+                     │          Raw Network Flow (ACI IoT 2023)     │
                      └──────────────────────┬───────────────────────┘
                                             │
                                   [ Feature Extractor ]
                                             │
                     ┌───────────────────────┴───────────────────────┐
                     ▼                                               ▼
-         [ Traditional ML Family ]                       [ DL Ensemble Family ]
+         [ Traditional ML Baseline ]                     [ DL Ensemble Family ]
       ┌─────────────────────────────┐               ┌─────────────────────────────┐
       │  - Random Forest (100 trees)│               │  - 1D-CNN (Temporal Conv)   │
-      │  - XGBoost (Grad Boosted)   │               │  - LSTM (Bi-directional)    │
-      │  - Explainer: TreeExplainer │               │  - Transformer Encoder      │
-      └─────────────┬───────────────┘               │  - Explainer: GradExplainer │
-                    │                               └──────────────┬──────────────┘
+      │  - XGBoost (Grad Boosted)   │               │  - Bi-LSTM (2-layer Bi-Dir) │
+      │  - MLP (Multi-Layer Percep) │               │  - Transformer Encoder      │
+      │  - Explainer: TreeExplainer │               │  - Explainer: GradExplainer │
+      └─────────────┬───────────────┘               └──────────────┬──────────────┘
+                    │                                              │
                     ▼                                              ▼
-         [ Majority Consensus ]                         [ Majority Consensus (2/3) ]
+         [ Hard Voting (2 of 3) ]                       [ Hard Voting (2 of 3) ]
                     │                                              │
                     └───────────────────────┬──────────────────────┘
                                             ▼
                               [ Schema v1 JSON Alert Payload ]
 ```
 
-### 3.1 Detector 1: Traditional ML (`traditional_ml`)
-- **Base Learners:**
+### 3.1 Detector 1: Traditional ML Baseline (`traditional_ml`)
+- **Base Learners (Paper's 3-Model Baseline):**
   - Random Forest (`n_estimators=100`, `max_depth=12`)
   - XGBoost (`n_estimators=100`, `learning_rate=0.1`)
-- **Consensus Rule:** Equal-weighted probability average across learners.
-- **SHAP Tooling:** `shap.TreeExplainer` computed for the consensus class.
+  - Multilayer Perceptron (MLP: `hidden_layer_sizes=(128, 64)`, `activation='relu'`)
+- **Consensus Rule:** Hard voting majority (minimum 2 of 3 votes).
+- **SHAP Tooling:** `shap.TreeExplainer` (for tree models) / unified majority attribution for the consensus class.
 
 ### 3.2 Detector 2: Deep Learning Ensemble (`dl_ensemble`)
 - **Base Learners:**
-  - 1D-CNN: Multi-channel 1D convolutions over normalized sequence slices.
+  - 1D-CNN: Multi-channel 1D convolutions over sequence slices.
   - Bi-LSTM: 2-layer bidirectional LSTM capturing long-term packet dynamics.
   - Transformer Encoder: 4-layer multi-head self-attention module.
-- **Consensus Rule:** Hard-voting majority (2-out-of-3) for predicted label; mean confidence of majority learners.
+- **Consensus Rule:** Hard voting majority (minimum 2 of 3 votes).
 - **SHAP Tooling:** `shap.GradientExplainer` (or `shap.DeepExplainer`).
 
 ---
@@ -82,20 +88,21 @@ To preserve strict experimental validity, this study enforces **exactly one mani
 
 | System ID | Detector Subsystem | Knowledge Sources | Retrieval Mechanism | Output Artifact |
 | :--- | :--- | :--- | :--- | :--- |
-| **SYS-01** | Traditional ML | Alert Payload only (No RAG) | None (Baseline 0-shot) | Baseline LLM Report |
-| **SYS-02** | DL Ensemble | Alert Payload only (No RAG) | None (Baseline 0-shot) | Baseline LLM Report |
-| **SYS-03** | Traditional ML | Local KB (ChromaDB) | Dense Vector Search ($k=5$) | Standard RAG Report |
-| **SYS-04** | DL Ensemble | Local KB (ChromaDB) | Dense Vector Search ($k=5$) | Standard RAG Report |
-| **SYS-05** | Traditional ML | Local KB + Web (Tavily Cache) | Hybrid RAG ($k=5$) | Augmented RAG Report |
-| **SYS-06** | DL Ensemble | Local KB + Web (Tavily Cache) | Hybrid RAG ($k=5$) | Augmented RAG Report |
+| **SYS-01** | Traditional ML (RF+XGB+MLP) | Alert Payload only (No RAG) | None (Baseline 0-shot) | Baseline LLM Report |
+| **SYS-02** | DL Ensemble (CNN+LSTM+Trans) | Alert Payload only (No RAG) | None (Baseline 0-shot) | Baseline LLM Report |
+| **SYS-03** | Traditional ML (RF+XGB+MLP) | Local KB (ChromaDB) | Dense Vector Search ($k=5$) | Standard RAG Report |
+| **SYS-04** | DL Ensemble (CNN+LSTM+Trans) | Local KB (ChromaDB) | Dense Vector Search ($k=5$) | Standard RAG Report |
+| **SYS-05** | Traditional ML (RF+XGB+MLP) | Local KB + Web (Tavily Cache) | Hybrid RAG ($k=5$) | Augmented RAG Report |
+| **SYS-06** | DL Ensemble (CNN+LSTM+Trans) | Local KB + Web (Tavily Cache) | Hybrid RAG ($k=5$) | Augmented RAG Report |
 
 ---
 
 ## 5. Pilot Set Specification
 
+- **Dataset:** ACI IoT Network Dataset 2023.
 - **Sample Size:** Exactly 20 alerts (10 pairs across traditional ML vs DL ensemble).
 - **1:1 Flow Mapping:** Every traditional alert pair `(ALT-xxxx, ALT-yyyy)` shares the identical network `flow_id`.
-- **Stratification:** Minimum 5 distinct IoT attack classes represented (e.g., `DDoS_SYN_Flood`, `Mirai_UDP_Flooding`, `Port_Scan`, `Brute_Force_SSH`, `Benign_Anomaly`).
+- **Stratification:** Minimum 5 distinct attack classes represented out of the 11 ACI IoT classes (e.g., `DDoS_SYN_Flood`, `Mirai_UDP_Flooding`, `Port_Scan`, `Brute_Force_SSH`, `Benign_Anomaly`).
 - **Data Partition Integrity:**
   - $0\%$ train/test overlap (`in_train_leakage_flag: false`).
   - Strict disjoint IP subnets and temporal partitioning between training corpus and pilot flows.
@@ -105,10 +112,13 @@ To preserve strict experimental validity, this study enforces **exactly one mani
 ## 6. Evaluation Metrics & Grounding Rubric
 
 Reports are evaluated against `eval/rubric_v0.md` along four primary dimensions:
-1. **Groundedness ($0.0 - 1.0$):** Degree to which claims in the incident report can be mapped to provided context (retrieved chunks + SHAP attributions).
-2. **Faithfulness ($0.0 - 1.0$):** Truthfulness of the report with respect to detector predictions and features (absence of contradictory deductions).
-3. **Fabrication Rate ($0.0 - 1.0$):** Proportion of ungrounded technical claims (CVEs, attacker IPs, payload signatures not present in input data).
-4. **Hallucination Severity (Categorical: None, Minor, Severe):** Impact of fabricated assertions on incident response actionability.
+1. **Groundedness ($0.0 - 1.0$):** $(N_{\text{FULL}} + N_{\text{PARTIAL}}) / N$.
+2. **Faithfulness ($0.0 - 1.0$):** $N_{\text{FULL}} / N$.
+3. **Fabrication Rate ($0.0 - 1.0$):** $N_{\text{FABRICATED}} / N$.
+4. **Hallucination Rate ($0.0 - 1.0$):** $(N_{\text{CONTRADICTED}} + N_{\text{UNSUPPORTED}}) / N$.
+
+> [!NOTE]
+> Groundedness saturated at 1.0 in the base paper. Faithfulness, Fabrication, and Hallucination carry the primary experimental distinction.
 
 ---
 
@@ -116,19 +126,24 @@ Reports are evaluated against `eval/rubric_v0.md` along four primary dimensions:
 
 ```mermaid
 flowchart TD
-    G1{Gate G1: Schema & Data Freeze} -->|Pass: Zero Validation Errors| Exec[Run Pilot Inference SYS-01..06]
-    G1 -->|Fail: Validation/Leakage Error| Hal1[Halt: Correct Schema & Partition]
+    G1{Gate G1: Schema, ACI-IoT & Baseline} -->|Pass: Zero Errors & Baseline ~99.2% F1| Exec[Run Pilot Inference SYS-01..06]
+    G1 -->|Fail: Validation/Baseline Error| Hal1[Halt: Correct Schema & Retrain Baseline]
     Exec --> G3{Gate G3: Pilot RAG Consistency}
     G3 -->|Pass: Groundedness >= 0.70| Prod[Execute Full Test Evaluation]
     G3 -->|Fail: Groundedness < 0.70| FBack[Fallback: Clamp Prompt & Re-tune k]
     Prod --> G5{Gate G5: Statistical Synthesis}
-    G5 -->|Pass: Significant Wilcoxon p < 0.05| Concl[Confirm Delta & Publish Finding]
+    G5 -->|Pass: Significant Wilcoxon p < 0.05 on Faith/Fab/Halluc| Concl[Confirm Delta & Publish Finding]
     G5 -->|Fail: Null Outcome p >= 0.05| RepNull[Report Null Equivalent Hypothesis]
 ```
 
-- **Gate G1 (End of Day 1):** Strict Schema freeze. Zero schema validation errors on pilot set; zero training leakage flags.
+- **Gate G1 (End of Day 1):** 
+  - Strict Schema freeze (`schema/alert_schema_v1.json`). Zero schema validation errors on pilot set; zero training leakage flags.
+  - Class counts must match ACI IoT 2023.
+  - Traditional baseline (RF + XGBoost + MLP) reproduction must land within ~1% macro-F1 of the paper (~99.2% macro-F1).
 - **Gate G3 (End of Day 3):** Pilot RAG pipeline operational across SYS-01 through SYS-06. If Groundedness $< 0.70$, prompt template must be tightened to penalize speculative reasoning.
-- **Gate G5 (End of Day 5):** Final comparative statistical test (Wilcoxon signed-rank test for paired flows).
+- **Gate G5 (End of Day 5):** 
+  - Final comparative statistical test (Wilcoxon signed-rank test for paired flows).
+  - **Special Constraint:** The Gate G5 decision **must not depend on groundedness delta** (due to saturation at 1.0). Primary decision metrics are Faithfulness, Fabrication Rate, and Hallucination Rate.
 
 ---
 
