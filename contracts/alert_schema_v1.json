@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://incident-rag-study.internal/schemas/alert_schema_v1.json",
+  "$id": "https://incident-rag-study.internal/contracts/alert_schema_v1.json",
   "title": "AlertSchemaV1",
-  "description": "Strict schema for alert payloads passed between detector modules and RAG generator.",
+  "description": "Strict schema for alert payloads passed between detection and retrieval/generation modules.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -47,7 +47,7 @@
         "dataset": {
           "type": "string",
           "minLength": 1,
-          "description": "Source dataset name"
+          "description": "Source dataset name (e.g. ACI-IoT-Network-2023)"
         },
         "split": {
           "type": "string",
@@ -78,7 +78,9 @@
         },
         "base_learner_votes": {
           "type": "array",
-          "minItems": 1,
+          "minItems": 3,
+          "maxItems": 3,
+          "description": "Exactly 3 base learners to prevent ties in majority voting",
           "items": {
             "type": "object",
             "additionalProperties": false,
@@ -168,6 +170,7 @@
     "evaluation_metadata": {
       "type": "object",
       "additionalProperties": false,
+      "description": "Metadata strictly excluded from LLM generation prompts to prevent evaluation leakage.",
       "required": [
         "true_label",
         "in_train_leakage_flag",

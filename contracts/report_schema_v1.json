@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://incident-rag-study.internal/contracts/report_schema_v1.json",
+  "title": "IncidentReportSchemaV1",
+  "description": "Strict schema for LLM-generated incident reports passed from generation to evaluation.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "system_id",
+    "flow_id",
+    "alert_id",
+    "model_name",
+    "generation_timestamp",
+    "incident_summary",
+    "attack_mechanism",
+    "key_indicators",
+    "recommended_actions",
+    "raw_report_markdown"
+  ],
+  "properties": {
+    "system_id": {
+      "type": "string",
+      "enum": ["SYS-01", "SYS-02", "SYS-03", "SYS-04", "SYS-05", "SYS-06"],
+      "description": "Experimental system identifier generating this report"
+    },
+    "flow_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Network flow identifier"
+    },
+    "alert_id": {
+      "type": "string",
+      "pattern": "^ALT-[0-9]{8}-[0-9]{4}$",
+      "description": "Source alert identifier"
+    },
+    "model_name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "LLM model used (e.g. meta-llama/Llama-3.1-8b-instant)"
+    },
+    "generation_timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 generation timestamp"
+    },
+    "incident_summary": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Concise executive overview of the incident"
+    },
+    "attack_mechanism": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Detailed explanation of technical attack mechanics and protocols"
+    },
+    "key_indicators": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      },
+      "description": "Key observable technical metrics and indicators (grounded in SHAP/features)"
+    },
+    "recommended_actions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      },
+      "description": "Triage and remediation recommendations"
+    },
+    "raw_report_markdown": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Full text markdown representation of the report"
+    }
+  }
+}

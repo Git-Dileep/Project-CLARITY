@@ -1,0 +1,5 @@
+# CODEOWNERS
+# Centralized control over shared API contracts on main branch
+# Changes to contracts require Dileep's review and approval.
+
+/contracts/ @Git-Dileep
