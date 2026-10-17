@@ -1,0 +1,193 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://incident-rag-study.internal/schemas/alert_schema_v1.json",
+  "title": "AlertSchemaV1",
+  "description": "Strict schema for alert payloads passed between detector modules and RAG generator.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "identity",
+    "prediction",
+    "shap_attribution",
+    "evaluation_metadata"
+  ],
+  "properties": {
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "alert_id",
+        "flow_id",
+        "detector_family",
+        "timestamp",
+        "dataset",
+        "split"
+      ],
+      "properties": {
+        "alert_id": {
+          "type": "string",
+          "pattern": "^ALT-[0-9]{8}-[0-9]{4}$",
+          "description": "Unique alert identifier matching ALT-YYYYMMDD-XXXX"
+        },
+        "flow_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Network flow identifier"
+        },
+        "detector_family": {
+          "type": "string",
+          "enum": ["traditional_ml", "dl_ensemble"],
+          "description": "Detector family generating this alert"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 formatted timestamp"
+        },
+        "dataset": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Source dataset name"
+        },
+        "split": {
+          "type": "string",
+          "enum": ["pilot", "test"],
+          "description": "Evaluation split"
+        }
+      }
+    },
+    "prediction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "predicted_label",
+        "confidence",
+        "base_learner_votes"
+      ],
+      "properties": {
+        "predicted_label": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Consensus predicted attack class or benign"
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "description": "Confidence score between 0.0 and 1.0"
+        },
+        "base_learner_votes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "learner_name",
+              "voted_label",
+              "learner_confidence"
+            ],
+            "properties": {
+              "learner_name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "voted_label": {
+                "type": "string",
+                "minLength": 1
+              },
+              "learner_confidence": {
+                "type": "number",
+                "minimum": 0.0,
+                "maximum": 1.0
+              }
+            }
+          }
+        }
+      }
+    },
+    "shap_attribution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "explainer_type",
+        "explained_class",
+        "base_value",
+        "top_features"
+      ],
+      "properties": {
+        "explainer_type": {
+          "type": "string",
+          "enum": ["TreeExplainer", "DeepExplainer", "GradientExplainer"],
+          "description": "SHAP explainer algorithm used"
+        },
+        "explained_class": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Class target for which SHAP values were computed"
+        },
+        "base_value": {
+          "type": "number",
+          "description": "Expected baseline model output"
+        },
+        "top_features": {
+          "type": "array",
+          "minItems": 10,
+          "maxItems": 10,
+          "description": "Exactly 10 features ranked 1-10 by descending absolute SHAP magnitude",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "rank",
+              "feature_name",
+              "feature_value",
+              "shap_value"
+            ],
+            "properties": {
+              "rank": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 10
+              },
+              "feature_name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "feature_value": {
+                "type": "number"
+              },
+              "shap_value": {
+                "type": "number"
+              }
+            }
+          }
+        }
+      }
+    },
+    "evaluation_metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "true_label",
+        "in_train_leakage_flag",
+        "detector_correct"
+      ],
+      "properties": {
+        "true_label": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Ground truth label"
+        },
+        "in_train_leakage_flag": {
+          "type": "boolean",
+          "description": "True if flow was inadvertently present in training partition"
+        },
+        "detector_correct": {
+          "type": "boolean",
+          "description": "True if predicted_label matches true_label"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.env
+.venv/
+env/
+venv/
+kb/chroma_db/
+*.pcap
+*.pcapng
+.DS_Store
+Thumbs.db
