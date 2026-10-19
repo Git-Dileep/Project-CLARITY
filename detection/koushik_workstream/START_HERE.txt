@@ -1,0 +1,17 @@
+START HERE — KOU IIoT DETECTION PROJECT
+
+1. Extract this ZIP completely.
+2. Put ONLY the network CSV files (GroundTruth_Network_*.csv) into:
+   input_data\network\
+3. Put ONLY the IoT device CSV files (GroundTruth_IoT_*.csv) into:
+   input_data\iot_devices\
+   Keep the two types in their own folders. Do not rename or edit CSVs in Excel.
+4. Double-click run_setup.bat once. This creates .venv and installs the required Python packages.
+5. Double-click run_audit.bat and inspect reports\audit_summary.json.
+6. Double-click run_baseline.bat.
+7. Double-click run_dl_feasibility.bat. This may take a long time on CPU.
+8. Double-click run_pilot.bat after both training runs complete.
+
+For a full sequential run, use run_all.bat after setup. It can take a long time and uses CPU/RAM.
+
+Important: the DL models are feasibility experiments. Their rows are not guaranteed to be contiguous time sequences. Do not claim real-world generalisation from a random row split. Pilot output is valid only if both detector outputs and both explanations are present and verified.
