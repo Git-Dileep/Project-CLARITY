@@ -1,92 +1,168 @@
-# Project CLARITY
+# Project CLARITY: Incident Analysis RAG Reliability Study
 
-A controlled study evaluating whether local feature attributions (SHAP) from deep learning ensembles versus tree-dominant ensembles affect downstream LLM groundedness, faithfulness, fabrication, and hallucination in RAG-driven IoT incident analysis.
+> **Evaluating whether SHAP attributions from deep learning vs. traditional ML ensembles impact LLM groundedness and hallucination in RAG incident analysis.**
 
----
-
-## 📌 Research Framing & Experimental Setup
-
-* **Core Research Question:** When a baseline detector is replaced by a higher-capacity DL ensemble in an otherwise identical RAG incident-analysis pipeline, does the resulting SHAP attribution change the reliability of the LLM-generated incident report?
-* **Single Manipulated Variable:** Detector Family
-  * **Baseline Ensemble:** Random Forest + XGBoost + MLP (Hard voting majority rule; matches the base paper baseline).
-  * **Deep Learning Ensemble:** 1D-CNN + LSTM + Transformer Encoder (Hard voting majority rule).
-* **Constants (Frozen):**
-  * **Primary Dataset:** ACI IoT Network Dataset 2023 (1,170,570 flow records, 71 features, 11 classes; IEEE DataPort).
-  * **Attribution Method:** Local SHAP (averaged over agreeing majority learners).
-  * **Knowledge Base:** Single fixed ChromaDB collection (Generic IoT threat profiles, MITRE ATT&CK generic mappings, and network defense guidance) + cached Tavily search snippets.
-  * **Default LLM:** `meta-llama/Llama-3.1-8b-instant` at `temperature: 0.0` (matching the base paper's reference baseline).
-  * **Target Metrics:** Groundedness, Faithfulness, Fabrication Rate, Hallucination Rate (evaluated via Rubric v0).
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Status: DIL-02 Complete](https://img.shields.io/badge/Sprint%20Status-DIL--02%20Complete-brightgreen.svg)]()
+[![Schema: Draft 2020-12](https://img.shields.io/badge/Schema-Draft%202020--12-success.svg)]()
 
 ---
 
-## 👥 Team Workstreams & Module Ownership
+## 📌 Research Question & Core Premise
 
-| Role | Workstream | Primary Directory | Owner | Key Responsibilities |
+> *"Does swapping a traditional-ML detector for a higher-capacity DL ensemble, in an otherwise identical RAG incident-analysis pipeline, change the reliability of the LLM-generated incident report?"*
+
+In automated Security Operations Center (SOC) pipelines, machine learning detectors generate alerts and feature attributions (SHAP) that feed into Retrieval-Augmented Generation (RAG) models to synthesize human-readable incident reports. **Project CLARITY** executes a controlled 5-day evaluation sprint measuring the direct downstream effects on LLM report reliability when altering only the detector architecture.
+
+### Experimental Controls
+- **Independent Variable:** Detector Subsystem producing the alert payload.
+  - **Traditional ML Baseline:** 3-model ensemble (**Random Forest + XGBoost + MLP**) with 2-of-3 hard voting.
+  - **Deep Learning Ensemble:** 3-model ensemble (**1D-CNN + Bi-LSTM + Transformer Encoder**) with 2-of-3 hard voting.
+- **Controlled Invariants:** Identical network flows ($1:1$ mapping), primary dataset (**ACI IoT Network Dataset 2023**), retrieval engine ($k=5$), LLM generator (`meta-llama/Llama-3.1-8b-instant`), decoding temperature ($0.0$), prompt template, and random seed ($42$).
+
+---
+
+## 🏗️ Architecture & Study Systems (SYS-01 to SYS-06)
+
+```
+                            ┌──────────────────────────────────────────────┐
+                            │          Raw Network Flow (ACI IoT 2023)     │
+                            └──────────────────────┬───────────────────────┘
+                                                   │
+                                         [ Feature Extractor ]
+                                                   │
+                           ┌───────────────────────┴───────────────────────┐
+                           ▼                                               ▼
+                [ Traditional ML Baseline ]                     [ DL Ensemble Family ]
+             ┌─────────────────────────────┐               ┌─────────────────────────────┐
+             │  - Random Forest (100 trees)│               │  - 1D-CNN (Temporal Conv)   │
+             │  - XGBoost (Grad Boosted)   │               │  - Bi-LSTM (2-layer Bi-Dir) │
+             │  - MLP (Multi-Layer Percep) │               │  - Transformer Encoder      │
+             │  - Explainer: TreeExplainer │               │  - Explainer: GradExplainer │
+             └─────────────┬───────────────┘               └──────────────┬──────────────┘
+                           │                                              │
+                           ▼                                              ▼
+                [ Hard Voting (2 of 3) ]                       [ Hard Voting (2 of 3) ]
+                           │                                              │
+                           └───────────────────────┬──────────────────────┘
+                                                   ▼
+                                     [ Schema v1 JSON Alert Payload ]
+                                                   │
+                   ┌───────────────────────────────┴───────────────────────────────┐
+                   ▼                               ▼                               ▼
+       [ Baseline (0-Shot RAG) ]         [ Standard Local RAG ]          [ Hybrid Local + Web RAG ]
+       - SYS-01 (Trad ML)                - SYS-03 (Trad ML)              - SYS-05 (Trad ML)
+       - SYS-02 (DL Ensemble)            - SYS-04 (DL Ensemble)          - SYS-06 (DL Ensemble)
+                   │                               │                               │
+                   └───────────────────────────────┼───────────────────────────────┘
+                                                   ▼
+                                    [ LLM Incident Report (Llama 3.1) ]
+                                                   │
+                                                   ▼
+                                [ Evaluation Engine (Rubric v0) ]
+```
+
+| System ID | Detector Subsystem | Knowledge Sources | Retrieval Mechanism | Output Artifact |
 | :--- | :--- | :--- | :--- | :--- |
-| **Lead / Eval** | Experimental Protocol & Evaluation | `contracts/`, `evaluation/` | **Dileep** (`@Git-Dileep`) | Architecture governance, protocol freeze, canonical schemas, Rubric v0 scoring harness. |
-| **Detection** | Baseline & DL Ensembles, SHAP | `detection/` | **Koushik** | ACI IoT 2023 data processing, RF+XGB+MLP baseline, CNN+LSTM+Transformer, SHAP exporters. |
-| **Retrieval** | Dense Store & Cached Tools | `retrieval/` | **Sumit & Sneha** | ChromaDB embedding collection, Tavily search caching, ATT&CK mapping tools. |
-| **Generation** | Prompt Engineering & RAG Pipeline | `generation/` | **Sneha** | RAG orchestration, system prompt construction, Llama-3.1-8b runner, report export. |
+| **SYS-01** | Traditional ML (RF+XGB+MLP) | Alert Payload only (No RAG) | None (Baseline 0-shot) | Baseline LLM Report |
+| **SYS-02** | DL Ensemble (CNN+LSTM+Trans) | Alert Payload only (No RAG) | None (Baseline 0-shot) | Baseline LLM Report |
+| **SYS-03** | Traditional ML (RF+XGB+MLP) | Local KB (ChromaDB) | Dense Vector Search ($k=5$) | Standard RAG Report |
+| **SYS-04** | DL Ensemble (CNN+LSTM+Trans) | Local KB (ChromaDB) | Dense Vector Search ($k=5$) | Standard RAG Report |
+| **SYS-05** | Traditional ML (RF+XGB+MLP) | Local KB + Web (Tavily Cache) | Hybrid RAG ($k=5$) | Augmented RAG Report |
+| **SYS-06** | DL Ensemble (CNN+LSTM+Trans) | Local KB + Web (Tavily Cache) | Hybrid RAG ($k=5$) | Augmented RAG Report |
 
 ---
 
-## 🏛️ Shared API Contracts (`contracts/`)
+## 📊 Evaluation Rubric v0 & Reliability Metrics
 
-All cross-module interfaces are governed strictly by Draft 2020-12 JSON schemas in `contracts/`.
+Reports are decomposed into disjoint atomic claims and graded strictly against Reference Evidence Set $E$ (alert metadata, top-10 SHAP features, and retrieved knowledge):
 
-| Contract File | Purpose | Producer | Consumer |
-| :--- | :--- | :--- | :--- |
-| [`alert_schema_v1.json`](contracts/alert_schema_v1.json) | Alert payload with classification votes & top-10 SHAP attributions | `detection/` | `generation/`, `evaluation/` |
-| [`retrieval_schema_v1.json`](contracts/retrieval_schema_v1.json) | Retrieved dense vector chunks and cached web search context ($k=5$) | `retrieval/` | `generation/` |
-| [`report_schema_v1.json`](contracts/report_schema_v1.json) | Generated incident report payload for metric evaluation | `generation/` | `evaluation/` |
+### Categorical Labels & Tie-Break Hierarchy
+Claims are assigned exactly one label under strict tie-break precedence:
+$$\mathbf{FABRICATED} \succ \mathbf{CONTRADICTED} \succ \mathbf{UNSUPPORTED} \succ \mathbf{FULL} \mid \mathbf{PARTIAL}$$
 
-> ⚠️ **Critical Prompt Boundary Rule:**
-> `alert_schema_v1.json` contains `evaluation_metadata` (`true_label`, `in_train_leakage_flag`, `detector_correct`). The prompt-building code in `generation/` **must programmatically strip `evaluation_metadata`** prior to constructing the LLM prompt to prevent ground-truth data contamination.
+- **`FABRICATED`**: Invents specific unlisted CVEs, MITRE IDs, external IPs, quantitative metrics, or feature names not present in $E$.
+- **`CONTRADICTED`**: Directly negates or conflicts with explicit facts or values in $E$.
+- **`UNSUPPORTED`**: Speculative deduction or generic botnet trivia unsupported by $E$, with no fabricated identifiers.
+- **`PARTIAL`**: Supported in concept or spirit, but over-generalized, imprecise, or hedged.
+- **`FULL`**: 100% corroborated by explicit facts in $E$.
+
+### Mathematical Formulations
+$$\text{Groundedness} = \frac{N_{\text{FULL}} + N_{\text{PARTIAL}}}{N}$$
+$$\text{Faithfulness} = \frac{N_{\text{FULL}}}{N}$$
+$$\text{Fabrication Rate} = \frac{N_{\text{FABRICATED}}}{N}$$
+$$\text{Hallucination Rate} = \frac{N_{\text{CONTRADICTED}} + N_{\text{UNSUPPORTED}}}{N}$$
+
+> **Note on Metric Sensitivity:** As observed in the base paper, Groundedness frequently saturates at $1.0$. Therefore, **Faithfulness**, **Fabrication Rate**, and **Hallucination Rate** carry the primary statistical discrimination.
 
 ---
 
-## 🤝 Contribution & Governance Workflow
-
-1. **Feature Branches:** Work exclusively on personal feature branches (e.g., `feature/koushik-detection`, `feature/sneha-generation`). Direct pushes to `main` are disabled.
-2. **Schema Immutability:** Schemas inside `contracts/` are locked and protected by `.github/CODEOWNERS`. If a schema modification is needed:
-   - File an RFC issue or notify Dileep with the rationale, proposed schema diff, and affected downstream modules.
-   - Once approved, Dileep will update the schema on `main`.
-3. **Pull Requests & CI Validation:** All PRs targeting `main` must pass the automated GitHub Actions contract validation test suite (`.github/workflows/ci.yml`).
-
----
-
-## 📂 Repository Layout
+## 📂 Repository Structure
 
 ```text
-Project-CLARITY/
-├── contracts/                  # Canonical shared API schemas (Maintained by Dileep)
-│   ├── alert_schema_v1.json
-│   ├── retrieval_schema_v1.json
-│   ├── report_schema_v1.json
-│   └── README.md
-├── detection/                  # Detectors, training pipelines & SHAP extractors (Koushik)
-├── retrieval/                  # ChromaDB vector store & Tavily web cache (Sumit / Sneha)
-├── generation/                 # Prompt builder & Llama-3.1 RAG generation runner (Sneha)
-├── evaluation/                 # Rubric v0 scoring harness & metric evaluation (Dileep)
-├── tests/                      # Canonical contract validation test suite
-│   └── test_contracts.py
-├── .github/
-│   ├── CODEOWNERS              # Governance: Dileep required for contracts/
-│   └── workflows/ci.yml        # Automated CI workflow
-├── requirements.txt            # Unified project dependencies
+├── protocol/
+│   └── protocol_v1.md          # Frozen experimental protocol & constants
+├── schema/
+│   ├── alert_schema_v1.json    # Strict Draft 2020-12 alert JSON schema
+│   └── examples/
+│       ├── alert_trad_example.json  # Traditional ML alert payload (RF+XGB+MLP)
+│       └── alert_dl_example.json    # DL ensemble alert payload (CNN+LSTM+Trans)
+├── data/
+│   ├── raw/                    # Raw flow captures and PCAPs
+│   ├── pilot_alerts/           # 20 stratified pilot alert payloads
+│   └── test/                   # Evaluation test splits
+├── detectors/
+│   ├── traditional/            # RF, XGBoost, and MLP models
+│   └── deep_learning/          # 1D-CNN, Bi-LSTM, and Transformer models
+├── kb/
+│   ├── chroma_db/              # Persistent ChromaDB vector collections
+│   └── tavily_cache/           # External web verification cache
+├── pipeline/
+│   └── run_rag.py              # End-to-end RAG generator pipeline
+├── eval/
+│   ├── rubric_v0.md            # Complete Rubric v0 specification & worked examples
+│   └── score_reports.py        # Pydantic evaluation harness & metric calculator
+├── tests/
+│   └── test_scoring.py         # Pytest suite for scoring, tie-breaks & schemas
+├── results/
+│   └── reports/                # Generated incident reports across SYS-01..06
+├── scripts/
+│   └── validate_schemas.py     # Draft 2020-12 schema validation runner
+├── requirements.txt            # Python dependencies
 └── README.md
+```
 
-⚡ Quickstart
-# 1. Clone the repository
-git clone [https://github.com/Git-Dileep/Project-CLARITY.git](https://github.com/Git-Dileep/Project-CLARITY.git)
+---
+
+## 🚀 Setup & Execution
+
+### 1. Installation
+Clone the repository and install dependencies:
+```bash
+git clone https://github.com/Git-Dileep/Project-CLARITY.git
 cd Project-CLARITY
-
-# 2. Set up virtual environment
-python -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-
-# 3. Install dependencies
 pip install -r requirements.txt
+```
 
-# 4. Verify canonical shared schemas
-python -m pytest tests/test_contracts.py -v
+### 2. Validate Alert Schemas
+Verify that all alert payloads strictly conform to Draft 2020-12 rules:
+```bash
+python scripts/validate_schemas.py
+```
+
+### 3. Run Test Suite
+Execute the unit and schema test suite with `pytest`:
+```bash
+python -m pytest tests/test_scoring.py -v
+```
+
+---
+
+## 📅 Sprint Roadmap (5-Day Plan)
+
+- [x] **DIL-01:** Scaffold workspace, freeze `alert_schema_v1.json`, draft `protocol_v1.md`, and initialize Git tracking.
+- [x] **DIL-02:** Finalize `rubric_v0.md`, implement `score_reports.py` Pydantic harness, integrate ACI IoT 2023 dataset specifications, and establish `tests/test_scoring.py`.
+- [ ] **DIL-03:** Ingest ACI IoT 2023 pilot dataset, extract 20 stratified flow pairs, and execute Gate G1 validation.
+- [ ] **DIL-04:** Execute pilot inference across SYS-01 through SYS-06 and evaluate Gate G3 consistency.
+- [ ] **DIL-05:** Full test set inference, Wilcoxon signed-rank significance testing, Gate G5 statistical synthesis, and final report generation.
