@@ -1,0 +1,524 @@
+{
+  "ensemble": {
+    "accuracy": 0.997,
+    "macro_precision": 0.9989,
+    "macro_recall": 0.9926,
+    "macro_f1": 0.9957,
+    "weighted_precision": 0.997,
+    "weighted_recall": 0.997,
+    "weighted_f1": 0.997,
+    "train_duration_seconds": 1.401,
+    "infer_duration_seconds": 0.045,
+    "classification_report": {
+      "Benign": {
+        "precision": 0.9934782608695653,
+        "recall": 1.0,
+        "f1-score": 0.9967284623773174,
+        "support": 457.0
+      },
+      "BruteForce": {
+        "precision": 1.0,
+        "recall": 0.9558823529411765,
+        "f1-score": 0.9774436090225563,
+        "support": 68.0
+      },
+      "DDoS_UDP": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 153.0
+      },
+      "Infiltration": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 81.0
+      },
+      "Mirai_Botnet": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 99.0
+      },
+      "PortScan": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 142.0
+      },
+      "accuracy": 0.997,
+      "macro avg": {
+        "precision": 0.9989130434782609,
+        "recall": 0.9926470588235294,
+        "f1-score": 0.9956953452333123,
+        "support": 1000.0
+      },
+      "weighted avg": {
+        "precision": 0.9970195652173913,
+        "recall": 0.997,
+        "f1-score": 0.9969710727199679,
+        "support": 1000.0
+      }
+    },
+    "confusion_matrix": [
+      [
+        457,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        3,
+        65,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        153,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        81,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        99,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        142
+      ]
+    ],
+    "class_names": [
+      "Benign",
+      "BruteForce",
+      "DDoS_UDP",
+      "Infiltration",
+      "Mirai_Botnet",
+      "PortScan"
+    ]
+  },
+  "learners": {
+    "RandomForest": {
+      "accuracy": 0.995,
+      "macro_precision": 0.996,
+      "macro_recall": 0.9898,
+      "macro_f1": 0.9928,
+      "weighted_precision": 0.995,
+      "weighted_recall": 0.995,
+      "weighted_f1": 0.995,
+      "train_duration_seconds": 0.252,
+      "infer_duration_seconds": 0.04,
+      "classification_report": {
+        "Benign": {
+          "precision": 0.991304347826087,
+          "recall": 0.9978118161925602,
+          "f1-score": 0.9945474372955289,
+          "support": 457.0
+        },
+        "BruteForce": {
+          "precision": 0.9846153846153847,
+          "recall": 0.9411764705882353,
+          "f1-score": 0.9624060150375939,
+          "support": 68.0
+        },
+        "DDoS_UDP": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 153.0
+        },
+        "Infiltration": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 81.0
+        },
+        "Mirai_Botnet": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 99.0
+        },
+        "PortScan": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 142.0
+        },
+        "accuracy": 0.995,
+        "macro avg": {
+          "precision": 0.9959866220735787,
+          "recall": 0.9898313811301326,
+          "f1-score": 0.9928255753888537,
+          "support": 1000.0
+        },
+        "weighted avg": {
+          "precision": 0.9949799331103679,
+          "recall": 0.995,
+          "f1-score": 0.9949517878666131,
+          "support": 1000.0
+        }
+      },
+      "confusion_matrix": [
+        [
+          456,
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          4,
+          64,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          153,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          81,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          99,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          142
+        ]
+      ],
+      "class_names": [
+        "Benign",
+        "BruteForce",
+        "DDoS_UDP",
+        "Infiltration",
+        "Mirai_Botnet",
+        "PortScan"
+      ]
+    },
+    "XGBoost": {
+      "accuracy": 0.998,
+      "macro_precision": 0.9972,
+      "macro_recall": 0.9972,
+      "macro_f1": 0.9972,
+      "weighted_precision": 0.998,
+      "weighted_recall": 0.998,
+      "weighted_f1": 0.998,
+      "train_duration_seconds": 0.429,
+      "infer_duration_seconds": 0.004,
+      "classification_report": {
+        "Benign": {
+          "precision": 0.9978118161925602,
+          "recall": 0.9978118161925602,
+          "f1-score": 0.9978118161925602,
+          "support": 457.0
+        },
+        "BruteForce": {
+          "precision": 0.9852941176470589,
+          "recall": 0.9852941176470589,
+          "f1-score": 0.9852941176470589,
+          "support": 68.0
+        },
+        "DDoS_UDP": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 153.0
+        },
+        "Infiltration": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 81.0
+        },
+        "Mirai_Botnet": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 99.0
+        },
+        "PortScan": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 142.0
+        },
+        "accuracy": 0.998,
+        "macro avg": {
+          "precision": 0.9971843223066031,
+          "recall": 0.9971843223066031,
+          "f1-score": 0.9971843223066031,
+          "support": 1000.0
+        },
+        "weighted avg": {
+          "precision": 0.998,
+          "recall": 0.998,
+          "f1-score": 0.998,
+          "support": 1000.0
+        }
+      },
+      "confusion_matrix": [
+        [
+          456,
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          67,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          153,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          81,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          99,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          142
+        ]
+      ],
+      "class_names": [
+        "Benign",
+        "BruteForce",
+        "DDoS_UDP",
+        "Infiltration",
+        "Mirai_Botnet",
+        "PortScan"
+      ]
+    },
+    "MLP": {
+      "accuracy": 0.988,
+      "macro_precision": 0.9878,
+      "macro_recall": 0.9812,
+      "macro_f1": 0.9844,
+      "weighted_precision": 0.9879,
+      "weighted_recall": 0.988,
+      "weighted_f1": 0.9879,
+      "train_duration_seconds": 0.72,
+      "infer_duration_seconds": 0.001,
+      "classification_report": {
+        "Benign": {
+          "precision": 0.9847826086956522,
+          "recall": 0.9912472647702407,
+          "f1-score": 0.9880043620501636,
+          "support": 457.0
+        },
+        "BruteForce": {
+          "precision": 0.9692307692307692,
+          "recall": 0.9264705882352942,
+          "f1-score": 0.9473684210526315,
+          "support": 68.0
+        },
+        "DDoS_UDP": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 153.0
+        },
+        "Infiltration": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 81.0
+        },
+        "Mirai_Botnet": {
+          "precision": 0.9795918367346939,
+          "recall": 0.9696969696969697,
+          "f1-score": 0.9746192893401016,
+          "support": 99.0
+        },
+        "PortScan": {
+          "precision": 0.993006993006993,
+          "recall": 1.0,
+          "f1-score": 0.9964912280701754,
+          "support": 142.0
+        },
+        "accuracy": 0.988,
+        "macro avg": {
+          "precision": 0.9877687012780182,
+          "recall": 0.9812358037837509,
+          "f1-score": 0.9844138834188453,
+          "support": 1000.0
+        },
+        "weighted avg": {
+          "precision": 0.9879399293253329,
+          "recall": 0.988,
+          "f1-score": 0.9879281101191386,
+          "support": 1000.0
+        }
+      },
+      "confusion_matrix": [
+        [
+          453,
+          2,
+          0,
+          0,
+          2,
+          0
+        ],
+        [
+          5,
+          63,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          153,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          81,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          0,
+          96,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          142
+        ]
+      ],
+      "class_names": [
+        "Benign",
+        "BruteForce",
+        "DDoS_UDP",
+        "Infiltration",
+        "Mirai_Botnet",
+        "PortScan"
+      ]
+    }
+  },
+  "config": {
+    "dataset_name": "Reference-Synthetic-Network",
+    "is_synthetic": true,
+    "features_used": [
+      "src_port",
+      "dst_port",
+      "duration",
+      "src_bytes",
+      "dst_bytes",
+      "src_pkts",
+      "dst_pkts",
+      "packet_rate",
+      "byte_rate",
+      "tcp_flags_syn",
+      "tcp_flags_ack",
+      "tcp_flags_fin",
+      "tcp_flags_rst",
+      "flow_iat_mean",
+      "flow_iat_std",
+      "header_length",
+      "proto_tcp",
+      "proto_udp",
+      "service_dns",
+      "service_http",
+      "service_mqtt",
+      "service_other",
+      "service_ssh",
+      "service_telnet"
+    ],
+    "classes": [
+      "Benign",
+      "BruteForce",
+      "DDoS_UDP",
+      "Infiltration",
+      "Mirai_Botnet",
+      "PortScan"
+    ],
+    "train_samples": 4000,
+    "test_samples": 1000
+  }
+}
