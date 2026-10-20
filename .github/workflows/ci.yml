@@ -1,0 +1,33 @@
+name: Contracts & Code Quality CI
+
+on:
+  push:
+    branches: [ main, Dileep ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate-contracts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - name: Install dependencies
+        run: |
+          pip install jsonschema pytest
+      - name: Validate JSON Schemas
+        run: |
+          python -c "
+          import json, glob, sys
+          from jsonschema import Draft202012Validator
+          schemas = glob.glob('contracts/*.json')
+          assert len(schemas) >= 3, f'Expected 3 contracts, found {len(schemas)}'
+          for s in schemas:
+              with open(s) as f:
+                  data = json.load(f)
+              Draft202012Validator.check_schema(data)
+              print(f'Valid schema: {s}')
+          "
