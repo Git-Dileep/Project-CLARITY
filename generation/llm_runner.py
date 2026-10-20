@@ -12,7 +12,7 @@ def generate_incident_report(alert_data, retrieval_data=None, system_id="SYS-01"
 
     client = Groq(api_key=api_key)
 
-    prompt = f"""You are an expert IIoT cybersecurity incident reporter.
+    prompt = f"""You are an expert IoT cybersecurity incident reporter.
 Analyze the following alert payload and generate a concise incident report.
 
 ALERT DATA:
@@ -32,7 +32,7 @@ Instructions:
 """
 
     response = client.chat.completions.create(
-        model="openai/gpt-oss-20b",
+        model="llama-3.1-8b-instant",
         messages=[{"role": "user", "content": prompt}],
         temperature=0.0,
         max_tokens=4096,
