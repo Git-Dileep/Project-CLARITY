@@ -2,16 +2,16 @@
 
 ## Completed Tasks Overview
 
-### SNE-02: LLM Report Generator
+### SNE-01: LLM Report Generator
 - **File:** `generation/llm_runner.py`
-- Integrated Groq API to generate Schema v1 compliant JSON incident reports.
-- Model Configured: `openai/gpt-oss-20b` with `max_tokens=4096`.
+- Integrated Groq API using `llama-3.1-8b-instant` with `max_tokens=4096` for Schema v1 compliant JSON incident reports.
+- Configured prompt for "expert IoT cybersecurity incident reporter".
 
-### SNE-04: Evaluation Harness
-- **File:** `evaluation/run_harness.py`
-- Built automated evaluation harness to validate generated incident reports against schema specifications and ground truth metrics.
+### SNE-02: LLM Evaluation Judge
+- **File:** `eval/score_reports.py`
+- Built evaluation judge module imported via `from eval.score_reports import evaluate_report`.
+- Evaluates generated reports against four core metrics: groundedness, faithfulness, fabrication, and hallucination.
 
-### SNE-05: Pilot Batch Report Generation
+### SNE-03: Sample Report Set Generation
 - **Files:** `run_pilot_5.py`, `generation/sample_reports.json`
-- Ingested pilot alerts exported from `detection/koushik_workstream/reports/pilot_20_alerts.csv`.
-- Generated 5 schema-compliant sample incident reports stored in `generation/sample_reports.json`.
+- Ingested pilot alerts from Koushik's export and generated schema-compliant sample incident reports saved in `generation/sample_reports.json`.
