@@ -1,0 +1,7 @@
+,Benign,BruteForce,DDoS_UDP,Infiltration,Mirai_Botnet,PortScan
+Benign,456,1,0,0,0,0
+BruteForce,14,54,0,0,0,0
+DDoS_UDP,0,0,153,0,0,0
+Infiltration,0,0,0,81,0,0
+Mirai_Botnet,5,0,0,0,92,2
+PortScan,0,0,0,0,0,142

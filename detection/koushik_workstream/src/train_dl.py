@@ -1,196 +1,427 @@
+"""Deep Learning Ensemble (1D-CNN, LSTM, and Transformer Encoder) using PyTorch.
+
+Trains three separate deep learning architectures on the exact same train split
+and evaluates on the exact same test split with majority-voting ensemble consensus.
+"""
+
 from __future__ import annotations
-import argparse, json
+
+import argparse
+import copy
+import json
+import time
 from pathlib import Path
+from typing import Dict, Any, List, Tuple, Optional
 import numpy as np
 import pandas as pd
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import LabelEncoder, StandardScaler
-from sklearn.metrics import accuracy_score, f1_score, classification_report
-from .common import find_csvs, unique_files_by_content, normalise_label
-import torch
-from torch import nn
-from torch.utils.data import Dataset, DataLoader
 
-def load_sample(files, max_per_class, chunksize=150000, seed=42):
-    pieces=[]
-    # Keep the intermediate sample bounded when scanning many millions of rows.
-    chunk_quota = min(max_per_class, max(100, max_per_class // 10))
-    for path in files:
-        print(f"[SAMPLE] {path.name}")
-        for chunk in pd.read_csv(path, usecols=lambda c: c in ["ts","src_port","dst_port","proto","type"],
-                                 chunksize=chunksize, low_memory=False):
-            if "type" not in chunk: continue
-            chunk["type"]=normalise_label(chunk["type"])
-            chunk=chunk.dropna(subset=["type"])
-            for _, group in chunk.groupby("type", sort=False):
-                n=min(len(group), chunk_quota)
-                pieces.append(group.sample(n=n, random_state=seed) if len(group)>n else group)
-    if not pieces: raise RuntimeError("No network rows loaded; check input_data/network.")
-    df=pd.concat(pieces, ignore_index=True).drop_duplicates()
-    final=[]
-    for _,g in df.groupby("type", sort=False):
-        final.append(g.sample(n=min(len(g),max_per_class),random_state=seed))
-    return pd.concat(final,ignore_index=True).sample(frac=1,random_state=seed).reset_index(drop=True)
+from .config import WorkstreamConfig
+from .data_loader import load_dataset
+from .preprocessing import prepare_data_and_splits, SplitData
+from .ensemble import LearnerVote, compute_ensemble_predictions, compute_comprehensive_metrics
 
-class WindowDataset(Dataset):
-    def __init__(self, X, y, window, sample_ids=None):
-        self.X=torch.tensor(X,dtype=torch.float32)
-        self.y=torch.tensor(y,dtype=torch.long)
-        self.window=window
-        self.sample_ids=np.asarray(sample_ids if sample_ids is not None else np.arange(len(y)))
-    def __len__(self): return len(self.X)-self.window+1
-    def __getitem__(self, idx):
-        # The target is the final row. See the output warning: sampled rows are not guaranteed to be contiguous traffic.
-        return self.X[idx:idx+self.window], self.y[idx+self.window-1]
+try:
+    import torch
+    from torch import nn
+    from torch.utils.data import Dataset, DataLoader
+    TORCH_AVAILABLE = True
+except ImportError:
+    TORCH_AVAILABLE = False
 
-class CNNModel(nn.Module):
-    def __init__(self,n_features,n_classes):
+
+class TabularFlowDataset(Dataset):
+    """Dataset wrapper for flow feature vectors."""
+    def __init__(self, X: np.ndarray, y: np.ndarray):
+        self.X = torch.tensor(X, dtype=torch.float32)
+        self.y = torch.tensor(y, dtype=torch.long)
+
+    def __len__(self) -> int:
+        return len(self.X)
+
+    def __getitem__(self, idx: int) -> Tuple[torch.Tensor, torch.Tensor]:
+        return self.X[idx], self.y[idx]
+
+
+class CNN1DModel(nn.Module):
+    """One-dimensional Convolutional Neural Network for flow classification."""
+    def __init__(self, n_features: int, n_classes: int, channels: int = 32):
         super().__init__()
-        self.net=nn.Sequential(nn.Conv1d(n_features,32,3,padding=1),nn.ReLU(),
-            nn.Conv1d(32,32,3,padding=1),nn.ReLU(),nn.AdaptiveAvgPool1d(1),nn.Flatten(),
-            nn.Linear(32,n_classes))
-    def forward(self,x): return self.net(x.transpose(1,2))
+        self.conv = nn.Sequential(
+            nn.Conv1d(1, channels, kernel_size=3, padding=1),
+            nn.BatchNorm1d(channels),
+            nn.ReLU(),
+            nn.Conv1d(channels, channels * 2, kernel_size=3, padding=1),
+            nn.BatchNorm1d(channels * 2),
+            nn.ReLU(),
+            nn.AdaptiveAvgPool1d(1),
+            nn.Flatten(),
+        )
+        self.classifier = nn.Sequential(
+            nn.Dropout(0.2),
+            nn.Linear(channels * 2, 32),
+            nn.ReLU(),
+            nn.Linear(32, n_classes),
+        )
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        # Input shape: (batch_size, n_features) -> (batch_size, 1, n_features)
+        if x.dim() == 2:
+            x = x.unsqueeze(1)
+        feat = self.conv(x)
+        return self.classifier(feat)
+
 
 class LSTMModel(nn.Module):
-    def __init__(self,n_features,n_classes):
-        super().__init__(); self.rnn=nn.LSTM(n_features,32,batch_first=True)
-        self.fc=nn.Linear(32,n_classes)
-    def forward(self,x):
-        _,(h,_)=self.rnn(x); return self.fc(h[-1])
+    """Bidirectional LSTM network for flow feature sequences."""
+    def __init__(self, n_features: int, n_classes: int, hidden_size: int = 32):
+        super().__init__()
+        self.lstm = nn.LSTM(
+            input_size=n_features,
+            hidden_size=hidden_size,
+            num_layers=2,
+            batch_first=True,
+            bidirectional=True,
+            dropout=0.1,
+        )
+        self.classifier = nn.Sequential(
+            nn.Dropout(0.2),
+            nn.Linear(hidden_size * 2, 32),
+            nn.ReLU(),
+            nn.Linear(32, n_classes),
+        )
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        # Input shape: (batch_size, n_features) -> (batch_size, 1, n_features)
+        if x.dim() == 2:
+            x = x.unsqueeze(1)
+        out, _ = self.lstm(x)
+        last_step = out[:, -1, :]
+        return self.classifier(last_step)
+
 
 class TransformerModel(nn.Module):
-    def __init__(self,n_features,n_classes,window):
+    """Transformer Encoder architecture for tabular flow representations."""
+    def __init__(self, n_features: int, n_classes: int, d_model: int = 32, nhead: int = 4):
         super().__init__()
-        self.proj=nn.Linear(n_features,32)
-        layer=nn.TransformerEncoderLayer(d_model=32,nhead=4,dim_feedforward=64,batch_first=True,dropout=0.1)
-        self.enc=nn.TransformerEncoder(layer,num_layers=1)
-        self.fc=nn.Linear(32,n_classes)
-    def forward(self,x): return self.fc(self.enc(self.proj(x))[:,-1,:])
+        self.proj = nn.Linear(n_features, d_model)
+        layer = nn.TransformerEncoderLayer(
+            d_model=d_model,
+            nhead=nhead,
+            dim_feedforward=64,
+            batch_first=True,
+            dropout=0.1,
+        )
+        self.transformer = nn.TransformerEncoder(layer, num_layers=2)
+        self.classifier = nn.Sequential(
+            nn.Dropout(0.2),
+            nn.Linear(d_model, 32),
+            nn.ReLU(),
+            nn.Linear(32, n_classes),
+        )
 
-def run_model(name, model, train_loader, test_loader, device, epochs):
-    model.to(device); opt=torch.optim.Adam(model.parameters(),lr=1e-3); loss_fn=nn.CrossEntropyLoss()
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        # (batch_size, n_features) -> (batch_size, 1, n_features)
+        if x.dim() == 2:
+            x = x.unsqueeze(1)
+        h = self.proj(x)
+        encoded = self.transformer(h)
+        return self.classifier(encoded[:, 0, :])
+
+
+def get_device(pref: str) -> torch.device:
+    if pref == "cuda" and torch.cuda.is_available():
+        return torch.device("cuda")
+    if pref == "auto" and torch.cuda.is_available():
+        return torch.device("cuda")
+    return torch.device("cpu")
+
+
+def train_single_dl_model(
+    name: str,
+    model: nn.Module,
+    train_loader: DataLoader,
+    val_loader: DataLoader,
+    device: torch.device,
+    epochs: int,
+    lr: float,
+    weight_decay: float,
+    patience: int = 2,
+) -> Tuple[nn.Module, float, List[Dict[str, float]]]:
+    """Train single PyTorch model with early stopping and loss tracking."""
+    model.to(device)
+    optimizer = torch.optim.AdamW(model.parameters(), lr=lr, weight_decay=weight_decay)
+    criterion = nn.CrossEntropyLoss()
+
+    best_val_loss = float("inf")
+    best_weights = copy.deepcopy(model.state_dict())
+    patience_counter = 0
+    history = []
+
+    t0 = time.perf_counter()
     for ep in range(epochs):
-        model.train(); total=0
-        for xb,yb in train_loader:
-            xb,yb=xb.to(device),yb.to(device); opt.zero_grad()
-            loss=loss_fn(model(xb),yb); loss.backward(); opt.step(); total+=loss.item()*len(yb)
-        print(f"{name} epoch {ep+1}/{epochs}: loss={total/max(1,len(train_loader.dataset)):.4f}")
-    model.eval(); preds=[]; actual=[]
+        model.train()
+        train_loss = 0.0
+        train_count = 0
+        for xb, yb in train_loader:
+            xb, yb = xb.to(device), yb.to(device)
+            optimizer.zero_grad()
+            out = model(xb)
+            loss = criterion(out, yb)
+            loss.backward()
+            optimizer.step()
+            train_loss += loss.item() * len(yb)
+            train_count += len(yb)
+        avg_train_loss = train_loss / max(1, train_count)
+
+        # Validation
+        model.eval()
+        val_loss = 0.0
+        val_count = 0
+        with torch.no_grad():
+            for xb, yb in val_loader:
+                xb, yb = xb.to(device), yb.to(device)
+                out = model(xb)
+                loss = criterion(out, yb)
+                val_loss += loss.item() * len(yb)
+                val_count += len(yb)
+        avg_val_loss = val_loss / max(1, val_count)
+
+        history.append({"epoch": ep + 1, "train_loss": avg_train_loss, "val_loss": avg_val_loss})
+        print(f"  [{name}] Epoch {ep+1:02d}/{epochs:02d} - Train Loss: {avg_train_loss:.4f} - Val Loss: {avg_val_loss:.4f}")
+
+        if avg_val_loss < best_val_loss:
+            best_val_loss = avg_val_loss
+            best_weights = copy.deepcopy(model.state_dict())
+            patience_counter = 0
+        else:
+            patience_counter += 1
+            if patience_counter >= patience and ep >= 2:
+                print(f"  [{name}] Early stopping triggered at epoch {ep+1}.")
+                break
+
+    train_duration = time.perf_counter() - t0
+    model.load_state_dict(best_weights)
+    return model, train_duration, history
+
+
+def evaluate_dl_model(
+    model: nn.Module,
+    loader: DataLoader,
+    device: torch.device,
+) -> Tuple[np.ndarray, np.ndarray, float]:
+    """Evaluate PyTorch model, returning predicted probabilities, labels, and latency."""
+    model.eval()
+    all_probs = []
+    t0 = time.perf_counter()
     with torch.no_grad():
-        for xb,yb in test_loader:
-            logits=model(xb.to(device)); preds.extend(logits.argmax(1).cpu().numpy()); actual.extend(yb.numpy())
-    return {"accuracy":float(accuracy_score(actual,preds)),
-            "macro_f1":float(f1_score(actual,preds,average="macro",zero_division=0)),
-            "classification_report":classification_report(actual,preds,output_dict=True,zero_division=0)}, model
+        for xb, _ in loader:
+            xb = xb.to(device)
+            logits = model(xb)
+            probs = torch.softmax(logits, dim=1).cpu().numpy()
+            all_probs.append(probs)
+    infer_duration = time.perf_counter() - t0
+    probs_arr = np.concatenate(all_probs, axis=0)
+    preds_arr = np.argmax(probs_arr, axis=1)
+    return probs_arr, preds_arr, infer_duration
+
+
+def train_dl_models(
+    split_data: SplitData,
+    config: WorkstreamConfig,
+    base_dir: Optional[Path] = None,
+) -> Dict[str, Any]:
+    """Train 1D-CNN, LSTM, and Transformer models, and combine into a majority-voting ensemble."""
+    if not TORCH_AVAILABLE:
+        raise RuntimeError("PyTorch is required for deep learning ensemble. Install via: pip install torch")
+
+    work_dir = base_dir or Path.cwd()
+    reports_dl_dir = config.resolve_path(work_dir, config.reports_dir) / "dl"
+    models_dir = config.resolve_path(work_dir, config.models_dir)
+    reports_dl_dir.mkdir(parents=True, exist_ok=True)
+    models_dir.mkdir(parents=True, exist_ok=True)
+
+    torch.manual_seed(config.random_seed)
+    np.random.seed(config.random_seed)
+    device = get_device(config.dl.device)
+    print(f"\n[DEEP LEARNING] PyTorch Version: {torch.__version__} | Executing on: {device}")
+
+    X_train = split_data.X_train
+    y_train = split_data.y_train
+    X_test = split_data.X_test
+    y_test = split_data.y_test
+    classes = split_data.class_names
+    n_features = X_train.shape[1]
+    n_classes = len(classes)
+
+    # Sub-split train into train/validation for early stopping
+    val_size = int(len(X_train) * 0.15)
+    train_ds = TabularFlowDataset(X_train[:-val_size], y_train[:-val_size])
+    val_ds = TabularFlowDataset(X_train[-val_size:], y_train[-val_size:])
+    test_ds = TabularFlowDataset(X_test, y_test)
+
+    batch_size = config.dl.batch_size
+    train_loader = DataLoader(train_ds, batch_size=batch_size, shuffle=True)
+    val_loader = DataLoader(val_ds, batch_size=batch_size, shuffle=False)
+    test_loader = DataLoader(test_ds, batch_size=batch_size, shuffle=False)
+
+    # Instantiate the 3 required models
+    models = {
+        "CNN1D": CNN1DModel(n_features=n_features, n_classes=n_classes, channels=config.dl.cnn_channels),
+        "LSTM": LSTMModel(n_features=n_features, n_classes=n_classes, hidden_size=config.dl.lstm_hidden),
+        "Transformer": TransformerModel(n_features=n_features, n_classes=n_classes, d_model=config.dl.transformer_dim, nhead=config.dl.transformer_heads),
+    }
+
+    trained_models: Dict[str, nn.Module] = {}
+    train_durations: Dict[str, float] = {}
+    infer_durations: Dict[str, float] = {}
+    model_probs: Dict[str, np.ndarray] = {}
+    model_preds: Dict[str, List[str]] = {}
+    model_confs: Dict[str, np.ndarray] = {}
+    training_histories: Dict[str, List[Dict[str, float]]] = {}
+
+    for name, model in models.items():
+        print(f"\n[DEEP LEARNING] Training {name}...")
+        fitted_model, tr_time, history = train_single_dl_model(
+            name=name,
+            model=model,
+            train_loader=train_loader,
+            val_loader=val_loader,
+            device=device,
+            epochs=config.dl.epochs,
+            lr=config.dl.learning_rate,
+            weight_decay=config.dl.weight_decay,
+            patience=config.dl.early_stopping_patience,
+        )
+        trained_models[name] = fitted_model
+        train_durations[name] = tr_time
+        training_histories[name] = history
+
+        probs, preds_idx, inf_time = evaluate_dl_model(fitted_model, test_loader, device)
+        model_probs[name] = probs
+        infer_durations[name] = inf_time
+        model_preds[name] = [classes[i] for i in preds_idx]
+        model_confs[name] = np.max(probs, axis=1)
+
+    # Build 3 learner votes per test sample
+    all_votes: List[List[LearnerVote]] = []
+    for i in range(len(X_test)):
+        sample_votes = [
+            LearnerVote(learner_name="CNN1D", voted_label=model_preds["CNN1D"][i], learner_confidence=float(model_confs["CNN1D"][i])),
+            LearnerVote(learner_name="LSTM", voted_label=model_preds["LSTM"][i], learner_confidence=float(model_confs["LSTM"][i])),
+            LearnerVote(learner_name="Transformer", voted_label=model_preds["Transformer"][i], learner_confidence=float(model_confs["Transformer"][i])),
+        ]
+        all_votes.append(sample_votes)
+
+    ensemble_preds, ensemble_confs = compute_ensemble_predictions(all_votes)
+    true_labels = [classes[i] for i in y_test]
+
+    # Metrics
+    total_tr_time = sum(train_durations.values())
+    total_inf_time = sum(infer_durations.values())
+    ensemble_metrics = compute_comprehensive_metrics(true_labels, ensemble_preds, classes, total_tr_time, total_inf_time)
+    cnn_metrics = compute_comprehensive_metrics(true_labels, model_preds["CNN1D"], classes, train_durations["CNN1D"], infer_durations["CNN1D"])
+    lstm_metrics = compute_comprehensive_metrics(true_labels, model_preds["LSTM"], classes, train_durations["LSTM"], infer_durations["LSTM"])
+    trans_metrics = compute_comprehensive_metrics(true_labels, model_preds["Transformer"], classes, train_durations["Transformer"], infer_durations["Transformer"])
+
+    # Export test predictions
+    test_df = split_data.test_df.copy()
+    test_df["true_label"] = true_labels
+    test_df["ensemble_prediction"] = ensemble_preds
+    test_df["ensemble_confidence"] = ensemble_confs
+    test_df["cnn_prediction"] = model_preds["CNN1D"]
+    test_df["cnn_confidence"] = model_confs["CNN1D"]
+    test_df["lstm_prediction"] = model_preds["LSTM"]
+    test_df["lstm_confidence"] = model_confs["LSTM"]
+    test_df["transformer_prediction"] = model_preds["Transformer"]
+    test_df["transformer_confidence"] = model_confs["Transformer"]
+    test_df["ensemble_correct"] = test_df["true_label"] == test_df["ensemble_prediction"]
+
+    pred_export_cols = [
+        c for c in [
+            "sample_id", "flow_id", "timestamp", "device_id", "true_label",
+            "ensemble_prediction", "ensemble_confidence",
+            "cnn_prediction", "cnn_confidence",
+            "lstm_prediction", "lstm_confidence",
+            "transformer_prediction", "transformer_confidence",
+            "ensemble_correct"
+        ] if c in test_df.columns
+    ]
+    test_predictions_path = reports_dl_dir / "dl_test_predictions.csv"
+    test_df[pred_export_cols].to_csv(test_predictions_path, index=False)
+
+    # Save reports
+    pd.DataFrame(ensemble_metrics["classification_report"]).T.to_csv(
+        reports_dl_dir / "dl_classification_report.csv", index=True, index_label="class"
+    )
+    pd.DataFrame(
+        ensemble_metrics["confusion_matrix"], index=classes, columns=classes
+    ).to_csv(reports_dl_dir / "dl_confusion_matrix.csv")
+
+    summary_metrics = {
+        "ensemble": ensemble_metrics,
+        "learners": {
+            "CNN1D": cnn_metrics,
+            "LSTM": lstm_metrics,
+            "Transformer": trans_metrics,
+        },
+        "training_history": training_histories,
+        "config": {
+            "dataset_name": config.dataset_name,
+            "is_synthetic": config.is_synthetic,
+            "device": str(device),
+            "features_used": split_data.feature_names,
+            "classes": classes,
+            "train_samples": len(X_train),
+            "test_samples": len(X_test),
+        }
+    }
+
+    with (reports_dl_dir / "dl_metrics.json").open("w", encoding="utf-8") as f:
+        json.dump(summary_metrics, f, indent=2)
+
+    metric_rows = [
+        {"model": "DL Ensemble (Hard Voting)", **{k: ensemble_metrics[k] for k in ["accuracy", "macro_f1", "weighted_f1", "train_duration_seconds", "infer_duration_seconds"]}},
+        {"model": "CNN1D", **{k: cnn_metrics[k] for k in ["accuracy", "macro_f1", "weighted_f1", "train_duration_seconds", "infer_duration_seconds"]}},
+        {"model": "LSTM", **{k: lstm_metrics[k] for k in ["accuracy", "macro_f1", "weighted_f1", "train_duration_seconds", "infer_duration_seconds"]}},
+        {"model": "Transformer", **{k: trans_metrics[k] for k in ["accuracy", "macro_f1", "weighted_f1", "train_duration_seconds", "infer_duration_seconds"]}},
+    ]
+    pd.DataFrame(metric_rows).to_csv(reports_dl_dir / "dl_metrics.csv", index=False)
+
+    # Save checkpoints locally
+    checkpoint = {
+        "cnn_state": trained_models["CNN1D"].state_dict(),
+        "lstm_state": trained_models["LSTM"].state_dict(),
+        "transformer_state": trained_models["Transformer"].state_dict(),
+        "classes": classes,
+        "n_features": n_features,
+        "feature_names": split_data.feature_names,
+    }
+    torch.save(checkpoint, models_dir / "dl_ensemble.pt")
+
+    print("\n[DEEP LEARNING] Ensemble Training Completed Successfully!")
+    print(f"  DL Ensemble Accuracy: {ensemble_metrics['accuracy']:.4f}")
+    print(f"  DL Ensemble Macro F1: {ensemble_metrics['macro_f1']:.4f}")
+    print(f"  DL Ensemble Weighted F1: {ensemble_metrics['weighted_f1']:.4f}")
+    print(f"  Reports saved to {reports_dl_dir}")
+
+    return {
+        "models": trained_models,
+        "test_df": test_df,
+        "metrics": summary_metrics,
+        "votes": all_votes,
+    }
+
 
 def main():
-    p=argparse.ArgumentParser(description="Compact DL feasibility experiment (not a validated temporal IDS).")
-    p.add_argument("--network-dir",default="input_data/network")
-    p.add_argument("--max-per-class",type=int,default=3000)
-    p.add_argument("--window",type=int,default=8)
-    p.add_argument("--epochs",type=int,default=3)
-    p.add_argument("--batch-size",type=int,default=128)
-    p.add_argument("--seed",type=int,default=42)
-    args=p.parse_args()
-    out=Path("reports/dl"); out.mkdir(parents=True,exist_ok=True); Path("models").mkdir(exist_ok=True)
-    files,dups=unique_files_by_content(find_csvs(args.network_dir))
-    if not files: raise FileNotFoundError(f"No network CSVs under {args.network_dir}")
-    shared_sample = Path("reports/modeling_sample.csv")
-    if shared_sample.exists():
-        print(f"[SAMPLE] Using shared traditional/DL sample: {shared_sample}")
-        df = pd.read_csv(shared_sample, low_memory=False)
-        df["type"] = normalise_label(df["type"])
-        if "sample_id" not in df.columns:
-            df.insert(0, "sample_id", np.arange(len(df), dtype=np.int64))
-    else:
-        print("[WARN] Shared modeling sample not found. Run run_baseline.bat first for matched pilot IDs.")
-        df=load_sample(files,args.max_per_class,seed=args.seed)
-        df.insert(0, "sample_id", np.arange(len(df), dtype=np.int64))
-    labels=normalise_label(df["type"]).astype(str)
-    enc=LabelEncoder(); y=enc.fit_transform(labels)
-    proto=pd.get_dummies(df["proto"].astype("string").fillna("unknown").str.lower(),prefix="proto",dtype=np.uint8)
-    raw=pd.DataFrame({"src_port":pd.to_numeric(df["src_port"],errors="coerce").fillna(-1).clip(-1,65535),
-                      "dst_port":pd.to_numeric(df["dst_port"],errors="coerce").fillna(-1).clip(-1,65535)})
-    X=pd.concat([raw.reset_index(drop=True),proto.reset_index(drop=True)],axis=1).astype(np.float32).to_numpy()
-    # Same stratified indices/seed as the traditional trainer. Fit scaling on training rows only.
-    idx=np.arange(len(y)); train_idx,test_idx=train_test_split(idx,test_size=0.2,random_state=args.seed,stratify=y)
-    scaler=StandardScaler(); scaler.fit(X[train_idx]); X=scaler.transform(X).astype(np.float32)
-    sample_ids=df["sample_id"].to_numpy()
-    # This is still a feasibility sequence: the sampled points are not guaranteed to be adjacent packets.
-    def make_windows(ix):
-        xx=X[ix]; yy=y[ix]; ids=sample_ids[ix]
-        if len(ix)<args.window: raise RuntimeError("Not enough rows for requested window size.")
-        return WindowDataset(xx,yy,args.window,ids)
-    train_ds=make_windows(train_idx); test_ds=make_windows(test_idx)
-    train_loader=DataLoader(train_ds,batch_size=args.batch_size,shuffle=True)
-    test_loader=DataLoader(test_ds,batch_size=args.batch_size,shuffle=False)
-    n_features=X.shape[1]; n_classes=len(enc.classes_)
-    device="cuda" if torch.cuda.is_available() else "cpu"
-    models={"cnn":CNNModel(n_features,n_classes),"lstm":LSTMModel(n_features,n_classes),
-            "transformer":TransformerModel(n_features,n_classes,args.window)}
-    results={}
-    for name,model in models.items():
-        print(f"\nTraining {name} on {device}...")
-        metrics,fitted=run_model(name,model,train_loader,test_loader,device,args.epochs)
-        results[name]={"accuracy":metrics["accuracy"],"macro_f1":metrics["macro_f1"],
-                        "classification_report":metrics["classification_report"]}
-        torch.save({"state_dict":fitted.state_dict(),"classes":enc.classes_.tolist(),
-                    "n_features":n_features,"window":args.window,"model":name,
-                    "feature_columns":["src_port","dst_port"]+list(proto.columns),
-                    "scaler_mean":scaler.mean_.tolist(),"scaler_scale":scaler.scale_.tolist()},
-                   Path("models")/f"{name}_feasibility.pt")
-        if name == "transformer":
-            # Export predictions tied to the final row of each sequence for the shared pilot.
-            fitted.eval(); dl_pred=[]; dl_true=[]
-            with torch.no_grad():
-                for xb,yb in test_loader:
-                    logits=fitted(xb.to(device)); dl_pred.extend(logits.argmax(1).cpu().numpy()); dl_true.extend(yb.numpy())
-            end_ids=test_ds.sample_ids[args.window-1:]
-            pd.DataFrame({"sample_id":end_ids[:len(dl_pred)],
-                          "dl_true_label":enc.inverse_transform(np.asarray(dl_true,dtype=int)),
-                          "transformer_prediction":enc.inverse_transform(np.asarray(dl_pred,dtype=int)),
-                          "transformer_correct":np.asarray(dl_true)==np.asarray(dl_pred)}).to_csv(
-                              out/"transformer_test_predictions.csv",index=False)
-            # Save a small held-out window array for the pilot/explanation stage.
-            np.savez_compressed(out/"transformer_test_windows.npz",
-                                X=np.stack([test_ds[i][0].numpy() for i in range(len(test_ds))]),
-                                y=np.asarray([test_ds[i][1].item() for i in range(len(test_ds))]),
-                                sample_id=end_ids)
-            try:
-                import shap
-                bg_n=min(40,len(train_ds)); ex_n=min(80,len(test_ds))
-                background=torch.stack([train_ds[i][0] for i in range(bg_n)]).to(device)
-                explain=torch.stack([test_ds[i][0] for i in range(ex_n)]).to(device)
-                explainer=shap.GradientExplainer(fitted,background)
-                shap_values=explainer.shap_values(explain)
-                import matplotlib
-                matplotlib.use("Agg")
-                import matplotlib.pyplot as plt
-                # Aggregate absolute attribution across windows and classes for a readable global summary.
-                if isinstance(shap_values,list):
-                    arr=np.mean([np.abs(np.asarray(v)) for v in shap_values],axis=0)
-                else:
-                    arr=np.abs(np.asarray(shap_values))
-                    if arr.ndim==4: arr=arr.mean(axis=-1)
-                if arr.ndim==3: arr=arr.mean(axis=1)
-                mean_abs=arr.mean(axis=0).reshape(-1)
-                feat_names=["src_port","dst_port"]+list(proto.columns)
-                pd.DataFrame({"feature":feat_names,"mean_abs_shap":mean_abs[:len(feat_names)]}).sort_values(
-                    "mean_abs_shap",ascending=False).to_csv(out/"transformer_shap_importance.csv",index=False)
-                plt.figure(figsize=(8,4)); imp=pd.DataFrame({"feature":feat_names,"mean_abs_shap":mean_abs[:len(feat_names)]}).sort_values("mean_abs_shap")
-                plt.barh(imp["feature"],imp["mean_abs_shap"]); plt.xlabel("Mean absolute SHAP value"); plt.tight_layout()
-                plt.savefig(out/"transformer_shap_summary.png",dpi=150); plt.close()
-            except Exception as exc:
-                print(f"[WARN] DL SHAP skipped: {exc}")
-    payload={"device":device,"rows_sampled":len(df),"classes":enc.classes_.tolist(),
-             "max_per_class":args.max_per_class,"window":args.window,"epochs":args.epochs,
-             "warning":"Feasibility only: windows are formed from sampled rows and are not guaranteed to be contiguous traffic. The stratified random split is not a real-world generalisation test.",
-             "shared_sample": str(shared_sample) if shared_sample.exists() else None,
-             "pilot_predictions": "reports/dl/transformer_test_predictions.csv",
-             "dl_shap": "reports/dl/transformer_shap_summary.png (if SHAP GradientExplainer succeeds)",
-             "results":results}
-    (out/"dl_metrics.json").write_text(json.dumps(payload,indent=2),encoding="utf-8")
-    print(json.dumps({k:{"accuracy":v["accuracy"],"macro_f1":v["macro_f1"]} for k,v in results.items()},indent=2))
-    print("DL feasibility results saved to reports/dl/dl_metrics.json")
+    parser = argparse.ArgumentParser(description="Train deep learning 3-model ensemble.")
+    parser.add_argument("--config", default="config/reference.json", help="Path to config file")
+    args = parser.parse_args()
 
-if __name__=="__main__": main()
+    cfg = WorkstreamConfig.load(args.config)
+    df, _ = load_dataset(cfg)
+    splits = prepare_data_and_splits(df, cfg)
+    train_dl_models(splits, cfg)
+
+
+if __name__ == "__main__":
+    main()

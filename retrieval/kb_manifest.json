@@ -1,0 +1,202 @@
+[
+  {
+    "id": "KB-001",
+    "title": "OWASP Internet of Things Top 10",
+    "category": "Vulnerability Baseline",
+    "source_url": "https://owasp.org/www-project-internet-of-things/",
+    "license": "CC-BY-SA 4.0",
+    "summary": "Core vulnerability taxonomy focusing on weak passwords, insecure ecosystem interfaces, unencrypted network services, and lack of secure update mechanisms."
+  },
+  {
+    "id": "KB-002",
+    "title": "ETSI EN 303 645: Cyber Security for Consumer Internet of Things",
+    "category": "Standard & Mitigation",
+    "source_url": "https://www.etsi.org/deliver/etsi_en/303600_303699/303645/02.01.01_60/en_303645v020101p.pdf",
+    "license": "Open Access (ETSI Free Use)",
+    "summary": "Baseline European standard defining 13 cybersecurity outcome-focused provisions for consumer connected devices."
+  },
+  {
+    "id": "KB-003",
+    "title": "NIST SP 800-213: IoT Device Cybersecurity Guidance for the Federal Government",
+    "category": "Standard & Hardening",
+    "source_url": "https://csrc.nist.gov/pubs/sp/800/213/final",
+    "license": "Public Domain (US Government)",
+    "summary": "Guidance on integrating IoT devices into existing enterprise network security architectures, device identity, and logical access control."
+  },
+  {
+    "id": "KB-004",
+    "title": "NIST IR 8259A: IoT Device Cybersecurity Capability Core Baseline",
+    "category": "Device Security",
+    "source_url": "https://csrc.nist.gov/pubs/ir/8259/a/final",
+    "license": "Public Domain (US Government)",
+    "summary": "Defines foundational device capabilities: device identification, configuration, data protection, interface access, software updates, and cybersecurity event logging."
+  },
+  {
+    "id": "KB-005",
+    "title": "ENISA Baseline Security Recommendations for IoT in the context of Critical Information Infrastructures",
+    "category": "Threat Intelligence",
+    "source_url": "https://www.enisa.europa.eu/publications/baseline-security-recommendations-for-iot",
+    "license": "CC-BY 4.0",
+    "summary": "Outlines threat models, attack vectors, and baseline security measures across the IoT hardware, network, and service lifecycle."
+  },
+  {
+    "id": "KB-006",
+    "title": "CISA Alert TA16-288A: Heightened Adversary Interest in Insecure IoT Devices (Mirai Botnet Analysis)",
+    "category": "Attack Analysis",
+    "source_url": "https://www.cisa.gov/news-events/alerts/2016/10/14/heightened-adversary-interest-unsecure-iot-devices",
+    "license": "Public Domain (US Government)",
+    "summary": "Technical advisory dissecting automated Telnet/SSH credential scanning and botnet propagation vectors used by Mirai-derived malware."
+  },
+  {
+    "id": "KB-007",
+    "title": "MITRE ATT&CK: Network Denial of Service (T0814 / T1498)",
+    "category": "Attack Technique",
+    "source_url": "https://attack.mitre.org/techniques/T1498/",
+    "license": "Apache 2.0",
+    "summary": "Adversary tactics and volumetric flow patterns executing direct network floods (SYN flood, UDP amplification) against target endpoints via compromised nodes."
+  },
+  {
+    "id": "KB-008",
+    "title": "MITRE ATT&CK: Brute Force: Password Guessing (T1110.001)",
+    "category": "Attack Technique",
+    "source_url": "https://attack.mitre.org/techniques/T1110/001/",
+    "license": "Apache 2.0",
+    "summary": "Technique analysis of automated dictionary and credential spraying attacks targeting weak default management interfaces on IoT devices."
+  },
+  {
+    "id": "KB-009",
+    "title": "MITRE ATT&CK: Network Service Discovery (T1046)",
+    "category": "Reconnaissance",
+    "source_url": "https://attack.mitre.org/techniques/T1046/",
+    "license": "Apache 2.0",
+    "summary": "Methods by which adversaries scan local and public IP spaces to identify listening services, open ports, and vulnerable daemon versions."
+  },
+  {
+    "id": "KB-010",
+    "title": "MITRE ATT&CK: Exploitation of Remote Services (T1210)",
+    "category": "Exploitation",
+    "source_url": "https://attack.mitre.org/techniques/T1210/",
+    "license": "Apache 2.0",
+    "summary": "Exploitation techniques leveraging unauthenticated remote buffer overflows, command injection, and logic flaws in embedded network daemons."
+  },
+  {
+    "id": "KB-011",
+    "title": "Cloud Security Alliance (CSA): IoT Security Controls Framework v2",
+    "category": "Control Framework",
+    "source_url": "https://cloudsecurityalliance.org/artifacts/iot-security-controls-framework-v2/",
+    "license": "CC-BY-NC 4.0",
+    "summary": "Comprehensive set of matrix controls designed to harden connected devices and their supporting cloud telemetry pipelines."
+  },
+  {
+    "id": "KB-012",
+    "title": "ISO/IEC 27400:2022 Guidelines for IoT Security and Privacy",
+    "category": "Standard",
+    "source_url": "https://www.iso.org/standard/44373.html",
+    "license": "Open Access Overview / Fair Use Documentation",
+    "summary": "International guidelines addressing security controls, trust boundaries, and privacy protections across distributed IoT architectures."
+  },
+  {
+    "id": "KB-013",
+    "title": "RFC 8576: Internet of Things (IoT) Security: State of the Art and Challenges",
+    "category": "Architecture & Threat Model",
+    "source_url": "https://www.rfc-editor.org/rfc/rfc8576.html",
+    "license": "IETF Trust (Open Access)",
+    "summary": "IETF overview of IoT communication security vulnerabilities, transport constraints, and mitigation tradeoffs."
+  },
+  {
+    "id": "KB-014",
+    "title": "RFC 8520: Manufacturer Usage Descriptions (MUD) Specification",
+    "category": "Network Defense",
+    "source_url": "https://www.rfc-editor.org/rfc/rfc8520.html",
+    "license": "IETF Trust (Open Access)",
+    "summary": "Standard for defining device intent profiles, enabling switches and firewalls to automatically isolate IoT devices into strict network access policies."
+  },
+  {
+    "id": "KB-015",
+    "title": "OASIS MQTT Security Best Practices Specification",
+    "category": "Protocol Security",
+    "source_url": "https://docs.oasis-open.org/mqtt/mqtt/v5.0/mqtt-v5.0.html",
+    "license": "OASIS Open IPR Policy",
+    "summary": "Guidelines for securing publish/subscribe message brokers via mutual TLS, authenticated topic authorization, and payload integrity."
+  },
+  {
+    "id": "KB-016",
+    "title": "RFC 7252: Constrained Application Protocol (CoAP) Security Considerations",
+    "category": "Protocol Security",
+    "source_url": "https://www.rfc-editor.org/rfc/rfc7252.html#section-11",
+    "license": "IETF Trust (Open Access)",
+    "summary": "Examines UDP amplification vectors, resource exhaustion, and DTLS binding requirements for constrained embedded endpoints."
+  },
+  {
+    "id": "KB-017",
+    "title": "CISA Alert AA20-302A: Ransomware and Botnet Activity Exploiting End-of-Life Consumer Routers",
+    "category": "Threat Intelligence",
+    "source_url": "https://www.cisa.gov/news-events/cybersecurity-advisories/aa20-302a",
+    "license": "Public Domain (US Government)",
+    "summary": "Advisory detailing adversary weaponization of unpatched firmware vulnerabilities in edge routing devices for command-and-control persistence."
+  },
+  {
+    "id": "KB-018",
+    "title": "The Mozi IoT Botnet: Analysis of P2P Command and Control Architecture",
+    "category": "Malware Analysis",
+    "source_url": "https://www.cisa.gov/news-events/analysis-reports/ar21-267a",
+    "license": "Public Domain (US Government)",
+    "summary": "Deconstruction of peer-to-peer Distributed Hash Table (DHT) mechanisms used by the Mozi malware family to coordinate DDoS and exfiltration."
+  },
+  {
+    "id": "KB-019",
+    "title": "UPnP Vulnerabilities: CallStranger (CVE-2020-12695) Advisory",
+    "category": "Vulnerability Analysis",
+    "source_url": "https://nvd.nist.gov/vuln/detail/CVE-2020-12695",
+    "license": "Public Domain (NVD)",
+    "summary": "Analysis of Universal Plug and Play SUBSCRIBE header callback flaws used to bypass firewalls and conduct DDoS amplification."
+  },
+  {
+    "id": "KB-020",
+    "title": "Bluetooth Core Specification: Low Energy (BLE) Security Modes and Pairing Profiles",
+    "category": "Wireless Security",
+    "source_url": "https://www.bluetooth.com/specifications/specs/",
+    "license": "Open Specification (Bluetooth SIG)",
+    "summary": "Technical reference detailing BLE cryptographic key generation, LE Secure Connections, and eavesdropping/Man-in-the-Middle mitigation."
+  },
+  {
+    "id": "KB-021",
+    "title": "Zigbee Alliance Security Baseline Specification for Connected Home",
+    "category": "Wireless Security",
+    "source_url": "https://csa-iot.org/all-solutions/matter/",
+    "license": "Open Specification (Connectivity Standards Alliance)",
+    "summary": "Network-layer encryption, frame counter anti-replay safeguards, and secure over-the-air commissioning standards for IEEE 802.15.4 mesh nodes."
+  },
+  {
+    "id": "KB-022",
+    "title": "NIST IR 8259B: IoT Non-Technical Supporting Capabilities",
+    "category": "Governance",
+    "source_url": "https://csrc.nist.gov/pubs/ir/8259/b/final",
+    "license": "Public Domain (US Government)",
+    "summary": "Requirements for vulnerability disclosure handling, transparent firmware update supply chain policies, and customer documentation."
+  },
+  {
+    "id": "KB-023",
+    "title": "NIST SP 800-160 Vol. 2: Developing Cyber-Resilient Systems",
+    "category": "System Hardening",
+    "source_url": "https://csrc.nist.gov/pubs/sp/800/160/v2/r1/final",
+    "license": "Public Domain (US Government)",
+    "summary": "Architectural principles for damage containment, automated fail-safe operation, and rapid service restoration in connected environments."
+  },
+  {
+    "id": "KB-024",
+    "title": "Gafgyt / BASHLITE Malware Family Behavioral Profile",
+    "category": "Malware Analysis",
+    "source_url": "https://www.cisa.gov/news-events/analysis-reports",
+    "license": "Public Domain (US Government)",
+    "summary": "Deconstruction of high-volume TCP/UDP flood payloads, Telnet scanning routines, and remote shell execution methods on Linux-based IoT architectures."
+  },
+  {
+    "id": "KB-025",
+    "title": "ENISA Good Practices for Security of IoT: Smart Homes",
+    "category": "Defense in Depth",
+    "source_url": "https://www.enisa.europa.eu/publications/good-practices-for-security-of-iot-1",
+    "license": "CC-BY 4.0",
+    "summary": "Comprehensive security controls spanning isolation of management VLANs, hardware secure boot validation, and user interface tokenization."
+  }
+]

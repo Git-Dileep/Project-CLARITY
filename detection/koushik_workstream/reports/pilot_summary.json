@@ -1,0 +1,17 @@
+{
+  "pilot_rows": 20,
+  "true_classes": [
+    "backdoor",
+    "ddos",
+    "dos",
+    "injection",
+    "mitm",
+    "password",
+    "ransomware"
+  ],
+  "traditional_accuracy_on_pilot": 0.4,
+  "transformer_accuracy_on_pilot": 0.1,
+  "predictions_file": "reports\\pilot_20_alerts.csv",
+  "shap_file": "reports\\pilot_shap_values.csv",
+  "warning": "Pilot examples are sampled from the shared stratified random holdout; they do not establish unseen-session generalisation. Inspect SHAP output and verify the actual feature columns before citing conclusions."
+}

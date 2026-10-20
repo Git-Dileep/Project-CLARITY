@@ -1,0 +1,92 @@
+{
+  "dataset_name": "Reference-Synthetic-Network",
+  "is_synthetic": true,
+  "status": "COMPLETE_SYNTHETIC_REFERENCE",
+  "total_files_inspected": 1,
+  "unique_files_count": 1,
+  "duplicate_files_count": 0,
+  "schema_compatible_across_files": true,
+  "target_column": "label",
+  "total_rows": 5000,
+  "total_columns": 24,
+  "columns": [
+    "byte_rate",
+    "device_id",
+    "dst_bytes",
+    "dst_ip",
+    "dst_pkts",
+    "dst_port",
+    "duration",
+    "flow_iat_mean",
+    "flow_iat_std",
+    "flow_id",
+    "header_length",
+    "label",
+    "packet_rate",
+    "proto",
+    "service",
+    "src_bytes",
+    "src_ip",
+    "src_pkts",
+    "src_port",
+    "tcp_flags_ack",
+    "tcp_flags_fin",
+    "tcp_flags_rst",
+    "tcp_flags_syn",
+    "timestamp"
+  ],
+  "suspicious_metadata_columns": [
+    "device_id",
+    "dst_ip",
+    "dst_pkts",
+    "dst_port",
+    "flow_id",
+    "src_ip",
+    "src_pkts",
+    "src_port",
+    "timestamp"
+  ],
+  "total_missing_cells": 0,
+  "total_infinite_cells": 0,
+  "invalid_target_cells": 0,
+  "unique_classes_count": 6,
+  "class_imbalance_ratio": 6.72,
+  "class_distribution": [
+    {
+      "class": "Benign",
+      "count": 2284,
+      "percentage": 45.68
+    },
+    {
+      "class": "DDoS_UDP",
+      "count": 765,
+      "percentage": 15.3
+    },
+    {
+      "class": "PortScan",
+      "count": 711,
+      "percentage": 14.22
+    },
+    {
+      "class": "Mirai_Botnet",
+      "count": 495,
+      "percentage": 9.9
+    },
+    {
+      "class": "Infiltration",
+      "count": 405,
+      "percentage": 8.1
+    },
+    {
+      "class": "BruteForce",
+      "count": 340,
+      "percentage": 6.8
+    }
+  ],
+  "exclusions": [
+    "src_ip",
+    "dst_ip",
+    "flow_id",
+    "timestamp"
+  ]
+}

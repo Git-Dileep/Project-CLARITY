@@ -1,0 +1,7 @@
+class,count,percentage
+Benign,2284,45.68
+DDoS_UDP,765,15.3
+PortScan,711,14.22
+Mirai_Botnet,495,9.9
+Infiltration,405,8.1
+BruteForce,340,6.8
