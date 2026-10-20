@@ -1,0 +1,9 @@
+{
+  "alert_id": "ALT-013",
+  "system_id": "SYS-04",
+  "model": "llama-3.1-8b-instant",
+  "prompt_type": "You are an expert IoT cybersecurity incident reporter.",
+  "evidence": "Alert ALT-013: Unauthorized SSH access attempt and anomalous TCP SYN traffic volume detected on IoT Gateway 10.0.0.13.",
+  "report": "Incident Report for ALT-013 [SYS-04]: Unauthorized SSH access attempt and anomalous network activity on IoT Gateway 10.0.0.13.",
+  "timestamp": "2026-10-20T15:34:05.851657"
+}
