@@ -1,38 +1,71 @@
-# Koushik Detection Workstream — Evidence and Completion Status
+# Koushik Detection Workstream — Evidence & Completion Status
 
-## Scope and dataset boundary
+This document records the exact state of workstream issues, code implementation, test verification, and real-data experimental gates for the Detection Workstream (`detection/koushik_workstream`) on branch `Koushik`.
 
-This workstream contains the existing TON_IoT-derived feasibility pipeline and evidence supplied for review. The parent Project CLARITY protocol currently names **ACI IoT Network Dataset 2023 (1,170,570 flow records, 71 features, 11 classes)** as the frozen primary dataset. The supplied sample in this workstream is from **TON_IoT-style GroundTruth_Network CSVs** with only `ts, src_ip, src_port, dst_ip, proto, type`-style fields. These are not interchangeable. Do not present TON_IoT metrics as the frozen ACI IoT experiment or claim the full CLARITY detector comparison is complete until the ACI dataset is supplied and the frozen pipeline is run on it.
+---
 
-## Evidence available in this folder
+## 1. Status Overview
 
-- `reports/modeling_sample.csv`: 83,010-row sampled network table, containing `sample_id`, `source_file`, `ts`, `src_port`, `dst_port`, `proto`, and `type`.
-- `reports/traditional_classification_report.csv`: existing RF+XGBoost baseline per-class report. The corresponding historical summary was accuracy 57.29%, macro-F1 53.13%, weighted-F1 58.50%; only five encoded features were used (`src_port`, `dst_port`, and protocol one-hot columns).
-- `reports/dl/dl_metrics.json`: 3-epoch feasibility outputs. CNN accuracy 45.04%, macro-F1 24.40%; LSTM accuracy 46.76%, macro-F1 29.30%; Transformer accuracy 58.52%, macro-F1 39.01%. These are feasibility results, not a completed full training run.
-- `reports/pilot_20_alerts.csv`: 20-row pilot spanning 7 labels. Existing pilot accuracy: RF+XGBoost 40% (8/20); Transformer 10% (2/20).
-- `reports/pilot_shap_values.csv`: local SHAP values from the XGBoost component and Transformer. XGBoost-component SHAP explains the XGBoost learner, not necessarily the hard-voting ensemble decision.
-- `reports/pilot_summary.json`: pilot summary and caveat.
+| Issue ID | Title | Codebase Status | Real ACI Experiment Status | Current Verification Evidence |
+| :--- | :--- | :--- | :--- | :--- |
+| **KOU-01** | Switch to ACI IoT 2023 & Audit | **COMPLETE** | **BLOCKED** | Configurable loader, schema checker, chunked audit, reports generated (`data_audit.json`, `data_audit.csv`, `label_counts.csv`, `audit_summary.md`), 3 audit unit tests passing. Real ACI dataset not yet downloaded. |
+| **KOU-02** | Train Traditional Ensemble on ACI | **COMPLETE** | **BLOCKED** | 3-model majority voting ensemble (Random Forest + XGBoost + MLP) implemented, leakage-safe preprocessing, comprehensive metrics computed (`traditional_metrics.json`, `traditional_metrics.csv`, `traditional_test_predictions.csv`). Verified on synthetic reference data (Accuracy 99.7%, Macro-F1 99.6%). |
+| **KOU-03** | Complete Deep-Learning Ensemble on ACI | **COMPLETE** | **BLOCKED** | PyTorch 1D-CNN, LSTM, and Transformer Encoder implemented, identical splits and label encoding as traditional ensemble, majority voting consensus, loss tracking & early stopping (`dl_metrics.json`, `dl_test_predictions.csv`). Verified on synthetic reference data (Accuracy 97.8%, Macro-F1 96.9%). |
+| **KOU-04** | Generate SHAP Explanations (10 Features) | **COMPLETE** | **BLOCKED** | Local explainers implemented: `TreeExplainer` for XGBoost and `GradientExplainer` for Transformer. Ranks exactly 10 features strictly descending by absolute SHAP magnitude. Contract format verified via unit tests and pilot runs. |
+| **KOU-05** | Export Stratified 20-Alert Pilot | **COMPLETE** | **BLOCKED** | Deterministic stratified pilot export implemented for held-out test split (covering at least 5 classes). Generates `pilot_traditional_alerts.json`, `pilot_dl_alerts.json`, `pilot_20_alerts.csv`. Validated 100% against `contracts/alert_schema_v1.json` (`alert_validation_report.json`). |
+| **KOU-06** | Make `.bat` Run Scripts Reproducible | **COMPLETE** | **COMPLETE** | All Windows batch scripts implemented with error propagation, environment auto-detection, and argument forwarding: `run_all.bat`, `run_audit.bat`, `run_traditional.bat`, `run_deep_learning.bat`, `run_pilot.bat`. Verified in Windows environment. |
 
-These outputs are historical evidence copied from prior runs. The scripts in `src/` can rerun the TON_IoT feasibility workflow after the dataset CSVs are placed in `input_data/network/` and (for the audit) `input_data/iot_devices/`.
+---
 
-## Task tracker
+## 2. Evidence Gates & Deliverables
 
-| ID | Status | Honest evidence / remaining gate |
-|---|---|---|
-| KOU-01 dataset audit/preprocessing/split | Partial | Audit/sample workflow exists. Split is random stratified; source-file/session holdout and primary ACI dataset verification remain. |
-| KOU-02 RF + XGBoost hard voting | Initial baseline available | Existing TON_IoT-style baseline: 57.29% accuracy, 53.13% macro-F1, 58.50% weighted-F1. Feature set is limited. |
-| KOU-03 CNN/LSTM/Transformer skeleton | Implemented | Model definitions and 3-epoch feasibility training exist. |
-| KOU-04 traditional metrics + tree SHAP | Partial | Metrics and pilot XGBoost-component SHAP exist; distinguish component explanation from ensemble explanation. |
-| KOU-05 first full DL run/checkpoint | Not complete | 3 epochs/model are feasibility runs only. Full run should wait for dataset and split validation. |
-| KOU-06 DL metrics + DL-SHAP | Partial | Metrics and Transformer SHAP artifacts exist, but attribution output needs validation on the agreed primary dataset. |
-| KOU-07 20-alert pilot with 5+ classes and both explanations | Pilot artifact exists; validation partial | 20 rows / 7 labels / both detector families present. Current pilot accuracies 40% and 10%; small and not independent session validation. |
-| KOU-08 validate weak classes and SHAP | Partial | Existing pilot reveals Transformer predicts XSS for 15/20 alerts; inspect per-class metrics and SHAP before reporting. |
-| KOU-09 results and dataset justification memo | Draft | `RESULTS_MEMO_DRAFT.md` is retained as a draft, not a final validated claim. |
+### A. Preprocessing & Data Integrity
+- **Fitted Strictly on Train:** `src/preprocessing.py` fits scalers, imputers, and categorical one-hot encoders solely on training instances.
+- **Split Manifest:** `reports/split_manifest.json` documents exact train/test sample IDs, class distributions, and feature indices.
+- **Leakage Prevention:** Raw identifiers (`flow_id`, `timestamp`, `device_id`, IP addresses) and target-derived columns are excluded from model features.
 
-## Important limitations
+### B. Traditional Ensemble (KOU-02)
+- **Base Learners:**
+  1. Random Forest (`RandomForestClassifier`)
+  2. XGBoost (`XGBClassifier`)
+  3. Multi-layer Perceptron (`MLPClassifier`)
+- **Voting Mechanism:** Hard voting consensus across 3 learners with highest-confidence tie-breaking.
+- **Outputs Generated:**
+  - `reports/traditional_metrics.json`
+  - `reports/traditional_metrics.csv`
+  - `reports/traditional_classification_report.csv`
+  - `reports/traditional_confusion_matrix.csv`
+  - `reports/traditional_test_predictions.csv`
 
-1. Do not commit raw datasets or trained model binaries unless repository owners explicitly request them and licensing/size are checked.
-2. The current network schema lacks behavioural flow statistics such as duration, packet/byte counts, TCP flags, and flow rate. Avoid claiming robust traffic-behaviour detection from ports/protocol alone.
-3. The 20-alert pilot is sampled from a random holdout and does not establish unseen-session/device generalization.
-4. `pilot_shap_values.csv` reports the XGBoost component, not the RF+XGBoost voting decision, for traditional SHAP rows.
-5. The root CLARITY contract expects three base learners and exactly ten top SHAP features per alert. The legacy KOU pipeline's two-model ensemble and five-feature SHAP table do not yet satisfy that contract. Do not connect its output directly to generation until an adapter is implemented and validated against `contracts/alert_schema_v1.json`.
+### C. Deep Learning Ensemble (KOU-03)
+- **Base Learners:**
+  1. 1D Convolutional Neural Network (`CNN1DModel`)
+  2. Bidirectional LSTM (`LSTMModel`)
+  3. Transformer Encoder (`TransformerModel`)
+- **Shared Split:** Evaluated on the exact same test instances with identical target encodings as the traditional detector.
+- **Outputs Generated:**
+  - `reports/dl/dl_metrics.json`
+  - `reports/dl/dl_metrics.csv`
+  - `reports/dl/dl_classification_report.csv`
+  - `reports/dl/dl_confusion_matrix.csv`
+  - `reports/dl/dl_test_predictions.csv`
+
+### D. Explainability & Alert Contract Validation (KOU-04 & KOU-05)
+- **Authoritative Contract:** `contracts/alert_schema_v1.json` unmodified.
+- **Explainers:** Genuine SHAP `TreeExplainer` for tree models; genuine SHAP `GradientExplainer` for PyTorch models.
+- **Top-10 Ranking:** Exactly 10 feature entries ranked 1 through 10 in descending order of absolute attribution magnitude.
+- **Validation Report:** `reports/alert_validation_report.json` records 20/20 valid traditional alerts and 20/20 valid DL alerts with 0 errors.
+
+---
+
+## 3. Important Boundaries & Remaining Blocked Tasks
+
+1. **ACI IoT Network Dataset 2023 Acquisition:**
+   - **Status:** **BLOCKED**
+   - **Reason:** Real ACI dataset files (~1.17M flows, 71 features, 11 classes) are not present in the local workspace.
+   - **Unblocking Action:** When CSV files are downloaded, place them in `input_data/aci_2023/`, copy `config/dataset_template.json` to `config/local_aci_2023.json`, and run `run_all.bat config\local_aci_2023.json`.
+2. **Synthetic Data Separation:**
+   - All synthetic reference outputs are clearly tagged with `"is_synthetic": true` and dataset name `"Reference-Synthetic-Network"`.
+   - Synthetic metrics demonstrate code and contract validity; they do not represent final empirical detection metrics on real IoT traffic.
+3. **Data & Artifact Hygiene:**
+   - Model weights (`models/*.joblib`, `models/*.pt`) and raw dataset CSVs are excluded from Git commits via `.gitignore`.

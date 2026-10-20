@@ -1,26 +1,43 @@
 @echo off
+setlocal enabledelayedexpansion
+
 cd /d "%~dp0"
-if not exist ".venv\Scripts\python.exe" (
-  echo Virtual environment not found. Create .venv and install requirements.txt first.
-  pause
-  exit /b 1
+echo ====================================================================
+echo [CLARITY Detection] Master End-to-End Pipeline Runner
+echo ====================================================================
+
+set "CONFIG_FILE=%~1"
+if "%CONFIG_FILE%"=="" set "CONFIG_FILE=config\reference.json"
+
+set "PYTHON_EXE="
+if exist ".venv\Scripts\python.exe" (
+    set "PYTHON_EXE=.venv\Scripts\python.exe"
+) else if exist "..\..\.venv\Scripts\python.exe" (
+    set "PYTHON_EXE=..\..\.venv\Scripts\python.exe"
+) else (
+    where python >nul 2>nul
+    if not errorlevel 1 set "PYTHON_EXE=python"
 )
-echo [1/4] Auditing both datasets...
-.venv\Scripts\python.exe -m src.audit_datasets --network-dir input_data\network --iot-dir input_data\iot_devices
-if errorlevel 1 goto fail
-echo [2/4] Training traditional RF+XGBoost baseline and exporting shared sample...
-.venv\Scripts\python.exe -m src.train_traditional --network-dir input_data\network --max-per-class 20000 --test-size 0.2
-if errorlevel 1 goto fail
-echo [3/4] Training CNN/LSTM/Transformer feasibility models...
-.venv\Scripts\python.exe -m src.train_dl --network-dir input_data\network --max-per-class 3000 --epochs 3
-if errorlevel 1 goto fail
-echo [4/4] Exporting 20-alert pilot and SHAP explanations...
-.venv\Scripts\python.exe -m src.export_pilot --pilot-size 20 --min-classes 5
-if errorlevel 1 goto fail
-echo Workflow finished. Inspect reports\ and reports\dl\; review all warnings before claiming final results.
-pause
+
+if "%PYTHON_EXE%"=="" (
+    echo [ERROR] Python not found. Please create a virtual environment:
+    echo   py -m venv .venv
+    echo   .venv\Scripts\activate
+    echo   pip install -r requirements.txt
+    exit /b 1
+)
+
+echo Using Python: %PYTHON_EXE%
+echo Using Config: %CONFIG_FILE%
+echo.
+
+"%PYTHON_EXE%" -m src.run_all --config "%CONFIG_FILE%"
+if errorlevel 1 (
+    echo.
+    echo [ERROR] Pipeline stopped due to failure.
+    exit /b %errorlevel%
+)
+
+echo.
+echo [SUCCESS] Complete workflow executed successfully.
 exit /b 0
-:fail
-echo Workflow stopped because a step failed. Read the error above before continuing.
-pause
-exit /b 1

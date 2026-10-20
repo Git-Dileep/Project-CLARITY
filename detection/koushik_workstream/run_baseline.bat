@@ -1,10 +1,4 @@
 @echo off
 cd /d "%~dp0"
-if not exist .venv\Scripts\python.exe (
-  echo Virtual environment not found. Run: py -m venv .venv
-  echo Then activate it and run: pip install -r requirements.txt
-  pause
-  exit /b 1
-)
-.venv\Scripts\python.exe -m src.train_traditional --network-dir input_data\network --max-per-class 20000 --test-size 0.2
-pause
+call run_traditional.bat %*
+exit /b %errorlevel%

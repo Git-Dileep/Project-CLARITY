@@ -3,17 +3,33 @@ venv/
 env/
 __pycache__/
 *.py[cod]
+
+# Data files (raw datasets must never be committed)
 input_data/**/*.csv
+data/*.csv
+!data/.gitkeep
+
+# Local user configurations
+config/local_*.json
+config/*_private.json
+
+# Model weights and binaries
 models/*.joblib
 models/*.pt
+!models/.gitkeep
+
+# Transient caches and checkpoints
+checkpoints/
+.pytest_cache/
+
+# Large prediction dumps and data samples
+reports/**/modeling_sample.csv
+reports/**/*_test_predictions.csv
 reports/data_audit.csv
 reports/duplicate_files.csv
 reports/class_summary.csv
-reports/audit_summary.json
-reports/traditional_test_predictions.csv
 reports/traditional_confusion_matrix.csv
 reports/traditional_feature_importance.csv
-reports/traditional_metrics.json
-reports/dl/transformer_test_predictions.csv
 reports/dl/transformer_test_windows.npz
-reports/modeling_sample.csv
+!reports/.gitkeep
+!reports/dl/.gitkeep
