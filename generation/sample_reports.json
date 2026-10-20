@@ -1,0 +1,118 @@
+[
+  {
+    "system_id": "SYS-01",
+    "flow_id": "FLOW-1",
+    "alert_id": "ALT-20261003-0001",
+    "generated_report": {
+      "incident_summary": "Alert indicates a UDP Flood attack detected by the traditional_ml detector, but ground truth labels it as a backdoor intrusion. The detector correctly identified an attack but misclassified its type.",
+      "severity_assessment": "HIGH",
+      "top_risk_factors": [
+        "Feature_1 (SHAP 0.0)",
+        "Feature_2 (SHAP 0.0)",
+        "Feature_3 (SHAP 0.0)",
+        "Feature_4 (SHAP 0.0)",
+        "Feature_5 (SHAP 0.0)",
+        "Feature_6 (SHAP 0.0)",
+        "Feature_7 (SHAP 0.0)",
+        "Feature_8 (SHAP 0.0)",
+        "Feature_9 (SHAP 0.0)",
+        "Feature_10 (SHAP 0.0)"
+      ],
+      "mitigation_recommendations": [
+        "Implement UDP traffic rate limiting and firewall rules to mitigate flood impact.",
+        "Deploy anomaly detection for backdoor indicators such as unusual command execution or persistence mechanisms.",
+        "Update IDS/IPS signatures to correctly classify backdoor activity and reduce false positives."
+      ]
+    }
+  },
+  {
+    "system_id": "SYS-01",
+    "flow_id": "FLOW-2",
+    "alert_id": "ALT-20261003-0002",
+    "generated_report": {
+      "incident_summary": "High\u2011confidence UDP Flood detection; ground truth indicates backdoor activity.",
+      "severity_assessment": "HIGH",
+      "top_risk_factors": [
+        "Feature_1",
+        "Feature_2",
+        "Feature_3"
+      ],
+      "mitigation_recommendations": [
+        "Block UDP traffic from source IPs identified in flow",
+        "Deploy intrusion detection rules for backdoor signatures",
+        "Update firewall and IDS signatures"
+      ]
+    }
+  },
+  {
+    "system_id": "SYS-01",
+    "flow_id": "FLOW-3",
+    "alert_id": "ALT-20261003-0003",
+    "generated_report": {
+      "incident_summary": "High\u2011confidence UDP Flood detection (confidence 0.95) but ground truth indicates backdoor activity, suggesting a misclassification or dual threat.",
+      "severity_assessment": "HIGH",
+      "top_risk_factors": [
+        "Feature_1",
+        "Feature_2",
+        "Feature_3"
+      ],
+      "mitigation_recommendations": [
+        "Block UDP traffic from the source IPs identified in the flow.",
+        "Investigate and isolate affected devices for backdoor indicators.",
+        "Apply latest security patches and update intrusion detection rules."
+      ]
+    }
+  },
+  {
+    "system_id": "SYS-01",
+    "flow_id": "FLOW-4",
+    "alert_id": "ALT-20261003-0004",
+    "generated_report": {
+      "incident_summary": "Detected a UDP Flood DDoS attack with 95% confidence.",
+      "severity_assessment": "HIGH",
+      "top_risk_factors": [
+        "Feature_1",
+        "Feature_2",
+        "Feature_3",
+        "Feature_4",
+        "Feature_5",
+        "Feature_6",
+        "Feature_7",
+        "Feature_8",
+        "Feature_9",
+        "Feature_10"
+      ],
+      "mitigation_recommendations": [
+        "Block or rate-limit UDP traffic from suspicious sources.",
+        "Deploy or enable DDoS mitigation services (e.g., scrubbing center).",
+        "Increase monitoring of network flow metrics and set alerts for abnormal UDP packet rates."
+      ]
+    }
+  },
+  {
+    "system_id": "SYS-01",
+    "flow_id": "FLOW-5",
+    "alert_id": "ALT-20261003-0005",
+    "generated_report": {
+      "incident_summary": "Detected a UDP Flood DDoS attack with 95% confidence.",
+      "severity_assessment": "HIGH",
+      "top_risk_factors": [
+        "Feature_1",
+        "Feature_2",
+        "Feature_3",
+        "Feature_4",
+        "Feature_5",
+        "Feature_6",
+        "Feature_7",
+        "Feature_8",
+        "Feature_9",
+        "Feature_10"
+      ],
+      "mitigation_recommendations": [
+        "Block or rate-limit UDP traffic from suspicious sources.",
+        "Deploy or enable DDoS mitigation services (e.g., scrubbing center).",
+        "Increase monitoring and alerting for sudden UDP traffic spikes."
+      ]
+    }
+  }
+]
