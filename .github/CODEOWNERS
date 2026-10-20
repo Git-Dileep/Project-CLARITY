@@ -1,5 +1,5 @@
-# CODEOWNERS
-# Centralized control over shared API contracts on main branch
-# Changes to contracts require Dileep's review and approval.
+# Require the repository owner to review all files
+* @Git-Dileep
 
-/contracts/ @Git-Dileep
+# Protect the ownership rules themselves
+/.github/CODEOWNERS @Git-Dileep
