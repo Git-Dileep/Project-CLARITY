@@ -1,6 +1,6 @@
 import json
 import os
-from evaluation.score_reports import calculate_metrics
+from eval.score_reports import evaluate_report
 
 def evaluate_generated_reports(reports_file_path: str, output_results_path: str):
     """Loads generated incident reports and computes Rubric v0 scores."""
