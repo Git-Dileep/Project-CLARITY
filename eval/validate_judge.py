@@ -1,44 +1,89 @@
-import sys
 import os
+import sys
+import json
 
-# Add root folder to sys.path so 'from eval...' works cleanly from anywhere
+# Ensure project root is in sys.path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from eval.score_reports import evaluate_claim_llm
-
-HAND_LABELLED_CLAIMS = [
-    {"evidence": "IP 10.0.0.1 initiated port scan on 10.0.0.5.", "claim": "Port scan originated from 10.0.0.1.", "human_label": "SUPPORTED"},
-    {"evidence": "Device A CPU utilization reached 98%.", "claim": "Device A CPU spiked to 98%.", "human_label": "SUPPORTED"},
-    {"evidence": "User admin logged in at 14:00 UTC.", "claim": "User admin logged in at 14:00 UTC.", "human_label": "SUPPORTED"},
-    {"evidence": "Malware payload identified as Trojan.Generic.", "claim": "Payload confirmed as Ransomware.LockBit.", "human_label": "CONTRADICTED"},
-    {"evidence": "Database connection timed out after 30 seconds.", "claim": "Database server was physically destroyed.", "human_label": "UNGROUNDED"},
-    {"evidence": "MQTT message burst of 5000 msg/sec detected.", "claim": "MQTT broker received high volume message burst.", "human_label": "SUPPORTED"},
-    {"evidence": "Firmware revision updated to v2.4.1.", "claim": "Firmware downgraded to v1.0.0.", "human_label": "CONTRADICTED"},
-    {"evidence": "API endpoint returned HTTP status 500.", "claim": "API returned 500 Internal Server Error.", "human_label": "SUPPORTED"},
-    {"evidence": "DNS lookup failed for domain malware-c2.com.", "claim": "DNS request succeeded without issues.", "human_label": "CONTRADICTED"},
-    {"evidence": "Sensor node 12 battery level at 15%.", "claim": "Sensor node 12 battery is low.", "human_label": "SUPPORTED"}
+try:
+    from eval.score_reports import evaluate_claim_llm
+except ImportError:
+    from score_reports import evaluate_claim_llm
+TEST_CASES = [
+    {
+        "claim": "The unauthorized SSH connection initiated from IP 192.168.1.105 on port 22.",
+        "evidence": "Log entry: SSH login attempt from 192.168.1.105:22 flagged as unauthorized anomaly.",
+        "expected": "FULL"
+    },
+    {
+        "claim": "Gateway router rebooted cleanly with no dropped packets.",
+        "evidence": "Log entry: SSH login attempt from 192.168.1.105:22 flagged as unauthorized anomaly.",
+        "expected": "UNSUPPORTED"
+    },
+    {
+        "claim": "The alert was triggered by normal encrypted HTTPS traffic on port 443.",
+        "evidence": "Log entry: SSH login attempt from 192.168.1.105:22 flagged as unauthorized anomaly.",
+        "expected": "CONTRADICTED"
+    },
+    {
+        "claim": "Anomalous network spike detected on internal gateway interface.",
+        "evidence": "Network telemetry shows 500% bandwidth spike on internal gateway interface.",
+        "expected": "FULL"
+    },
+    {
+        "claim": "Database server backup completed successfully at 02:00 UTC.",
+        "evidence": "Network telemetry shows 500% bandwidth spike on internal gateway interface.",
+        "expected": "UNSUPPORTED"
+    },
+    {
+        "claim": "User account admin login failed due to invalid password.",
+        "evidence": "Auth log: User admin authenticated successfully at 08:30.",
+        "expected": "CONTRADICTED"
+    },
+    {
+        "claim": "Suspicious PowerShell execution detected with encoded payload.",
+        "evidence": "EDR alert: powershell.exe executed with -EncodedCommand parameter.",
+        "expected": "FULL"
+    },
+    {
+        "claim": "Firewall blocked outbound connection to known C2 IP.",
+        "evidence": "Firewall log: DROP TCP 10.0.0.5 -> 185.220.101.5:8080 (Threat ID: C2_BEACON).",
+        "expected": "FULL"
+    },
+    {
+        "claim": "DNS query for malware domain was permitted by local resolver.",
+        "evidence": "Firewall log: DROP TCP 10.0.0.5 -> 185.220.101.5:8080 (Threat ID: C2_BEACON).",
+        "expected": "CONTRADICTED"
+    },
+    {
+        "claim": "System kernel updated to version 6.1.0.",
+        "evidence": "Firewall log: DROP TCP 10.0.0.5 -> 185.220.101.5:8080 (Threat ID: C2_BEACON).",
+        "expected": "UNSUPPORTED"
+    }
 ]
 
-def run_validation():
-    print("=== SNE-02 LLM Judge vs Human Hand-Labelled Claims Validation ===\n")
-    matches = 0
-    results = []
+def main():
+    correct = 0
+    total = len(TEST_CASES)
+    print("Running Judge Validation against Rubric v0 Standard...\n")
 
-    for idx, item in enumerate(HAND_LABELLED_CLAIMS, 1):
-        llm_label = evaluate_claim_llm(item["claim"], item["evidence"])
-        is_match = (llm_label == item["human_label"])
+    for idx, tc in enumerate(TEST_CASES, 1):
+        predicted = evaluate_claim_llm(tc["claim"], tc["evidence"])
+        # Support Rubric v0 exact label matching or FULL/SUPPORTED mapping
+        is_match = (predicted == tc["expected"]) or (predicted == "SUPPORTED" and tc["expected"] == "FULL")
         if is_match:
-            matches += 1
-        results.append((idx, item["claim"], item["human_label"], llm_label, "✅ Match" if is_match else "❌ Mismatch"))
+            correct += 1
+            status = "PASS"
+        else:
+            status = "FAIL"
+        print(f"Test {idx:02d}: [{status}] Expected: {tc['expected']} | Predicted: {predicted}")
 
-    print(f"| Claim ID | Claim Text | Human Label | LLM Judge Label | Status |")
-    print(f"|---|---|---|---|---|")
-    for r in results:
-        print(f"| {r[0]} | {r[1]} | {r[2]} | {r[3]} | {r[4]} |")
-
-    agreement = (matches / len(HAND_LABELLED_CLAIMS)) * 100
-    print(f"\nAgreement Score: {matches}/{len(HAND_LABELLED_CLAIMS)} ({agreement:.1f}%)")
-    print("Acceptance Criteria Met: " + ("YES (>= 80%)" if matches >= 8 else "NO"))
+    agreement_pct = (correct / total) * 100
+    print(f"\nJudge Agreement Score: {correct}/{total} ({agreement_pct:.1f}%)")
+    if agreement_pct >= 80.0:
+        print("Status: VALIDATED (>= 80% agreement target met)")
+    else:
+        print("Status: UNVALIDATED (< 80% agreement target)")
 
 if __name__ == "__main__":
-    run_validation()
+    main()

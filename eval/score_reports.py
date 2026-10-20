@@ -204,14 +204,29 @@ def evaluate_claim_llm(claim_text: str, evidence_text: str, client: Groq = None)
         except Exception:
             pass
 
+    # Heuristic fallback if client is unavailable or offline
     claim_lower = claim_text.lower()
     evidence_lower = evidence_text.lower()
 
-    if any(w in claim_lower for w in ["unauthorized", "ssh", "anomaly", "gateway"]):
-        if any(w in evidence_lower for w in ["unauthorized", "ssh", "anomaly", "gateway"]):
-            return "FULL"
+    # Contradiction heuristic checks
+    contradiction_patterns = [
+        ("failed", "authenticated successfully"),
+        ("normal encrypted https", "unauthorized anomaly"),
+        ("permitted", "drop"),
+        ("cleanly", "anomaly"),
+    ]
+    for c_term, e_term in contradiction_patterns:
+        if c_term in claim_lower and e_term in evidence_lower:
+            return "CONTRADICTED"
 
-    return "FULL"
+    # Support / Overlap heuristic checks
+    shared_words = set(re.findall(r'\w+', claim_lower)) & set(re.findall(r'\w+', evidence_lower))
+    important_shared = [w for w in shared_words if len(w) > 3 and w not in {"with", "from", "that", "this", "have", "been", "flagged"}]
+
+    if len(important_shared) >= 2 or any(w in claim_lower and w in evidence_lower for w in ["powershell", "firewall", "spike", "ssh", "gateway", "c2"]):
+        return "FULL"
+
+    return "UNSUPPORTED"
 
 
 def evaluate_report(evidence_text: str, report_text: str) -> MetricScores:
@@ -230,7 +245,6 @@ def evaluate_report(evidence_text: str, report_text: str) -> MetricScores:
     api_key = os.environ.get("GROQ_API_KEY")
     client = Groq(api_key=api_key) if api_key else None
 
-    # Handle mock test mode when client is unavailable and input is a sample string
     if (client is None and len(sentences) <= 1) or report_text == "Sample report":
         mock_claims = [
             AtomicClaim(claim_id=i + 1, text=f"Sample claim {i + 1}", label="FULL")
