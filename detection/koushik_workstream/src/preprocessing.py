@@ -193,16 +193,30 @@ def prepare_data_and_splits(
     train_hashes = set(hash(tuple(row)) for row in X_train)
     overlap_count = sum(1 for row in X_test if hash(tuple(row)) in train_hashes)
 
+    # Compute source file sha256 if possible
+    source_sha = config.source_sha256
+    resolved_input = config.resolve_path(work_dir, config.input_path)
+    if not source_sha and resolved_input.exists() and resolved_input.is_file():
+        from .data_loader import sha256_file
+        source_sha = sha256_file(resolved_input)
+
     # Save split manifest
     split_manifest = {
+        "run_id": config.run_id or f"RUN-{config.dataset_name}",
+        "split_id": config.split_id or f"SPLIT-{config.random_seed}",
         "dataset_name": config.dataset_name,
+        "source_sha256": source_sha,
         "random_seed": config.random_seed,
         "test_size": config.test_size,
         "total_rows": len(clean_df),
         "train_rows": len(train_df),
         "test_rows": len(test_df),
+        "train_indices": train_idx.tolist(),
+        "test_indices": test_idx.tolist(),
         "train_sample_ids": train_df["sample_id"].tolist() if "sample_id" in train_df else [],
         "test_sample_ids": test_df["sample_id"].tolist() if "sample_id" in test_df else [],
+        "train_flow_ids": train_df["flow_id"].tolist() if "flow_id" in train_df else [],
+        "test_flow_ids": test_df["flow_id"].tolist() if "flow_id" in test_df else [],
         "train_class_counts": pd.Series(y_train).value_counts().to_dict(),
         "test_class_counts": pd.Series(y_test).value_counts().to_dict(),
         "class_mapping": {str(cls_name): int(idx) for idx, cls_name in enumerate(label_encoder.classes_)},

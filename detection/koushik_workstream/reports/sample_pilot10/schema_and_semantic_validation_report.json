@@ -1,0 +1,29 @@
+{
+  "timestamp": "2026-10-20T17:00:22.076137+00:00",
+  "status": "PASSED",
+  "total_errors": 0,
+  "files_validated": {
+    "schema": "C:\\Users\\koush\\Downloads\\Koushik_CLARITY_Workstream\\Koushik_CLARITY_Workstream\\Project-CLARITY\\contracts\\alert_schema_v1.json",
+    "traditional_alerts": "C:\\Users\\koush\\Downloads\\Koushik_CLARITY_Workstream\\Koushik_CLARITY_Workstream\\Project-CLARITY\\detection\\koushik_workstream\\reports\\sample_pilot10\\pilot_traditional_alerts_10.json",
+    "dl_alerts": "C:\\Users\\koush\\Downloads\\Koushik_CLARITY_Workstream\\Koushik_CLARITY_Workstream\\Project-CLARITY\\detection\\koushik_workstream\\reports\\sample_pilot10\\pilot_dl_alerts_10.json"
+  },
+  "alerts_count": {
+    "traditional": 10,
+    "dl": 10
+  },
+  "classes_represented": [
+    "Benign",
+    "BruteForce",
+    "DDoS_UDP",
+    "Infiltration",
+    "Mirai_Botnet",
+    "PortScan"
+  ],
+  "errors": {
+    "traditional_schema_errors": [],
+    "traditional_semantic_errors": [],
+    "dl_schema_errors": [],
+    "dl_semantic_errors": [],
+    "cross_detector_errors": []
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "dataset_name": "Reference-Synthetic-Network",
+  "is_synthetic": true,
+  "run_id": "RUN-20261020-SAMPLE-PILOT10",
+  "split_id": "SPLIT-20261020-SEED42-V1",
+  "source_sha256": "c85c523d12610dc8554cdeee0eedc6a46b9e27a0ed74be12d0d362b8215ebceb",
+  "input_path": "data/reference_synthetic.csv",
+  "target_column": "label",
+  "flow_id_column": "flow_id",
+  "timestamp_column": "timestamp",
+  "device_id_column": "device_id",
+  "metadata_columns": [
+    "device_id",
+    "source_file",
+    "sample_id"
+  ],
+  "drop_columns": [
+    "src_ip",
+    "dst_ip",
+    "flow_id",
+    "timestamp"
+  ],
+  "numeric_columns": null,
+  "categorical_columns": null,
+  "max_rows_per_class": null,
+  "test_size": 0.2,
+  "random_seed": 42,
+  "chunksize": 100000,
+  "traditional": {
+    "rf_n_estimators": 100,
+    "rf_max_depth": 15,
+    "xgb_n_estimators": 100,
+    "xgb_max_depth": 6,
+    "xgb_learning_rate": 0.1,
+    "mlp_hidden_layer_sizes": [
+      64,
+      32
+    ],
+    "mlp_max_iter": 60,
+    "mlp_early_stopping": true
+  },
+  "dl": {
+    "enabled": true,
+    "batch_size": 64,
+    "epochs": 5,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "cnn_channels": 32,
+    "lstm_hidden": 32,
+    "transformer_dim": 32,
+    "transformer_heads": 4,
+    "early_stopping_patience": 2,
+    "device": "auto"
+  },
+  "explainability": {
+    "top_n_features": 10,
+    "background_samples": 50,
+    "traditional_explainer": "TreeExplainer",
+    "dl_explainer": "GradientExplainer"
+  },
+  "pilot": {
+    "pilot_size": 10,
+    "min_classes": 5,
+    "stratified": true
+  },
+  "reports_dir": "reports/sample_pilot10",
+  "models_dir": "models",
+  "data_dir": "data"
+}

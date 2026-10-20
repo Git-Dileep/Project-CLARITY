@@ -1,0 +1,74 @@
+{
+  "run_id": "RUN-20261020-SAMPLE-PILOT10",
+  "split_id": "SPLIT-20261020-SEED42-V1",
+  "dataset_name": "Reference-Synthetic-Network",
+  "source_sha256": "c85c523d12610dc8554cdeee0eedc6a46b9e27a0ed74be12d0d362b8215ebceb",
+  "selection_seed": 42,
+  "pilot_size": 10,
+  "min_classes_required": 5,
+  "represented_classes_count": 6,
+  "represented_classes": [
+    "Benign",
+    "BruteForce",
+    "DDoS_UDP",
+    "Infiltration",
+    "Mirai_Botnet",
+    "PortScan"
+  ],
+  "flow_ids": [
+    "FLW-20261020-000657",
+    "FLW-20261020-004125",
+    "FLW-20261020-001603",
+    "FLW-20261020-001063",
+    "FLW-20261020-000216",
+    "FLW-20261020-002464",
+    "FLW-20261020-004612",
+    "FLW-20261020-003466",
+    "FLW-20261020-001268",
+    "FLW-20261020-000753"
+  ],
+  "sample_ids": [
+    2757,
+    4076,
+    2103,
+    4517,
+    3744,
+    695,
+    2313,
+    4554,
+    4968,
+    1937
+  ],
+  "true_labels": [
+    "Infiltration",
+    "BruteForce",
+    "PortScan",
+    "Benign",
+    "PortScan",
+    "DDoS_UDP",
+    "Benign",
+    "Mirai_Botnet",
+    "BruteForce",
+    "Benign"
+  ],
+  "class_counts": {
+    "Benign": 3,
+    "BruteForce": 2,
+    "PortScan": 2,
+    "Infiltration": 1,
+    "DDoS_UDP": 1,
+    "Mirai_Botnet": 1
+  },
+  "pilot_indices_in_test": [
+    65,
+    86,
+    94,
+    201,
+    415,
+    478,
+    694,
+    701,
+    761,
+    777
+  ]
+}
