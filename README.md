@@ -4,8 +4,9 @@
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Status: DIL-02 Complete](https://img.shields.io/badge/Sprint%20Status-DIL--02%20Complete-brightgreen.svg)]()
+[![Status: Pilot Sprint Complete](https://img.shields.io/badge/Sprint%20Status-Pilot%20Sprint%20Complete-brightgreen.svg)]()
 [![Schema: Draft 2020-12](https://img.shields.io/badge/Schema-Draft%202020--12-success.svg)]()
+[![Gates: G1 G3 G5 GO](https://img.shields.io/badge/Gate%20Status-G1%20%7C%20G3%20%7C%20G5%20%3A%20GO-brightgreen.svg)](docs/decision_memo.md)
 
 ---
 
@@ -13,13 +14,13 @@
 
 > *"Does swapping a traditional-ML detector for a higher-capacity DL ensemble, in an otherwise identical RAG incident-analysis pipeline, change the reliability of the LLM-generated incident report?"*
 
-In automated Security Operations Center (SOC) pipelines, machine learning detectors generate alerts and feature attributions (SHAP) that feed into Retrieval-Augmented Generation (RAG) models to synthesize human-readable incident reports. **Project CLARITY** executes a controlled 5-day evaluation sprint measuring the direct downstream effects on LLM report reliability when altering only the detector architecture.
+In automated Security Operations Center (SOC) pipelines, machine learning detectors generate alerts and feature attributions (SHAP) that feed into Retrieval-Augmented Generation (RAG) models to synthesize human-readable incident reports. **Project CLARITY** executes a controlled evaluation sprint measuring the direct downstream effects on LLM report reliability when altering only the detector architecture.
 
 ### Experimental Controls
 - **Independent Variable:** Detector Subsystem producing the alert payload.
   - **Traditional ML Baseline:** 3-model ensemble (**Random Forest + XGBoost + MLP**) with 2-of-3 hard voting.
   - **Deep Learning Ensemble:** 3-model ensemble (**1D-CNN + Bi-LSTM + Transformer Encoder**) with 2-of-3 hard voting.
-- **Controlled Invariants:** Identical network flows ($1:1$ mapping), primary dataset (**ACI IoT Network Dataset 2023**), retrieval engine ($k=5$), LLM generator (`meta-llama/Llama-3.1-8b-instant`), decoding temperature ($0.0$), prompt template, and random seed ($42$).
+- **Controlled Invariants:** Identical network flows ($1:1$ mapping), reference dataset schema, retrieval engine ($k=5$), LLM generator (`meta-llama/Llama-3.1-8b-instant`), decoding temperature ($0.0$), prompt template, and random seed ($42$).
 
 ---
 
@@ -27,7 +28,7 @@ In automated Security Operations Center (SOC) pipelines, machine learning detect
 
 ```
                             ┌──────────────────────────────────────────────┐
-                            │          Raw Network Flow (ACI IoT 2023)     │
+                            │            Raw Network Flow Event            │
                             └──────────────────────┬───────────────────────┘
                                                    │
                                          [ Feature Extractor ]
@@ -94,41 +95,50 @@ $$\text{Faithfulness} = \frac{N_{\text{FULL}}}{N}$$
 $$\text{Fabrication Rate} = \frac{N_{\text{FABRICATED}}}{N}$$
 $$\text{Hallucination Rate} = \frac{N_{\text{CONTRADICTED}} + N_{\text{UNSUPPORTED}}}{N}$$
 
-> **Note on Metric Sensitivity:** As observed in the base paper, Groundedness frequently saturates at $1.0$. Therefore, **Faithfulness**, **Fabrication Rate**, and **Hallucination Rate** carry the primary statistical discrimination.
+> **Key Findings from Pilot Sprint:** See [`outputs/eval_results.md`](outputs/eval_results.md) and [`docs/decision_memo.md`](docs/decision_memo.md) for full metric breakdowns across all systems and attack classes. Standard RAG (SYS-03/04) drives Groundedness to near 1.0, making Faithfulness, Fabrication Rate, and Hallucination Rate the primary discriminatory metrics.
 
 ---
 
 ## 📂 Repository Structure
 
 ```text
-├── protocol/
-│   └── protocol_v1.md          # Frozen experimental protocol & constants
-├── schema/
-│   ├── alert_schema_v1.json    # Strict Draft 2020-12 alert JSON schema
-│   └── examples/
-│       ├── alert_trad_example.json  # Traditional ML alert payload (RF+XGB+MLP)
-│       └── alert_dl_example.json    # DL ensemble alert payload (CNN+LSTM+Trans)
-├── data/
-│   ├── raw/                    # Raw flow captures and PCAPs
-│   ├── pilot_alerts/           # 20 stratified pilot alert payloads
-│   └── test/                   # Evaluation test splits
-├── detectors/
-│   ├── traditional/            # RF, XGBoost, and MLP models
-│   └── deep_learning/          # 1D-CNN, Bi-LSTM, and Transformer models
-├── kb/
-│   ├── chroma_db/              # Persistent ChromaDB vector collections
-│   └── tavily_cache/           # External web verification cache
-├── pipeline/
-│   └── run_rag.py              # End-to-end RAG generator pipeline
-├── eval/
-│   ├── rubric_v0.md            # Complete Rubric v0 specification & worked examples
-│   └── score_reports.py        # Pydantic evaluation harness & metric calculator
-├── tests/
-│   └── test_scoring.py         # Pytest suite for scoring, tie-breaks & schemas
-├── results/
-│   └── reports/                # Generated incident reports across SYS-01..06
-├── scripts/
-│   └── validate_schemas.py     # Draft 2020-12 schema validation runner
+├── contracts/                  # Frozen Draft 2020-12 JSON Schemas
+│   ├── alert_schema_v1.json    # Canonical alert contract (metadata + top-10 SHAP)
+│   ├── report_schema_v1.json   # Incident report structure schema
+│   └── retrieval_schema_v1.json# Retrieval context chunk schema
+├── detection/                  # Detection Workstream
+│   └── koushik_workstream/     # Traditional & DL ensemble models, SHAP, and audit
+│       ├── reports/            # Pilot alert payloads & leakage audit reports
+│       └── src/                # Training, inference, SHAP, and export pipelines
+├── retrieval/                  # Retrieval Workstream
+│   ├── ingest.py               # ChromaDB document ingestion pipeline
+│   ├── kb_manifest.json        # Curated 25-document IoT threat knowledge base
+│   ├── retrieve.py             # Top-k vector retrieval engine
+│   └── tools.py                # MITRE ATT&CK mapping & cached Tavily web search
+├── generation/                 # Report Generation Workstream
+│   ├── llm_runner.py           # Groq Llama 3.1 8B report generator
+│   └── run_pilot.py            # End-to-end multi-system report generator
+├── eval/                       # Evaluation & Scoring
+│   ├── rubric_v0.md            # Rubric v0 specification & claim grading rules
+│   ├── score_reports.py        # Pydantic automated claim scoring harness
+│   ├── validate_judge.py       # LLM judge validation against ground truth
+│   └── build_results.py        # Aggregate metric compilation
+├── evaluation/                 # Human Evaluation & Verification
+│   └── human_eval_sumit.md     # Blind human review & rubric calibration
+├── outputs/                    # Sprint Results & Artifacts
+│   ├── eval_results.md         # Final metric tables & hypothesis tests (H1-H3)
+│   └── pilot_reports/          # Generated JSON & Markdown reports across systems
+├── docs/                       # Project Governance & Milestones
+│   └── decision_memo.md        # Formal Gate Decision Memo (G1, G3, G5 = GO)
+├── protocol/                   # Experimental Protocol
+│   └── protocol_v1.md          # Frozen experimental parameters & constants
+├── scripts/                    # Automation & Verification
+│   └── validate_schemas.py     # JSON Schema validation runner
+├── tests/                      # Pytest Test Suites
+│   ├── test_contracts.py       # Schema presence and Draft 2020-12 compliance
+│   ├── test_scoring.py         # Rubric v0 calculations & tie-break tests
+│   ├── test_tools.py           # MITRE & Tavily tool cache tests
+│   └── test_retrieval.py       # Vector retrieval tests
 ├── requirements.txt            # Python dependencies
 └── README.md
 ```
@@ -138,31 +148,47 @@ $$\text{Hallucination Rate} = \frac{N_{\text{CONTRADICTED}} + N_{\text{UNSUPPORT
 ## 🚀 Setup & Execution
 
 ### 1. Installation
-Clone the repository and install dependencies:
+Clone the repository and set up a virtual environment:
 ```bash
 git clone https://github.com/Git-Dileep/Project-CLARITY.git
 cd Project-CLARITY
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-### 2. Validate Alert Schemas
-Verify that all alert payloads strictly conform to Draft 2020-12 rules:
+### 2. Validate Contracts & Schemas
+Verify that all alert payloads and contracts conform strictly to JSON Schema Draft 2020-12:
 ```bash
 python scripts/validate_schemas.py
 ```
 
 ### 3. Run Test Suite
-Execute the unit and schema test suite with `pytest`:
+Execute the unit and contract validation test suites:
 ```bash
-python -m pytest tests/test_scoring.py -v
+python -m pytest tests/test_contracts.py tests/test_scoring.py tests/test_tools.py -v
+```
+
+### 4. Evaluate Generated Reports
+Score incident reports against Rubric v0:
+```bash
+python eval/score_reports.py
 ```
 
 ---
 
-## 📅 Sprint Roadmap (5-Day Plan)
+## 📋 Milestone & Gate Status
 
-- [x] **DIL-01:** Scaffold workspace, freeze `alert_schema_v1.json`, draft `protocol_v1.md`, and initialize Git tracking.
-- [x] **DIL-02:** Finalize `rubric_v0.md`, implement `score_reports.py` Pydantic harness, integrate ACI IoT 2023 dataset specifications, and establish `tests/test_scoring.py`.
-- [ ] **DIL-03:** Ingest ACI IoT 2023 pilot dataset, extract 20 stratified flow pairs, and execute Gate G1 validation.
-- [ ] **DIL-04:** Execute pilot inference across SYS-01 through SYS-06 and evaluate Gate G3 consistency.
-- [ ] **DIL-05:** Full test set inference, Wilcoxon signed-rank significance testing, Gate G5 statistical synthesis, and final report generation.
+All Sprint 1 milestone gates (G1, G3, G5) were evaluated and approved under **GO** decisions on the synthetic reference baseline. See [`docs/decision_memo.md`](docs/decision_memo.md) for full audit trails and decision matrices.
+
+| Gate | Scope | Status | Notes |
+| :--- | :--- | :---: | :--- |
+| **G1** | Detection & Alert Schema | **GO** | 20 alerts exported (10 Trad + 10 DL), 0 schema errors, 0 data leakage |
+| **G3** | Knowledge Base & Retrieval | **GO** | 25-doc KB, ChromaDB retrieval, MITRE mapping & cached Tavily operational |
+| **G5** | Generation & Evaluation | **GO** | 80 pilot reports scored, LLM judge 10/10 agreement, 4 Rubric v0 metrics synthesized |
+
+### Open Workstream Items (Dataset Dependent)
+The following workstream tickets remain open pending full real-world ACI IoT 2023 dataset access:
+- **Issue #7 [KOU-01]:** Switch to real ACI IoT 2023 dataset and audit schema
+- **Issue #8 [KOU-02]:** Train traditional ensemble on real ACI IoT 2023
+- **Issue #9 [KOU-03]:** Complete deep learning ensemble training on real ACI IoT 2023
