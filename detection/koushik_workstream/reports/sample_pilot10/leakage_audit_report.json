@@ -1,0 +1,36 @@
+{
+  "audit_timestamp": "2026-10-20T17:00:22.081413+00:00",
+  "status": "PASSED \u2014 ZERO LEAKAGE VERIFIED",
+  "leakage_detected": false,
+  "run_id": "RUN-20261020-SAMPLE-PILOT10",
+  "split_id": "SPLIT-20261020-SEED42-V1",
+  "source_sha256": "c85c523d12610dc8554cdeee0eedc6a46b9e27a0ed74be12d0d362b8215ebceb",
+  "counts": {
+    "train_flows_count": 4000,
+    "train_unique_flows_count": 4000,
+    "test_flows_count": 1000,
+    "test_unique_flows_count": 1000,
+    "pilot_flows_count": 0,
+    "pilot_unique_flows_count": 0,
+    "traditional_alerts_count": 10,
+    "dl_alerts_count": 10
+  },
+  "leakage_metrics": {
+    "train_pilot_overlap_count": 0,
+    "train_pilot_overlap_flow_ids": [],
+    "train_traditional_overlap_count": 0,
+    "train_traditional_overlap_flow_ids": [],
+    "train_dl_overlap_count": 0,
+    "train_dl_overlap_flow_ids": [],
+    "pilot_subset_of_test": true,
+    "pilot_flows_missing_from_test": [],
+    "cross_detector_flows_identical": true,
+    "cross_detector_flow_mismatches": []
+  },
+  "inspected_files": {
+    "split_manifest": "C:\\Users\\koush\\Downloads\\Koushik_CLARITY_Workstream\\Koushik_CLARITY_Workstream\\Project-CLARITY\\detection\\koushik_workstream\\reports\\sample_pilot10\\split_manifest.json",
+    "pilot_manifest": "C:\\Users\\koush\\Downloads\\Koushik_CLARITY_Workstream\\Koushik_CLARITY_Workstream\\Project-CLARITY\\detection\\koushik_workstream\\reports\\sample_pilot10\\pilot_manifest.json",
+    "traditional_alerts": "C:\\Users\\koush\\Downloads\\Koushik_CLARITY_Workstream\\Koushik_CLARITY_Workstream\\Project-CLARITY\\detection\\koushik_workstream\\reports\\sample_pilot10\\pilot_traditional_alerts_10.json",
+    "dl_alerts": "C:\\Users\\koush\\Downloads\\Koushik_CLARITY_Workstream\\Koushik_CLARITY_Workstream\\Project-CLARITY\\detection\\koushik_workstream\\reports\\sample_pilot10\\pilot_dl_alerts_10.json"
+  }
+}

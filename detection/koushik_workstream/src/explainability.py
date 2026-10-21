@@ -38,8 +38,8 @@ def get_top_10_attributions(
         s_vals = s_vals[:len(feature_names)]
         f_vals = f_vals[:len(feature_names)]
 
-    # Sort indices by descending absolute attribution
-    sorted_indices = np.argsort(-np.abs(s_vals))[:10]
+    # Sort indices by descending absolute attribution with stable index tie-breaking
+    sorted_indices = sorted(range(len(s_vals)), key=lambda idx: (-abs(s_vals[idx]), idx))[:10]
 
     top_features: List[Dict[str, Any]] = []
     for rank, idx in enumerate(sorted_indices, start=1):

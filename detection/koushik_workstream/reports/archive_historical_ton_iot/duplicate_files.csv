@@ -1,0 +1,2 @@
+dataset_kind,duplicate_file,same_as,size_bytes,sha256
+network,input_data\network\GroundTruth_Network_16.csv,input_data\network\GroundTruth_Network_15.csv,58467300,d1d4cb491cb6edda3523f7424d24ea1afd4496a933e60b3ec357286f7f0f542f

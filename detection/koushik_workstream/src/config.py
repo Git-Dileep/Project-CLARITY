@@ -77,6 +77,10 @@ class WorkstreamConfig:
     explainability: ExplainabilityConfig = field(default_factory=ExplainabilityConfig)
     pilot: PilotConfig = field(default_factory=PilotConfig)
 
+    run_id: Optional[str] = None
+    split_id: Optional[str] = None
+    source_sha256: Optional[str] = None
+
     reports_dir: str = "reports"
     models_dir: str = "models"
     data_dir: str = "data"

@@ -1,0 +1,2 @@
+file,status,rows,columns_count,total_missing_cells,total_inf_cells,invalid_targets,unique_labels
+reference_synthetic.csv,OK,5000,24,0,0,0,6

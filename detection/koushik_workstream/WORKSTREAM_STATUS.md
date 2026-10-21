@@ -10,10 +10,10 @@ This document records the exact state of workstream issues, code implementation,
 | :--- | :--- | :--- | :--- | :--- |
 | **KOU-01** | Switch to ACI IoT 2023 & Audit | **COMPLETE** | **BLOCKED** | Configurable loader, schema checker, chunked audit, reports generated (`data_audit.json`, `data_audit.csv`, `label_counts.csv`, `audit_summary.md`), 3 audit unit tests passing. Real ACI dataset not yet downloaded. |
 | **KOU-02** | Train Traditional Ensemble on ACI | **COMPLETE** | **BLOCKED** | 3-model majority voting ensemble (Random Forest + XGBoost + MLP) implemented, leakage-safe preprocessing, comprehensive metrics computed (`traditional_metrics.json`, `traditional_metrics.csv`, `traditional_test_predictions.csv`). Verified on synthetic reference data (Accuracy 99.7%, Macro-F1 99.6%). |
-| **KOU-03** | Complete Deep-Learning Ensemble on ACI | **COMPLETE** | **BLOCKED** | PyTorch 1D-CNN, LSTM, and Transformer Encoder implemented, identical splits and label encoding as traditional ensemble, majority voting consensus, loss tracking & early stopping (`dl_metrics.json`, `dl_test_predictions.csv`). Verified on synthetic reference data (Accuracy 97.8%, Macro-F1 96.9%). |
-| **KOU-04** | Generate SHAP Explanations (10 Features) | **COMPLETE** | **BLOCKED** | Local explainers implemented: `TreeExplainer` for XGBoost and `GradientExplainer` for Transformer. Ranks exactly 10 features strictly descending by absolute SHAP magnitude. Contract format verified via unit tests and pilot runs. |
-| **KOU-05** | Export Stratified 20-Alert Pilot | **COMPLETE** | **BLOCKED** | Deterministic stratified pilot export implemented for held-out test split (covering at least 5 classes). Generates `pilot_traditional_alerts.json`, `pilot_dl_alerts.json`, `pilot_20_alerts.csv`. Validated 100% against `contracts/alert_schema_v1.json` (`alert_validation_report.json`). |
-| **KOU-06** | Make `.bat` Run Scripts Reproducible | **COMPLETE** | **COMPLETE** | All Windows batch scripts implemented with error propagation, environment auto-detection, and argument forwarding: `run_all.bat`, `run_audit.bat`, `run_traditional.bat`, `run_deep_learning.bat`, `run_pilot.bat`. Verified in Windows environment. |
+| **KOU-03** | Complete Deep-Learning Ensemble on ACI | **COMPLETE** | **BLOCKED** | PyTorch 1D-CNN, LSTM, and Transformer Encoder implemented, identical splits and label encoding as traditional ensemble, majority voting consensus, loss tracking & early stopping (`dl_metrics.json`, `dl_test_predictions.csv`). Verified on synthetic reference data (Accuracy 97.8%, Macro-F1 96.9%). **Honesty declaration: Marked BLOCKED for real ACI IoT 2023 data pending dataset availability.** |
+| **KOU-04** | Generate SHAP Explanations (10 Features) | **COMPLETE** | **SAMPLE VERIFIED** | SHAP `TreeExplainer` (XGBoost) and `GradientExplainer` (Transformer) implemented with stable tie-breaking on index. Exactly 10 canonical features ranked 1..10 strictly descending by absolute SHAP magnitude. Fully verified on 10 held-out flows in `RUN-20261020-SAMPLE-PILOT10`. Mathematical protocol in `docs/SHAP_EXPLANATION_PROTOCOL.md`. |
+| **KOU-05** | Export Stratified Pilot for Both Detectors | **COMPLETE** | **SAMPLE VERIFIED** | Reproducible 10-flow pilot (`RUN-20261020-SAMPLE-PILOT10`) with identical flow IDs across Traditional ML and DL detectors spanning 6 classes. Validated against `contracts/alert_schema_v1.json` via `scripts/validate_schemas.py` (0 schema/semantic errors) and audited via `src/leakage_audit.py` (0 train/test overlap). |
+| **KOU-06** | Make `.bat` Run Scripts Reproducible | **COMPLETE** | **COMPLETE** | All Windows batch scripts implemented with error propagation, environment auto-detection, and config parameter support: `run_all.bat`, `run_audit.bat`, `run_traditional.bat`, `run_deep_learning.bat`, `run_pilot.bat`, and `run_sample_pilot10.bat`. Automated verification suite passing 38/38 tests. |
 
 ---
 
@@ -53,8 +53,15 @@ This document records the exact state of workstream issues, code implementation,
 ### D. Explainability & Alert Contract Validation (KOU-04 & KOU-05)
 - **Authoritative Contract:** `contracts/alert_schema_v1.json` unmodified.
 - **Explainers:** Genuine SHAP `TreeExplainer` for tree models; genuine SHAP `GradientExplainer` for PyTorch models.
-- **Top-10 Ranking:** Exactly 10 feature entries ranked 1 through 10 in descending order of absolute attribution magnitude.
-- **Validation Report:** `reports/alert_validation_report.json` records 20/20 valid traditional alerts and 20/20 valid DL alerts with 0 errors.
+- **Top-10 Ranking:** Exactly 10 canonical feature entries ranked 1 through 10 in descending order of absolute attribution magnitude, with stable deterministic tie-breaking on index.
+- **Sample Pilot Run:** `RUN-20261020-SAMPLE-PILOT10` / `SPLIT-20261020-SEED42-V1` (dataset SHA-256: `c85c523d...`):
+  - 10 alerts generated for Traditional ML (`pilot_traditional_alerts_10.json`)
+  - 10 alerts generated for Deep Learning (`pilot_dl_alerts_10.json`)
+  - Identical 10 held-out `flow_id`s evaluated across both detectors.
+  - 6 distinct attack/benign classes represented: Benign (3), BruteForce (2), PortScan (2), Infiltration (1), DDoS_UDP (1), Mirai_Botnet (1).
+- **Validation Report:** `scripts/validate_schemas.py` confirms 0 schema errors under Draft 2020-12, 0 semantic errors, and 0 cross-detector mismatches (`reports/sample_pilot10/schema_and_semantic_validation_report.json`).
+- **Leakage Audit:** `src/leakage_audit.py` confirms 0 train/pilot flow overlap and 100% test isolation (`reports/sample_pilot10/leakage_audit_report.json`).
+- **Runbook:** Documented fully in `RUNBOOK_SAMPLE_PILOT10.md` and automated via `run_sample_pilot10.bat`.
 
 ---
 

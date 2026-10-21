@@ -280,8 +280,72 @@ def export_pilot_alerts(
                 validation_results["errors"].append({"detector": "dl_ensemble", "alert_id": alt_id, "errors": errs})
             dl_alerts.append(payload)
 
+    # Programmatic assertion: verify identical flow IDs across detectors
+    trad_flow_ids = [a["identity"]["flow_id"] for a in traditional_alerts]
+    if dl_alerts:
+        dl_flow_ids = [a["identity"]["flow_id"] for a in dl_alerts]
+        if trad_flow_ids != dl_flow_ids:
+            raise ValueError(
+                f"Mismatch in pilot flow IDs! Traditional: {trad_flow_ids} vs DL: {dl_flow_ids}"
+            )
+        if len(set(trad_flow_ids)) != len(trad_flow_ids):
+            raise ValueError(f"Duplicate flow IDs found in pilot: {trad_flow_ids}")
+
+    # Verify at least min_classes represented
+    rep_classes = sorted(list(set(y_pilot_true)))
+    print(f"[PILOT] Represented classes in pilot ({len(rep_classes)}): {rep_classes}")
+    if len(rep_classes) < config.pilot.min_classes:
+        raise ValueError(
+            f"Pilot contains only {len(rep_classes)} classes ({rep_classes}), but required at least {config.pilot.min_classes}."
+        )
+
+    # Save pilot manifest
+    pilot_manifest = {
+        "run_id": config.run_id or f"RUN-{config.dataset_name}",
+        "split_id": config.split_id or f"SPLIT-{config.random_seed}",
+        "dataset_name": config.dataset_name,
+        "source_sha256": config.source_sha256,
+        "selection_seed": config.random_seed,
+        "pilot_size": len(pilot_indices),
+        "min_classes_required": config.pilot.min_classes,
+        "represented_classes_count": len(rep_classes),
+        "represented_classes": rep_classes,
+        "flow_ids": flow_ids,
+        "sample_ids": pilot_test_df["sample_id"].tolist() if "sample_id" in pilot_test_df else [],
+        "true_labels": y_pilot_true,
+        "class_counts": pd.Series(y_pilot_true).value_counts().to_dict(),
+        "pilot_indices_in_test": [int(i) for i in pilot_indices],
+    }
+    with (reports_dir / "pilot_manifest.json").open("w", encoding="utf-8") as f:
+        json.dump(pilot_manifest, f, indent=2)
+
+    df_manifest = pd.DataFrame({
+        "flow_id": flow_ids,
+        "sample_id": pilot_test_df["sample_id"].tolist() if "sample_id" in pilot_test_df else list(range(len(pilot_test_df))),
+        "true_label": y_pilot_true,
+        "timestamp": timestamps,
+    })
+    df_manifest.to_csv(reports_dir / "pilot_manifest.csv", index=False)
+
+    # Save traditional alerts JSON (both standard and pilot10 named)
+    trad_alerts_path = reports_dir / "pilot_traditional_alerts.json"
+    trad_alerts_10_path = reports_dir / f"pilot_traditional_alerts_{len(traditional_alerts)}.json"
+    with trad_alerts_path.open("w", encoding="utf-8") as f:
+        json.dump(traditional_alerts, f, indent=2)
+    with trad_alerts_10_path.open("w", encoding="utf-8") as f:
+        json.dump(traditional_alerts, f, indent=2)
+
+    trad_valid_count = sum(1 for a in traditional_alerts if validate_alert_payload(a, validator)[0])
+    validation_results["traditional_alerts_count"] = len(traditional_alerts)
+    validation_results["traditional_valid"] = trad_valid_count == len(traditional_alerts)
+
+    # Save DL alerts JSON (both standard and pilot10 named)
+    if dl_alerts:
         dl_alerts_path = reports_dir / "pilot_dl_alerts.json"
+        dl_alerts_10_path = reports_dir / f"pilot_dl_alerts_{len(dl_alerts)}.json"
         with dl_alerts_path.open("w", encoding="utf-8") as f:
+            json.dump(dl_alerts, f, indent=2)
+        with dl_alerts_10_path.open("w", encoding="utf-8") as f:
             json.dump(dl_alerts, f, indent=2)
 
         dl_valid_count = sum(1 for a in dl_alerts if validate_alert_payload(a, validator)[0])
@@ -295,10 +359,10 @@ def export_pilot_alerts(
     for i in range(len(pilot_test_df)):
         t_alert = traditional_alerts[i]
         row = {
-            "alert_id_trad": t_alert["identity"]["alert_id"],
             "flow_id": flow_ids[i],
             "timestamp": timestamps[i],
             "true_label": y_pilot_true[i],
+            "alert_id_trad": t_alert["identity"]["alert_id"],
             "traditional_prediction": t_alert["prediction"]["predicted_label"],
             "traditional_confidence": t_alert["prediction"]["confidence"],
             "traditional_correct": t_alert["evaluation_metadata"]["detector_correct"],
@@ -312,6 +376,7 @@ def export_pilot_alerts(
         tabular_rows.append(row)
 
     df_pilot = pd.DataFrame(tabular_rows)
+    df_pilot.to_csv(reports_dir / f"pilot_{len(pilot_test_df)}_alerts.csv", index=False)
     df_pilot.to_csv(reports_dir / "pilot_20_alerts.csv", index=False)
 
     # Save validation report
@@ -323,7 +388,7 @@ def export_pilot_alerts(
     print(f"  Traditional Alerts Exported: {len(traditional_alerts)} (Valid: {validation_results['traditional_valid']})")
     print(f"  DL Alerts Exported: {len(dl_alerts)} (Valid: {validation_results['dl_valid']})")
     print(f"  Validation Report Saved: {val_report_path}")
-    print(f"  Tabular Pilot Saved: {reports_dir / 'pilot_20_alerts.csv'}")
+    print(f"  Pilot Manifest Saved: {reports_dir / 'pilot_manifest.json'}")
 
     if not validation_results["traditional_valid"] or (dl_alerts and not validation_results["dl_valid"]):
         raise ValueError(f"Alert schema validation failed! Details in {val_report_path}: {validation_results['errors']}")

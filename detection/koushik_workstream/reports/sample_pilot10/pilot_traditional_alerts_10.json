@@ -1,0 +1,1032 @@
+[
+  {
+    "identity": {
+      "alert_id": "ALT-20261020-0001",
+      "flow_id": "FLW-20261020-000657",
+      "detector_family": "traditional_ml",
+      "timestamp": "2026-10-21T02:28:21+00:00",
+      "dataset": "Reference-Synthetic-Network",
+      "split": "pilot"
+    },
+    "prediction": {
+      "predicted_label": "Infiltration",
+      "confidence": 0.9997353951136271,
+      "base_learner_votes": [
+        {
+          "learner_name": "RandomForest",
+          "voted_label": "Infiltration",
+          "learner_confidence": 1.0
+        },
+        {
+          "learner_name": "XGBoost",
+          "voted_label": "Infiltration",
+          "learner_confidence": 0.9992
+        },
+        {
+          "learner_name": "MLP",
+          "voted_label": "Infiltration",
+          "learner_confidence": 1.0
+        }
+      ]
+    },
+    "shap_attribution": {
+      "explainer_type": "TreeExplainer",
+      "explained_class": "Infiltration",
+      "base_value": -0.6985,
+      "top_features": [
+        {
+          "rank": 1,
+          "feature_name": "dst_pkts",
+          "feature_value": 2.2335,
+          "shap_value": 5.708854
+        },
+        {
+          "rank": 2,
+          "feature_name": "src_port",
+          "feature_value": 1.4552,
+          "shap_value": 0.0
+        },
+        {
+          "rank": 3,
+          "feature_name": "dst_port",
+          "feature_value": -0.3117,
+          "shap_value": 0.0
+        },
+        {
+          "rank": 4,
+          "feature_name": "duration",
+          "feature_value": 0.7128,
+          "shap_value": 0.0
+        },
+        {
+          "rank": 5,
+          "feature_name": "src_bytes",
+          "feature_value": -0.3207,
+          "shap_value": 0.0
+        },
+        {
+          "rank": 6,
+          "feature_name": "dst_bytes",
+          "feature_value": 3.2707,
+          "shap_value": 0.0
+        },
+        {
+          "rank": 7,
+          "feature_name": "src_pkts",
+          "feature_value": -0.0119,
+          "shap_value": 0.0
+        },
+        {
+          "rank": 8,
+          "feature_name": "packet_rate",
+          "feature_value": -0.1284,
+          "shap_value": 0.0
+        },
+        {
+          "rank": 9,
+          "feature_name": "byte_rate",
+          "feature_value": -0.1244,
+          "shap_value": 0.0
+        },
+        {
+          "rank": 10,
+          "feature_name": "tcp_flags_syn",
+          "feature_value": 0.427,
+          "shap_value": 0.0
+        }
+      ]
+    },
+    "evaluation_metadata": {
+      "true_label": "Infiltration",
+      "in_train_leakage_flag": false,
+      "detector_correct": true
+    }
+  },
+  {
+    "identity": {
+      "alert_id": "ALT-20261020-0002",
+      "flow_id": "FLW-20261020-004125",
+      "detector_family": "traditional_ml",
+      "timestamp": "2026-10-20T09:40:24+00:00",
+      "dataset": "Reference-Synthetic-Network",
+      "split": "pilot"
+    },
+    "prediction": {
+      "predicted_label": "BruteForce",
+      "confidence": 0.8607165945900812,
+      "base_learner_votes": [
+        {
+          "learner_name": "RandomForest",
+          "voted_label": "BruteForce",
+          "learner_confidence": 0.7292
+        },
+        {
+          "learner_name": "XGBoost",
+          "voted_label": "BruteForce",
+          "learner_confidence": 0.9802
+        },
+        {
+          "learner_name": "MLP",
+          "voted_label": "BruteForce",
+          "learner_confidence": 0.8728
+        }
+      ]
+    },
+    "shap_attribution": {
+      "explainer_type": "TreeExplainer",
+      "explained_class": "BruteForce",
+      "base_value": -0.3956,
+      "top_features": [
+        {
+          "rank": 1,
+          "feature_name": "tcp_flags_fin",
+          "feature_value": 1.2903,
+          "shap_value": 1.409959
+        },
+        {
+          "rank": 2,
+          "feature_name": "dst_bytes",
+          "feature_value": -0.4236,
+          "shap_value": 1.22605
+        },
+        {
+          "rank": 3,
+          "feature_name": "service_ssh",
+          "feature_value": 1.0,
+          "shap_value": 1.101965
+        },
+        {
+          "rank": 4,
+          "feature_name": "dst_pkts",
+          "feature_value": -0.4225,
+          "shap_value": -0.311361
+        },
+        {
+          "rank": 5,
+          "feature_name": "duration",
+          "feature_value": -0.4848,
+          "shap_value": 0.243243
+        },
+        {
+          "rank": 6,
+          "feature_name": "src_bytes",
+          "feature_value": -0.4,
+          "shap_value": 0.234056
+        },
+        {
+          "rank": 7,
+          "feature_name": "tcp_flags_rst",
+          "feature_value": -0.4756,
+          "shap_value": -0.201535
+        },
+        {
+          "rank": 8,
+          "feature_name": "tcp_flags_ack",
+          "feature_value": 0.2021,
+          "shap_value": 0.160352
+        },
+        {
+          "rank": 9,
+          "feature_name": "service_http",
+          "feature_value": 0.0,
+          "shap_value": -0.123198
+        },
+        {
+          "rank": 10,
+          "feature_name": "src_port",
+          "feature_value": -1.3463,
+          "shap_value": 0.113281
+        }
+      ]
+    },
+    "evaluation_metadata": {
+      "true_label": "BruteForce",
+      "in_train_leakage_flag": false,
+      "detector_correct": true
+    }
+  },
+  {
+    "identity": {
+      "alert_id": "ALT-20261020-0003",
+      "flow_id": "FLW-20261020-001603",
+      "detector_family": "traditional_ml",
+      "timestamp": "2026-10-21T03:11:55+00:00",
+      "dataset": "Reference-Synthetic-Network",
+      "split": "pilot"
+    },
+    "prediction": {
+      "predicted_label": "PortScan",
+      "confidence": 0.9996734658877054,
+      "base_learner_votes": [
+        {
+          "learner_name": "RandomForest",
+          "voted_label": "PortScan",
+          "learner_confidence": 1.0
+        },
+        {
+          "learner_name": "XGBoost",
+          "voted_label": "PortScan",
+          "learner_confidence": 0.9992
+        },
+        {
+          "learner_name": "MLP",
+          "voted_label": "PortScan",
+          "learner_confidence": 0.9998
+        }
+      ]
+    },
+    "shap_attribution": {
+      "explainer_type": "TreeExplainer",
+      "explained_class": "PortScan",
+      "base_value": -0.3132,
+      "top_features": [
+        {
+          "rank": 1,
+          "feature_name": "src_bytes",
+          "feature_value": -0.4095,
+          "shap_value": 5.500243
+        },
+        {
+          "rank": 2,
+          "feature_name": "header_length",
+          "feature_value": -0.5362,
+          "shap_value": 0.059258
+        },
+        {
+          "rank": 3,
+          "feature_name": "src_pkts",
+          "feature_value": -0.4589,
+          "shap_value": 0.025766
+        },
+        {
+          "rank": 4,
+          "feature_name": "src_port",
+          "feature_value": 0.6717,
+          "shap_value": 0.0
+        },
+        {
+          "rank": 5,
+          "feature_name": "dst_port",
+          "feature_value": -0.2127,
+          "shap_value": 0.0
+        },
+        {
+          "rank": 6,
+          "feature_name": "duration",
+          "feature_value": -0.8139,
+          "shap_value": 0.0
+        },
+        {
+          "rank": 7,
+          "feature_name": "dst_bytes",
+          "feature_value": -0.4418,
+          "shap_value": 0.0
+        },
+        {
+          "rank": 8,
+          "feature_name": "dst_pkts",
+          "feature_value": -0.5151,
+          "shap_value": 0.0
+        },
+        {
+          "rank": 9,
+          "feature_name": "packet_rate",
+          "feature_value": -0.0753,
+          "shap_value": 0.0
+        },
+        {
+          "rank": 10,
+          "feature_name": "byte_rate",
+          "feature_value": -0.1254,
+          "shap_value": 0.0
+        }
+      ]
+    },
+    "evaluation_metadata": {
+      "true_label": "PortScan",
+      "in_train_leakage_flag": false,
+      "detector_correct": true
+    }
+  },
+  {
+    "identity": {
+      "alert_id": "ALT-20261020-0004",
+      "flow_id": "FLW-20261020-001063",
+      "detector_family": "traditional_ml",
+      "timestamp": "2026-10-20T19:24:59+00:00",
+      "dataset": "Reference-Synthetic-Network",
+      "split": "pilot"
+    },
+    "prediction": {
+      "predicted_label": "Benign",
+      "confidence": 0.9999211033185323,
+      "base_learner_votes": [
+        {
+          "learner_name": "RandomForest",
+          "voted_label": "Benign",
+          "learner_confidence": 1.0
+        },
+        {
+          "learner_name": "XGBoost",
+          "voted_label": "Benign",
+          "learner_confidence": 0.9998
+        },
+        {
+          "learner_name": "MLP",
+          "voted_label": "Benign",
+          "learner_confidence": 1.0
+        }
+      ]
+    },
+    "shap_attribution": {
+      "explainer_type": "TreeExplainer",
+      "explained_class": "Benign",
+      "base_value": 1.4039,
+      "top_features": [
+        {
+          "rank": 1,
+          "feature_name": "src_pkts",
+          "feature_value": -0.4151,
+          "shap_value": 1.215697
+        },
+        {
+          "rank": 2,
+          "feature_name": "src_bytes",
+          "feature_value": -0.3762,
+          "shap_value": 0.952743
+        },
+        {
+          "rank": 3,
+          "feature_name": "dst_bytes",
+          "feature_value": 0.8617,
+          "shap_value": 0.740779
+        },
+        {
+          "rank": 4,
+          "feature_name": "service_dns",
+          "feature_value": 1.0,
+          "shap_value": 0.624421
+        },
+        {
+          "rank": 5,
+          "feature_name": "packet_rate",
+          "feature_value": -0.1347,
+          "shap_value": 0.305772
+        },
+        {
+          "rank": 6,
+          "feature_name": "duration",
+          "feature_value": 1.1079,
+          "shap_value": 0.195491
+        },
+        {
+          "rank": 7,
+          "feature_name": "service_other",
+          "feature_value": 0.0,
+          "shap_value": 0.139917
+        },
+        {
+          "rank": 8,
+          "feature_name": "tcp_flags_rst",
+          "feature_value": -0.4756,
+          "shap_value": 0.125167
+        },
+        {
+          "rank": 9,
+          "feature_name": "tcp_flags_ack",
+          "feature_value": -0.5167,
+          "shap_value": 0.105863
+        },
+        {
+          "rank": 10,
+          "feature_name": "header_length",
+          "feature_value": -0.3816,
+          "shap_value": -0.09631
+        }
+      ]
+    },
+    "evaluation_metadata": {
+      "true_label": "Benign",
+      "in_train_leakage_flag": false,
+      "detector_correct": true
+    }
+  },
+  {
+    "identity": {
+      "alert_id": "ALT-20261020-0005",
+      "flow_id": "FLW-20261020-000216",
+      "detector_family": "traditional_ml",
+      "timestamp": "2026-10-20T14:54:50+00:00",
+      "dataset": "Reference-Synthetic-Network",
+      "split": "pilot"
+    },
+    "prediction": {
+      "predicted_label": "PortScan",
+      "confidence": 0.9977232615152994,
+      "base_learner_votes": [
+        {
+          "learner_name": "RandomForest",
+          "voted_label": "PortScan",
+          "learner_confidence": 1.0
+        },
+        {
+          "learner_name": "XGBoost",
+          "voted_label": "PortScan",
+          "learner_confidence": 0.9994
+        },
+        {
+          "learner_name": "MLP",
+          "voted_label": "PortScan",
+          "learner_confidence": 0.9938
+        }
+      ]
+    },
+    "shap_attribution": {
+      "explainer_type": "TreeExplainer",
+      "explained_class": "PortScan",
+      "base_value": -0.3132,
+      "top_features": [
+        {
+          "rank": 1,
+          "feature_name": "src_bytes",
+          "feature_value": -0.4096,
+          "shap_value": 5.500243
+        },
+        {
+          "rank": 2,
+          "feature_name": "header_length",
+          "feature_value": -0.5377,
+          "shap_value": 0.059258
+        },
+        {
+          "rank": 3,
+          "feature_name": "src_pkts",
+          "feature_value": -0.4604,
+          "shap_value": 0.025766
+        },
+        {
+          "rank": 4,
+          "feature_name": "src_port",
+          "feature_value": 0.5777,
+          "shap_value": 0.0
+        },
+        {
+          "rank": 5,
+          "feature_name": "dst_port",
+          "feature_value": -0.3355,
+          "shap_value": 0.0
+        },
+        {
+          "rank": 6,
+          "feature_name": "duration",
+          "feature_value": -0.8061,
+          "shap_value": 0.0
+        },
+        {
+          "rank": 7,
+          "feature_name": "dst_bytes",
+          "feature_value": -0.4418,
+          "shap_value": 0.0
+        },
+        {
+          "rank": 8,
+          "feature_name": "dst_pkts",
+          "feature_value": -0.5151,
+          "shap_value": 0.0
+        },
+        {
+          "rank": 9,
+          "feature_name": "packet_rate",
+          "feature_value": -0.1313,
+          "shap_value": 0.0
+        },
+        {
+          "rank": 10,
+          "feature_name": "byte_rate",
+          "feature_value": -0.1285,
+          "shap_value": 0.0
+        }
+      ]
+    },
+    "evaluation_metadata": {
+      "true_label": "PortScan",
+      "in_train_leakage_flag": false,
+      "detector_correct": true
+    }
+  },
+  {
+    "identity": {
+      "alert_id": "ALT-20261020-0006",
+      "flow_id": "FLW-20261020-002464",
+      "detector_family": "traditional_ml",
+      "timestamp": "2026-10-20T19:45:30+00:00",
+      "dataset": "Reference-Synthetic-Network",
+      "split": "pilot"
+    },
+    "prediction": {
+      "predicted_label": "DDoS_UDP",
+      "confidence": 0.9997915824254354,
+      "base_learner_votes": [
+        {
+          "learner_name": "RandomForest",
+          "voted_label": "DDoS_UDP",
+          "learner_confidence": 1.0
+        },
+        {
+          "learner_name": "XGBoost",
+          "voted_label": "DDoS_UDP",
+          "learner_confidence": 0.9994
+        },
+        {
+          "learner_name": "MLP",
+          "voted_label": "DDoS_UDP",
+          "learner_confidence": 1.0
+        }
+      ]
+    },
+    "shap_attribution": {
+      "explainer_type": "TreeExplainer",
+      "explained_class": "DDoS_UDP",
+      "base_value": -0.2988,
+      "top_features": [
+        {
+          "rank": 1,
+          "feature_name": "src_pkts",
+          "feature_value": 1.8271,
+          "shap_value": 2.023118
+        },
+        {
+          "rank": 2,
+          "feature_name": "src_bytes",
+          "feature_value": 2.6175,
+          "shap_value": 1.868114
+        },
+        {
+          "rank": 3,
+          "feature_name": "flow_iat_std",
+          "feature_value": -0.6093,
+          "shap_value": 1.473114
+        },
+        {
+          "rank": 4,
+          "feature_name": "byte_rate",
+          "feature_value": 1.1834,
+          "shap_value": 0.150223
+        },
+        {
+          "rank": 5,
+          "feature_name": "flow_iat_mean",
+          "feature_value": -0.6747,
+          "shap_value": 0.040147
+        },
+        {
+          "rank": 6,
+          "feature_name": "header_length",
+          "feature_value": 1.7694,
+          "shap_value": 0.032852
+        },
+        {
+          "rank": 7,
+          "feature_name": "src_port",
+          "feature_value": 1.3102,
+          "shap_value": -0.004719
+        },
+        {
+          "rank": 8,
+          "feature_name": "tcp_flags_syn",
+          "feature_value": -1.354,
+          "shap_value": 0.00468
+        },
+        {
+          "rank": 9,
+          "feature_name": "dst_port",
+          "feature_value": -0.4866,
+          "shap_value": -0.002288
+        },
+        {
+          "rank": 10,
+          "feature_name": "duration",
+          "feature_value": -0.7835,
+          "shap_value": 0.001356
+        }
+      ]
+    },
+    "evaluation_metadata": {
+      "true_label": "DDoS_UDP",
+      "in_train_leakage_flag": false,
+      "detector_correct": true
+    }
+  },
+  {
+    "identity": {
+      "alert_id": "ALT-20261020-0007",
+      "flow_id": "FLW-20261020-004612",
+      "detector_family": "traditional_ml",
+      "timestamp": "2026-10-20T18:51:31+00:00",
+      "dataset": "Reference-Synthetic-Network",
+      "split": "pilot"
+    },
+    "prediction": {
+      "predicted_label": "Benign",
+      "confidence": 0.9929908649126689,
+      "base_learner_votes": [
+        {
+          "learner_name": "RandomForest",
+          "voted_label": "Benign",
+          "learner_confidence": 0.98
+        },
+        {
+          "learner_name": "XGBoost",
+          "voted_label": "Benign",
+          "learner_confidence": 0.9991
+        },
+        {
+          "learner_name": "MLP",
+          "voted_label": "Benign",
+          "learner_confidence": 0.9999
+        }
+      ]
+    },
+    "shap_attribution": {
+      "explainer_type": "TreeExplainer",
+      "explained_class": "Benign",
+      "base_value": 1.4039,
+      "top_features": [
+        {
+          "rank": 1,
+          "feature_name": "dst_bytes",
+          "feature_value": 0.4084,
+          "shap_value": 1.352178
+        },
+        {
+          "rank": 2,
+          "feature_name": "service_dns",
+          "feature_value": 1.0,
+          "shap_value": 0.736567
+        },
+        {
+          "rank": 3,
+          "feature_name": "src_pkts",
+          "feature_value": -0.3815,
+          "shap_value": 0.698585
+        },
+        {
+          "rank": 4,
+          "feature_name": "src_bytes",
+          "feature_value": -0.4027,
+          "shap_value": -0.455807
+        },
+        {
+          "rank": 5,
+          "feature_name": "duration",
+          "feature_value": 0.6925,
+          "shap_value": 0.452861
+        },
+        {
+          "rank": 6,
+          "feature_name": "header_length",
+          "feature_value": -0.3846,
+          "shap_value": -0.17011
+        },
+        {
+          "rank": 7,
+          "feature_name": "service_ssh",
+          "feature_value": 0.0,
+          "shap_value": 0.156811
+        },
+        {
+          "rank": 8,
+          "feature_name": "service_other",
+          "feature_value": 0.0,
+          "shap_value": 0.118025
+        },
+        {
+          "rank": 9,
+          "feature_name": "tcp_flags_rst",
+          "feature_value": -0.4756,
+          "shap_value": 0.116208
+        },
+        {
+          "rank": 10,
+          "feature_name": "tcp_flags_ack",
+          "feature_value": 0.2901,
+          "shap_value": -0.112968
+        }
+      ]
+    },
+    "evaluation_metadata": {
+      "true_label": "Benign",
+      "in_train_leakage_flag": false,
+      "detector_correct": true
+    }
+  },
+  {
+    "identity": {
+      "alert_id": "ALT-20261020-0008",
+      "flow_id": "FLW-20261020-003466",
+      "detector_family": "traditional_ml",
+      "timestamp": "2026-10-21T04:29:52+00:00",
+      "dataset": "Reference-Synthetic-Network",
+      "split": "pilot"
+    },
+    "prediction": {
+      "predicted_label": "Mirai_Botnet",
+      "confidence": 0.9996428291002909,
+      "base_learner_votes": [
+        {
+          "learner_name": "RandomForest",
+          "voted_label": "Mirai_Botnet",
+          "learner_confidence": 1.0
+        },
+        {
+          "learner_name": "XGBoost",
+          "voted_label": "Mirai_Botnet",
+          "learner_confidence": 0.999
+        },
+        {
+          "learner_name": "MLP",
+          "voted_label": "Mirai_Botnet",
+          "learner_confidence": 0.9999
+        }
+      ]
+    },
+    "shap_attribution": {
+      "explainer_type": "TreeExplainer",
+      "explained_class": "Mirai_Botnet",
+      "base_value": -0.3754,
+      "top_features": [
+        {
+          "rank": 1,
+          "feature_name": "service_telnet",
+          "feature_value": 1.0,
+          "shap_value": 2.860166
+        },
+        {
+          "rank": 2,
+          "feature_name": "dst_bytes",
+          "feature_value": -0.4318,
+          "shap_value": 1.064295
+        },
+        {
+          "rank": 3,
+          "feature_name": "dst_pkts",
+          "feature_value": -0.4019,
+          "shap_value": 0.8825
+        },
+        {
+          "rank": 4,
+          "feature_name": "flow_iat_std",
+          "feature_value": -0.3651,
+          "shap_value": 0.152779
+        },
+        {
+          "rank": 5,
+          "feature_name": "tcp_flags_fin",
+          "feature_value": -0.775,
+          "shap_value": 0.149829
+        },
+        {
+          "rank": 6,
+          "feature_name": "src_bytes",
+          "feature_value": -0.3716,
+          "shap_value": -0.148813
+        },
+        {
+          "rank": 7,
+          "feature_name": "header_length",
+          "feature_value": -0.3507,
+          "shap_value": 0.126934
+        },
+        {
+          "rank": 8,
+          "feature_name": "byte_rate",
+          "feature_value": -0.1277,
+          "shap_value": 0.057955
+        },
+        {
+          "rank": 9,
+          "feature_name": "service_http",
+          "feature_value": 0.0,
+          "shap_value": -0.045879
+        },
+        {
+          "rank": 10,
+          "feature_name": "src_pkts",
+          "feature_value": -0.2909,
+          "shap_value": 0.036903
+        }
+      ]
+    },
+    "evaluation_metadata": {
+      "true_label": "Mirai_Botnet",
+      "in_train_leakage_flag": false,
+      "detector_correct": true
+    }
+  },
+  {
+    "identity": {
+      "alert_id": "ALT-20261020-0009",
+      "flow_id": "FLW-20261020-001268",
+      "detector_family": "traditional_ml",
+      "timestamp": "2026-10-20T09:42:25+00:00",
+      "dataset": "Reference-Synthetic-Network",
+      "split": "pilot"
+    },
+    "prediction": {
+      "predicted_label": "BruteForce",
+      "confidence": 0.9721763801196265,
+      "base_learner_votes": [
+        {
+          "learner_name": "RandomForest",
+          "voted_label": "BruteForce",
+          "learner_confidence": 0.9331
+        },
+        {
+          "learner_name": "XGBoost",
+          "voted_label": "BruteForce",
+          "learner_confidence": 0.9966
+        },
+        {
+          "learner_name": "MLP",
+          "voted_label": "BruteForce",
+          "learner_confidence": 0.9868
+        }
+      ]
+    },
+    "shap_attribution": {
+      "explainer_type": "TreeExplainer",
+      "explained_class": "BruteForce",
+      "base_value": -0.3956,
+      "top_features": [
+        {
+          "rank": 1,
+          "feature_name": "tcp_flags_fin",
+          "feature_value": 1.2903,
+          "shap_value": 1.525992
+        },
+        {
+          "rank": 2,
+          "feature_name": "dst_bytes",
+          "feature_value": -0.3916,
+          "shap_value": 1.19051
+        },
+        {
+          "rank": 3,
+          "feature_name": "service_ssh",
+          "feature_value": 1.0,
+          "shap_value": 0.88218
+        },
+        {
+          "rank": 4,
+          "feature_name": "tcp_flags_rst",
+          "feature_value": 2.1024,
+          "shap_value": 0.660395
+        },
+        {
+          "rank": 5,
+          "feature_name": "src_bytes",
+          "feature_value": -0.402,
+          "shap_value": 0.33861
+        },
+        {
+          "rank": 6,
+          "feature_name": "duration",
+          "feature_value": -0.591,
+          "shap_value": 0.263779
+        },
+        {
+          "rank": 7,
+          "feature_name": "src_port",
+          "feature_value": 1.0533,
+          "shap_value": -0.225505
+        },
+        {
+          "rank": 8,
+          "feature_name": "dst_port",
+          "feature_value": -0.3117,
+          "shap_value": 0.136827
+        },
+        {
+          "rank": 9,
+          "feature_name": "service_http",
+          "feature_value": 0.0,
+          "shap_value": -0.113794
+        },
+        {
+          "rank": 10,
+          "feature_name": "packet_rate",
+          "feature_value": -0.1302,
+          "shap_value": 0.079263
+        }
+      ]
+    },
+    "evaluation_metadata": {
+      "true_label": "BruteForce",
+      "in_train_leakage_flag": false,
+      "detector_correct": true
+    }
+  },
+  {
+    "identity": {
+      "alert_id": "ALT-20261020-0010",
+      "flow_id": "FLW-20261020-000753",
+      "detector_family": "traditional_ml",
+      "timestamp": "2026-10-20T15:08:24+00:00",
+      "dataset": "Reference-Synthetic-Network",
+      "split": "pilot"
+    },
+    "prediction": {
+      "predicted_label": "Benign",
+      "confidence": 0.9945749205234004,
+      "base_learner_votes": [
+        {
+          "learner_name": "RandomForest",
+          "voted_label": "Benign",
+          "learner_confidence": 0.9844
+        },
+        {
+          "learner_name": "XGBoost",
+          "voted_label": "Benign",
+          "learner_confidence": 0.9993
+        },
+        {
+          "learner_name": "MLP",
+          "voted_label": "Benign",
+          "learner_confidence": 1.0
+        }
+      ]
+    },
+    "shap_attribution": {
+      "explainer_type": "TreeExplainer",
+      "explained_class": "Benign",
+      "base_value": 1.4039,
+      "top_features": [
+        {
+          "rank": 1,
+          "feature_name": "src_pkts",
+          "feature_value": -0.4589,
+          "shap_value": 1.086923
+        },
+        {
+          "rank": 2,
+          "feature_name": "dst_bytes",
+          "feature_value": -0.2928,
+          "shap_value": 0.741369
+        },
+        {
+          "rank": 3,
+          "feature_name": "src_bytes",
+          "feature_value": -0.4056,
+          "shap_value": -0.717899
+        },
+        {
+          "rank": 4,
+          "feature_name": "service_dns",
+          "feature_value": 1.0,
+          "shap_value": 0.677601
+        },
+        {
+          "rank": 5,
+          "feature_name": "duration",
+          "feature_value": 0.5198,
+          "shap_value": 0.61562
+        },
+        {
+          "rank": 6,
+          "feature_name": "packet_rate",
+          "feature_value": -0.1347,
+          "shap_value": 0.401949
+        },
+        {
+          "rank": 7,
+          "feature_name": "tcp_flags_ack",
+          "feature_value": -0.5167,
+          "shap_value": 0.345472
+        },
+        {
+          "rank": 8,
+          "feature_name": "service_other",
+          "feature_value": 0.0,
+          "shap_value": 0.129194
+        },
+        {
+          "rank": 9,
+          "feature_name": "tcp_flags_rst",
+          "feature_value": -0.4756,
+          "shap_value": 0.122249
+        },
+        {
+          "rank": 10,
+          "feature_name": "service_ssh",
+          "feature_value": 0.0,
+          "shap_value": 0.11852
+        }
+      ]
+    },
+    "evaluation_metadata": {
+      "true_label": "Benign",
+      "in_train_leakage_flag": false,
+      "detector_correct": true
+    }
+  }
+]
