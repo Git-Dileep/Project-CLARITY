@@ -126,7 +126,7 @@ $$\text{Hallucination Rate} = \frac{N_{\text{CONTRADICTED}} + N_{\text{UNSUPPORT
 ├── evaluation/                 # Human Evaluation & Verification
 │   └── human_eval.md           # Blind human review & rubric calibration
 ├── outputs/                    # Sprint Results & Artifacts
-│   ├── eval_results.md         # Final metric tables & hypothesis tests (H1-H3)
+│   ├── eval_results.md         # Evaluation metric tables
 │   └── pilot_reports/          # Generated JSON & Markdown reports across systems
 ├── docs/                       # Project Governance & Milestones
 │   └── decision_memo.md        # Formal Gate Decision Memo (G1, G3, G5 = GO)

@@ -57,7 +57,7 @@ Project CLARITY completed its Sprint 1 pilot cycle on 2026-10-21. All four works
 | LLM report generator operational (Groq Llama 3.1 8B Instant) | `generation/llm_runner.py` (PR #25) | ✅ PASS |
 | Pilot reports generated across SYS-01..SYS-04 on 20 alerts | `outputs/pilot_reports/`: 80 `.json` + 80 `.md` files (PR #28) | ✅ PASS |
 | Real LLM judge with Rubric v0 validation | `eval/validate_judge.py`: **10/10 agreement** with rubric labels (PR #28) | ✅ PASS |
-| 4 uncollapsed Rubric v0 metrics scored | `outputs/eval_results.md`: Groundedness, Faithfulness, Fabrication, Hallucination across systems, detectors, attack types, and H1–H3 trade-offs | ✅ PASS |
+| 4 uncollapsed Rubric v0 metrics scored | `outputs/eval_results.md`: Groundedness, Faithfulness, Fabrication, and Hallucination summaries across systems, detectors, and attack types | ✅ PASS |
 | Human blind review completed | `evaluation/human_eval.md`: Mean Groundedness **0.73**, Faithfulness **0.65**, Fabrication **0.19**, Hallucination **0.16** (PR #29) | ✅ PASS |
 | Human-judge agreement documented | High consensus on penalties for raw feature placeholders and ground-truth label leakage | ✅ PASS |
 | DL ensemble training supported | `detection/workstream/logs/dl_training.log` + metrics artifacts (PR #30) | ✅ PASS |
