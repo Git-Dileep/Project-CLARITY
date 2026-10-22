@@ -1,8 +1,8 @@
-# Project CLARITY — Reproducible 10-Flow Sample Pilot Runbook (KOU-04 / KOU-05)
+﻿# Project CLARITY — Reproducible 10-Flow Sample Pilot Runbook (DET-04 / DET-05)
 
 **Run ID:** `RUN-20261020-SAMPLE-PILOT10`  
 **Split ID:** `SPLIT-20261020-SEED42-V1`  
-**Target Workstream:** `detection/koushik_workstream` (Git branch: `Koushik`)  
+**Target Workstream:** `detection/workstream`
 **Specification Reference:** `contracts/alert_schema_v1.json` (Draft 2020-12)  
 **Execution Date:** October 2026  
 
@@ -10,8 +10,8 @@
 
 > [!IMPORTANT]
 > **SAMPLE-ONLY RUN DISCLAIMER:**  
-> This run constitutes a **sample-only pilot** designed strictly to satisfy and verify the lead's KOU-04 (SHAP explainability) and KOU-05 (alert export and validation) requirements. It uses the canonical reference synthetic dataset (`data/reference_synthetic.csv`) to validate end-to-end schemas, SHAP attributions, ensemble voter contracts, and zero data leakage.  
-> **This run does NOT claim validation on the real ACI IoT 2023 dataset.** KOU-03 remains cleanly and honestly designated as **BLOCKED** pending acquisition and unblocking of the genuine ACI IoT dataset.
+> This run constitutes a **sample-only pilot** designed strictly to satisfy and verify the DET-04 (SHAP explainability) and DET-05 (alert export and validation) acceptance criteria. It uses the canonical reference synthetic dataset (`data/reference_synthetic.csv`) to validate end-to-end schemas, SHAP attributions, ensemble voter contracts, and zero data leakage.
+> **This run does NOT claim validation on the real ACI IoT 2023 dataset.** DET-03 remains cleanly and honestly designated as **BLOCKED** pending acquisition and unblocking of the genuine ACI IoT dataset.
 
 ---
 
@@ -37,7 +37,7 @@ The run is governed by `config/run_sample_pilot10.json`:
 - `reports_dir`: `reports/sample_pilot10`
 
 ### One-Click Reproduction (Windows Batch)
-From `detection/koushik_workstream/`:
+From `detection/workstream/`:
 ```bat
 run_sample_pilot10.bat
 ```
@@ -46,16 +46,16 @@ run_sample_pilot10.bat
 From `Project-CLARITY/` repository root:
 ```powershell
 # 1. Run complete training, explanation, and pilot export pipeline
-detection\koushik_workstream\.venv\Scripts\python.exe -m src.run_all --config config/run_sample_pilot10.json
+detection\workstream\.venv\Scripts\python.exe -m src.run_all --config config/run_sample_pilot10.json
 
 # 2. Validate alert schema contracts (Draft 2020-12) and semantic invariants
-detection\koushik_workstream\.venv\Scripts\python.exe scripts/validate_schemas.py --config detection/koushik_workstream/config/run_sample_pilot10.json
+detection\workstream\.venv\Scripts\python.exe scripts/validate_schemas.py --config detection/workstream/config/run_sample_pilot10.json
 
 # 3. Perform train-vs-pilot data leakage audit
-detection\koushik_workstream\.venv\Scripts\python.exe -m src.leakage_audit --config config/run_sample_pilot10.json
+detection\workstream\.venv\Scripts\python.exe -m src.leakage_audit --config config/run_sample_pilot10.json
 
 # 4. Run automated test suite
-detection\koushik_workstream\.venv\Scripts\python.exe -m pytest detection/koushik_workstream/tests/test_pilot10_run.py -v
+detection\workstream\.venv\Scripts\python.exe -m pytest detection/workstream/tests/test_pilot10_run.py -v
 ```
 
 ---
@@ -130,14 +130,14 @@ Attributions comply with `contracts/alert_schema_v1.json` and are documented mat
 
 ## 6. Directory Artifacts Reference
 
-All generated outputs are located in `detection/koushik_workstream/reports/sample_pilot10/`:
+All generated outputs are located in `detection/workstream/reports/sample_pilot10/`:
 
 ```
 reports/sample_pilot10/
 ├── alert_validation_report.json              # Fast internal validator output
-├── audit_summary.md                          # KOU-01 reference dataset audit summary
-├── data_audit.csv                            # KOU-01 feature statistics
-├── data_audit.json                           # KOU-01 complete dataset audit metadata
+├── audit_summary.md                          # DET-01 reference dataset audit summary
+├── data_audit.csv                            # DET-01 feature statistics
+├── data_audit.json                           # DET-01 complete dataset audit metadata
 ├── dl/
 │   ├── dl_classification_report.csv          # Deep Learning per-class metrics
 │   ├── dl_confusion_matrix.csv               # Deep Learning confusion matrix
@@ -145,8 +145,8 @@ reports/sample_pilot10/
 │   └── dl_test_predictions.csv              # Deep Learning test predictions
 ├── leakage_audit_report.json                 # Train-vs-pilot leakage audit JSON
 ├── leakage_audit_report.md                   # Train-vs-pilot leakage audit Markdown summary
-├── pilot_traditional_alerts_10.json          # 10 schema-validated Traditional ML alerts (KOU-05)
-├── pilot_dl_alerts_10.json                   # 10 schema-validated DL alerts (KOU-05)
+├── pilot_traditional_alerts_10.json          # 10 schema-validated Traditional ML alerts (DET-05)
+├── pilot_dl_alerts_10.json                   # 10 schema-validated DL alerts (DET-05)
 ├── pilot_manifest.json                       # Shared 10-flow pilot selection manifest
 ├── pilot_manifest.csv                        # CSV summary of 10 pilot flows
 ├── schema_and_semantic_validation_report.json # Comprehensive Draft 2020-12 validation report

@@ -1,11 +1,11 @@
-"""Master entry point to execute the complete detection workflow end-to-end.
+﻿"""Master entry point to execute the complete detection workflow end-to-end.
 
 Steps:
 1. Load WorkstreamConfig
-2. Dataset Audit (KOU-01)
-3. Traditional 3-Model Ensemble (KOU-02)
-4. Deep Learning 3-Model Ensemble (KOU-03)
-5. SHAP Explanations & 20-Alert Pilot Export with Strict Contract Validation (KOU-04 & KOU-05)
+2. Dataset Audit (DET-01)
+3. Traditional 3-Model Ensemble (DET-02)
+4. Deep Learning 3-Model Ensemble (DET-03)
+5. SHAP Explanations & 20-Alert Pilot Export with Strict Contract Validation (DET-04 & DET-05)
 """
 
 from __future__ import annotations
@@ -27,7 +27,7 @@ from .export_pilot import export_pilot_alerts
 def run_pipeline(config_path: str = "config/reference.json") -> int:
     t_start = time.perf_counter()
     print("=" * 70)
-    print("PROJECT CLARITY — KOUSHIK DETECTION WORKSTREAM RUNNER")
+    print("PROJECT CLARITY — DETECTION WORKSTREAM RUNNER")
     print("=" * 70)
 
     cfg = WorkstreamConfig.load(config_path)

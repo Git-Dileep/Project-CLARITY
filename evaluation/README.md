@@ -1,4 +1,4 @@
-# Evaluation Module (Lead: Dileep)
+# Evaluation Module
 
 This module implements the Rubric v0 evaluation engine, atomic claim scoring, and statistical synthesis.
 

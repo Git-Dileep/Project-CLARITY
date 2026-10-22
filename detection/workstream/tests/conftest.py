@@ -1,4 +1,4 @@
-"""Pytest fixtures for koushik_workstream testing suite.
+"""Pytest fixtures for workstream testing suite.
 """
 
 from __future__ import annotations

@@ -1,4 +1,4 @@
-START HERE — KOU IIoT DETECTION PROJECT
+﻿START HERE — IoT Detection DETECTION PROJECT
 
 1. Extract this ZIP completely.
 2. Put ONLY the network CSV files (GroundTruth_Network_*.csv) into:

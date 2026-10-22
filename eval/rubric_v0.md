@@ -1,9 +1,8 @@
 # Evaluation Rubric v0: Reliability Scoring for LLM Incident Reports
 
-**Lead Author:** Dileep (Lead Systems / ML)  
-**Status:** DRAFT / FROZEN FOR DIL-02  
+**Status:** DRAFT / FROZEN
 **Date:** October 17, 2026  
-**Document ID:** DIL-02-RUBRIC-V0  
+**Document ID:** RUBRIC-V0
 **Target Architecture:** RAG Incident Analysis Pipeline (SYS-01 through SYS-06)
 
 ---

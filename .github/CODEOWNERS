@@ -1,5 +1,1 @@
-# Require the repository owner to review all files
-* @Git-Dileep
-
-# Protect the ownership rules themselves
-/.github/CODEOWNERS @Git-Dileep
+# Reviewer ownership is managed through issue assignments and pull requests.

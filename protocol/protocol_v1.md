@@ -1,9 +1,8 @@
 # Protocol v1: Incident Analysis RAG Reliability Evaluation
 
-**Study Lead:** Dileep (Lead Systems / ML)  
 **Status:** FROZEN  
-**Date:** October 17, 2026 (Updated with ACI IoT 2023 & DIL-02 Rubric)  
-**Document ID:** DIL-01-PROT-V1  
+**Date:** October 17, 2026 (Updated with ACI IoT 2023 & Rubric v0)
+**Document ID:** PROTOCOL-V1
 
 ---
 
@@ -23,19 +22,19 @@ To preserve strict experimental validity, this study enforces **exactly one mani
 
 ## 2. Experimental Constants Table
 
-| Constant | Value | Description / Scope | Owner Confirmation |
+| Constant | Value | Description / Scope | Validation |
 | :--- | :--- | :--- | :--- |
-| **Primary Dataset** | **ACI IoT Network Dataset 2023** | 1,170,570 flow records, 71 features, 11 classes (IEEE DataPort) | Confirmed (Dileep / Paper) |
-| **Backup Datasets** | TON_IoT, IoT-23, BoT-IoT | Secondary fallback datasets if cross-domain test is run | Confirmed (Dileep) |
-| **Target LLM Model**| `meta-llama/Llama-3.1-8b-instant` | Generator LLM (matching paper's 0.6391 faithfulness reference baseline) | Confirmed (Dileep) |
-| **LLM Temperature** | `0.0` | Deterministic decoding mode | Confirmed (Dileep) |
-| **Top-$k$ Retrieval** | `5` | Retrieved chunks from vector KB | Confirmed (Dileep) |
-| **Top-$N$ SHAP Features**| `10` | Features passed into incident prompt | Confirmed (Dileep) |
-| **Random Seed** | `42` | Global pseudo-random generator seed | Confirmed (Dileep) |
-| **Embedding Model** | `text-embedding-3-small` / equivalent | Embedding engine for knowledge base chunks | `TODO-Sneha` |
-| **Vector DB** | ChromaDB (`chromadb>=0.4.22`) | Vector search database for local KB | Confirmed (Dileep) |
-| **External Search** | Tavily Search API | Live verification cache / web lookup | `TODO-Sneha` |
-| **Feature Extraction** | 71 flow features (ACI IoT 2023) | Standardized tabular representation | `TODO-Koushik` |
+| **Primary Dataset** | **ACI IoT Network Dataset 2023** | 1,170,570 flow records, 71 features, 11 classes (IEEE DataPort) | Confirmed |
+| **Backup Datasets** | TON_IoT, IoT-23, BoT-IoT | Secondary fallback datasets if cross-domain test is run | Confirmed |
+| **Target LLM Model**| `meta-llama/Llama-3.1-8b-instant` | Generator LLM (matching paper's 0.6391 faithfulness reference baseline) | Confirmed |
+| **LLM Temperature** | `0.0` | Deterministic decoding mode | Confirmed |
+| **Top-$k$ Retrieval** | `5` | Retrieved chunks from vector KB | Confirmed |
+| **Top-$N$ SHAP Features**| `10` | Features passed into incident prompt | Confirmed |
+| **Random Seed** | `42` | Global pseudo-random generator seed | Confirmed |
+| **Embedding Model** | `text-embedding-3-small` / equivalent | Embedding engine for knowledge base chunks | To validate |
+| **Vector DB** | ChromaDB (`chromadb>=0.4.22`) | Vector search database for local KB | Confirmed |
+| **External Search** | Tavily Search API | Live verification cache / web lookup | To validate |
+| **Feature Extraction** | 71 flow features (ACI IoT 2023) | Standardized tabular representation | To validate |
 
 ---
 
@@ -171,4 +170,4 @@ When resolving feature attributions for an ensemble using majority hard voting (
 - Dynamic autonomous agent tool-calling loops outside controlled retrieval.
 
 ### Change Control Policy
-Any modification to `schema/alert_schema_v1.json` or `protocol/protocol_v1.md` requires consensus between Lead (Dileep), Detector Lead (Koushik), and RAG Lead (Sneha) with an incremental version tag (`v2`, `v3`).
+Any modification to `schema/alert_schema_v1.json` or `protocol/protocol_v1.md` requires review through an issue and pull request, with an incremental version tag (`v2`, `v3`).

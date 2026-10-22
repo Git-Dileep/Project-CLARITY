@@ -1,4 +1,4 @@
-import sys
+﻿import sys
 import os
 
 # Add root folder to sys.path so 'from eval...' works from anywhere
@@ -97,7 +97,7 @@ def run_evaluation_and_build_tables():
     
     # Build Markdown Content
     md_output = [
-        "# SNE-04 Evaluation Results & Metric Tables\n",
+        "# GEN-04 Evaluation Results & Metric Tables\n",
         "## Table 1: Metrics per System\n",
         sys_df.to_markdown(),
         "\n## Table 2: Metrics per Detector\n",

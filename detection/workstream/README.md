@@ -1,6 +1,6 @@
-# Koushik Detection Workstream — CLARITY Intrusion Detection Pipeline
+﻿# Detection Workstream — CLARITY Intrusion Detection Pipeline
 
-This directory contains the production-grade, modular network intrusion detection pipeline for **Project CLARITY (Detection Workstream)** assigned to **Koushik** on branch `Koushik`.
+This directory contains the production-grade, modular network intrusion detection pipeline for **Project CLARITY (Detection Workstream)**.
 
 The pipeline supports both **Traditional Machine Learning (Random Forest, XGBoost, MLP)** and **Deep Learning (1D-CNN, LSTM, Transformer Encoder)** ensembles with majority-voting consensus, local SHAP explainability, and strict contract-compliant pilot alert export validated against `contracts/alert_schema_v1.json`.
 
@@ -19,10 +19,10 @@ The pipeline supports both **Traditional Machine Learning (Random Forest, XGBoos
 ## Architecture & Directory Layout
 
 ```text
-detection/koushik_workstream/
+detection/workstream/
 ├── README.md                          # Comprehensive workstream guide & instructions
 ├── WORKSTREAM_STATUS.md               # Evidence gates and completion tracking
-├── TASK_STATUS_AND_NEXT_STEPS.md      # Detailed task breakdown (KOU-01 to KOU-06)
+├── TASK_STATUS_AND_NEXT_STEPS.md      # Detailed task breakdown (DET-01 to DET-06)
 ├── requirements.txt                   # Tested dependency specification
 ├── .gitignore                         # Excludes raw data, virtual environments, binaries
 ├── run_all.bat                        # One-click master workflow runner
@@ -80,7 +80,7 @@ detection/koushik_workstream/
 
 ```powershell
 # 1. From repository root or workstream folder
-cd detection/koushik_workstream
+cd detection/workstream
 
 # 2. Create virtual environment
 py -m venv .venv
@@ -172,10 +172,10 @@ Run syntax validation and automated pytest suite:
 
 ```powershell
 # 1. Compileall check
-python -m compileall -q -x "\.venv" detection/koushik_workstream
+python -m compileall -q -x "\.venv" detection/workstream
 
 # 2. Pytest test suite (32 tests)
-python -m pytest detection/koushik_workstream/tests -v
+python -m pytest detection/workstream/tests -v
 ```
 
 ---

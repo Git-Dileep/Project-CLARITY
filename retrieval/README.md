@@ -1,4 +1,4 @@
-# Retrieval Module (Lead: Sumit / Sneha)
+# Retrieval Module
 
 This module handles dense vector embeddings, vector database persistence, and live verification caching.
 

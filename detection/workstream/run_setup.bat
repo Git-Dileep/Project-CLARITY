@@ -1,7 +1,7 @@
-@echo off
+﻿@echo off
 cd /d "%~dp0"
 echo ======================================================
-echo KOU IIoT Detection - one-time environment setup
+echo IoT Detection Detection - one-time environment setup
 echo ======================================================
 where py >nul 2>nul
 if errorlevel 1 (

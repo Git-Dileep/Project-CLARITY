@@ -1,8 +1,7 @@
-# Koushik — Detection Workstream Handoff
+# Detection Workstream Handoff
 
-- **Owner:** Koushik
-- **Assigned Branch:** `Koushik`
-- **Scope:** Detection workstream located strictly within `detection/koushik_workstream/`. Authoritative shared contracts (`contracts/alert_schema_v1.json`) are preserved untouched.
+- **Ownership:** Managed through issue assignments and pull request reviews.
+- **Scope:** Detection workstream located strictly within `detection/workstream/`. Authoritative shared contracts (`contracts/alert_schema_v1.json`) are preserved untouched.
 - **Completed Implementation:**
   - Configurable multi-CSV data loader, schema compatibility checker, and robust audit generator (`src/audit_datasets.py`).
   - Three-model Traditional Ensemble (Random Forest + XGBoost + MLP) with majority voting (`src/train_traditional.py`).

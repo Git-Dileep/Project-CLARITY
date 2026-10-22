@@ -1,6 +1,5 @@
-# Human Blind Review Scoring Sheet (SUM-06)
+# Human Blind Review Scoring Sheet
 
-- **Evaluator:** Sumit Lamani
 - **Rubric Followed:** `eval/rubric_v0.md`
 - **Source Data:** `generation/sample_reports.json` (SYS-01 pilot samples)
 - **Target Issue:** Refs #18

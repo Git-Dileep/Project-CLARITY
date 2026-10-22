@@ -1,4 +1,4 @@
-import json
+﻿import json
 import os
 from eval.score_reports import evaluate_report
 
@@ -27,4 +27,4 @@ def evaluate_generated_reports(reports_file_path: str, output_results_path: str)
     print(f"Evaluated {len(evaluated_results)} reports -> Saved to {output_results_path}")
 
 if __name__ == "__main__":
-    print("SNE-04 Evaluation Harness Skeleton initialized successfully.")
+    print("GEN-04 Evaluation Harness Skeleton initialized successfully.")

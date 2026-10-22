@@ -1,6 +1,6 @@
 {
   "timestamp": "2026-10-20T07:04:59.977257+00:00",
-  "schema_path": "C:\\Users\\koush\\Downloads\\Koushik_CLARITY_Workstream\\Koushik_CLARITY_Workstream\\Project-CLARITY\\contracts\\alert_schema_v1.json",
+  "schema_path": "contracts\\alert_schema_v1.json",
   "traditional_alerts_count": 20,
   "traditional_valid": true,
   "dl_alerts_count": 20,

@@ -1,21 +1,21 @@
-import os
+﻿import os
 import json
 import pandas as pd
 from generation.llm_runner import generate_incident_report
 
-# 1. Define file paths to Koushik's CSV files
-alerts_path = "detection/koushik_workstream/reports/pilot_20_alerts.csv"
-shap_path = "detection/koushik_workstream/reports/pilot_shap_values.csv"
+# 1. Define file paths to the detection workstream CSV files
+alerts_path = "detection/workstream/reports/pilot_20_alerts.csv"
+shap_path = "detection/workstream/reports/pilot_shap_values.csv"
 
 if not os.path.exists(alerts_path):
     print(f"Error: {alerts_path} not found. Ensure git checkout was run.")
     exit(1)
 
-# 2. Load Koushik's CSV files
+# 2. Load the detection workstream CSV files
 alerts_df = pd.read_csv(alerts_path)
 shap_df = pd.read_csv(shap_path) if os.path.exists(shap_path) else None
 
-print(f"Loaded {len(alerts_df)} alerts from Koushik's export.")
+print(f"Loaded {len(alerts_df)} alerts from the detection workstream export.")
 
 sample_reports = []
 
@@ -84,4 +84,4 @@ os.makedirs("generation", exist_ok=True)
 with open("generation/sample_reports.json", "w") as f:
     json.dump(sample_reports, f, indent=2)
 
-print("\nTask SNE-05 Complete! 5 incident reports generated and saved to 'generation/sample_reports.json'")
+print("\nTask GEN-05 Complete! 5 incident reports generated and saved to 'generation/sample_reports.json'")

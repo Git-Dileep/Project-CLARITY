@@ -1,4 +1,4 @@
-"""Tests for validating generated alert payloads against contracts/alert_schema_v1.json.
+﻿"""Tests for validating generated alert payloads against contracts/alert_schema_v1.json.
 """
 
 from __future__ import annotations
@@ -57,7 +57,7 @@ def test_valid_alert_passes_schema(valid_alert_payload):
 def test_invalid_alert_id_format(valid_alert_payload):
     validator = load_validator()
     bad_alert = copy.deepcopy(valid_alert_payload)
-    bad_alert["identity"]["alert_id"] = "KOU-PILOT-001"  # Invalid format
+    bad_alert["identity"]["alert_id"] = "DET-PILOT-001"  # Invalid format
 
     is_valid, errors = validate_alert_payload(bad_alert, validator)
     assert is_valid is False

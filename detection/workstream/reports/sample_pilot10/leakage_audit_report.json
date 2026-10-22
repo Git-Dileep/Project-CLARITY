@@ -28,9 +28,9 @@
     "cross_detector_flow_mismatches": []
   },
   "inspected_files": {
-    "split_manifest": "C:\\Users\\koush\\Downloads\\Koushik_CLARITY_Workstream\\Koushik_CLARITY_Workstream\\Project-CLARITY\\detection\\koushik_workstream\\reports\\sample_pilot10\\split_manifest.json",
-    "pilot_manifest": "C:\\Users\\koush\\Downloads\\Koushik_CLARITY_Workstream\\Koushik_CLARITY_Workstream\\Project-CLARITY\\detection\\koushik_workstream\\reports\\sample_pilot10\\pilot_manifest.json",
-    "traditional_alerts": "C:\\Users\\koush\\Downloads\\Koushik_CLARITY_Workstream\\Koushik_CLARITY_Workstream\\Project-CLARITY\\detection\\koushik_workstream\\reports\\sample_pilot10\\pilot_traditional_alerts_10.json",
-    "dl_alerts": "C:\\Users\\koush\\Downloads\\Koushik_CLARITY_Workstream\\Koushik_CLARITY_Workstream\\Project-CLARITY\\detection\\koushik_workstream\\reports\\sample_pilot10\\pilot_dl_alerts_10.json"
+    "split_manifest": "detection\\workstream\\reports\\sample_pilot10\\split_manifest.json",
+    "pilot_manifest": "detection\\workstream\\reports\\sample_pilot10\\pilot_manifest.json",
+    "traditional_alerts": "detection\\workstream\\reports\\sample_pilot10\\pilot_traditional_alerts_10.json",
+    "dl_alerts": "detection\\workstream\\reports\\sample_pilot10\\pilot_dl_alerts_10.json"
   }
 }

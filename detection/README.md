@@ -1,4 +1,4 @@
-# Detection Module (Lead: Koushik)
+# Detection Module
 
 This module implements and evaluates the network flow detectors and SHAP attribution pipelines.
 

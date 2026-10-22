@@ -1,4 +1,4 @@
-# Project CLARITY: Incident Analysis RAG Reliability Study
+﻿# Project CLARITY: Incident Analysis RAG Reliability Study
 
 > **Evaluating whether SHAP attributions from deep learning vs. traditional ML ensembles impact LLM groundedness and hallucination in RAG incident analysis.**
 
@@ -107,7 +107,7 @@ $$\text{Hallucination Rate} = \frac{N_{\text{CONTRADICTED}} + N_{\text{UNSUPPORT
 │   ├── report_schema_v1.json   # Incident report structure schema
 │   └── retrieval_schema_v1.json# Retrieval context chunk schema
 ├── detection/                  # Detection Workstream
-│   └── koushik_workstream/     # Traditional & DL ensemble models, SHAP, and audit
+│   └── workstream/                # Traditional & DL ensemble models, SHAP, and audit
 │       ├── reports/            # Pilot alert payloads & leakage audit reports
 │       └── src/                # Training, inference, SHAP, and export pipelines
 ├── retrieval/                  # Retrieval Workstream
@@ -124,7 +124,7 @@ $$\text{Hallucination Rate} = \frac{N_{\text{CONTRADICTED}} + N_{\text{UNSUPPORT
 │   ├── validate_judge.py       # LLM judge validation against ground truth
 │   └── build_results.py        # Aggregate metric compilation
 ├── evaluation/                 # Human Evaluation & Verification
-│   └── human_eval_sumit.md     # Blind human review & rubric calibration
+│   └── human_eval.md           # Blind human review & rubric calibration
 ├── outputs/                    # Sprint Results & Artifacts
 │   ├── eval_results.md         # Final metric tables & hypothesis tests (H1-H3)
 │   └── pilot_reports/          # Generated JSON & Markdown reports across systems
@@ -148,9 +148,8 @@ $$\text{Hallucination Rate} = \frac{N_{\text{CONTRADICTED}} + N_{\text{UNSUPPORT
 ## 🚀 Setup & Execution
 
 ### 1. Installation
-Clone the repository and set up a virtual environment:
+Clone the repository using its configured GitHub URL, then set up a virtual environment:
 ```bash
-git clone https://github.com/Git-Dileep/Project-CLARITY.git
 cd Project-CLARITY
 python -m venv .venv
 source .venv/bin/activate  # On Windows: .venv\Scripts\activate
@@ -189,6 +188,6 @@ All Sprint 1 milestone gates (G1, G3, G5) were evaluated and approved under **GO
 
 ### Open Workstream Items (Dataset Dependent)
 The following workstream tickets remain open pending full real-world ACI IoT 2023 dataset access:
-- **Issue #7 [KOU-01]:** Switch to real ACI IoT 2023 dataset and audit schema
-- **Issue #8 [KOU-02]:** Train traditional ensemble on real ACI IoT 2023
-- **Issue #9 [KOU-03]:** Complete deep learning ensemble training on real ACI IoT 2023
+- **Issue #7 [DET-01]:** Switch to real ACI IoT 2023 dataset and audit schema
+- **Issue #8 [DET-02]:** Train traditional ensemble on real ACI IoT 2023
+- **Issue #9 [DET-03]:** Complete deep learning ensemble training on real ACI IoT 2023

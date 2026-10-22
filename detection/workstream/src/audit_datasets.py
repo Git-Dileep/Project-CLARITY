@@ -1,4 +1,4 @@
-"""Audit datasets and produce detailed machine-readable and human-readable reports.
+﻿"""Audit datasets and produce detailed machine-readable and human-readable reports.
 
 Generates:
 - data_audit.json
@@ -98,7 +98,7 @@ def inspect_single_file(path: Path, target_col: str, chunksize: int = 100000) ->
 
 
 def run_audit(config: WorkstreamConfig, base_dir: Optional[Path] = None) -> Dict[str, Any]:
-    """Execute complete dataset audit according to KOU-01 criteria."""
+    """Execute complete dataset audit according to DET-01 criteria."""
     work_dir = base_dir or Path.cwd()
     reports_dir = config.resolve_path(work_dir, config.reports_dir)
     reports_dir.mkdir(parents=True, exist_ok=True)

@@ -1,4 +1,4 @@
-"""Configuration management for Koushik Detection Workstream.
+"""Configuration management for the Detection Workstream.
 
 Supports loading, validating, and saving configuration files in JSON format.
 Ensures independence from specific datasets via dynamic schema definitions.

@@ -3,8 +3,8 @@ import json
 from pathlib import Path
 from groq import Groq
 
-TRAD_JSON_PATH = Path("detection/koushik_workstream/reports/reference_synthetic/pilot_traditional_alerts.json")
-DL_JSON_PATH = Path("detection/koushik_workstream/reports/reference_synthetic/pilot_dl_alerts.json")
+TRAD_JSON_PATH = Path("detection/workstream/reports/reference_synthetic/pilot_traditional_alerts.json")
+DL_JSON_PATH = Path("detection/workstream/reports/reference_synthetic/pilot_dl_alerts.json")
 OUTPUT_DIR = Path("outputs/pilot_reports")
 
 

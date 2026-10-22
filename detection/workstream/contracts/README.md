@@ -5,7 +5,7 @@ The authoritative shared alert schema for Project CLARITY is located at the root
 
 ## Rules
 1. **Never modify, weaken, or replace** `contracts/alert_schema_v1.json`.
-2. All alert exports from `detection/koushik_workstream` must strictly conform to `AlertSchemaV1` Draft 2020-12.
+2. All alert exports from `detection/workstream` must strictly conform to `AlertSchemaV1` Draft 2020-12.
 3. Every exported alert payload must satisfy:
    - `identity.alert_id`: format `^ALT-[0-9]{8}-[0-9]{4}$`
    - `identity.detector_family`: `"traditional_ml"` or `"dl_ensemble"`

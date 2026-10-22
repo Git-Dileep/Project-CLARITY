@@ -2,7 +2,7 @@ name: Contracts & Code Quality CI
 
 on:
   push:
-    branches: [ main, Dileep ]
+    branches: [ main ]
   pull_request:
     branches: [ main ]
 

@@ -1,4 +1,4 @@
-[2026-10-20 15:33:56] === STARTING PILOT GENERATION RUN (SNE-03 / Issue #21) ===
+﻿[2026-10-20 15:33:56] === STARTING PILOT GENERATION RUN (GEN-03 / Issue #21) ===
 [2026-10-20 15:33:56] Target Systems: ['SYS-01', 'SYS-02', 'SYS-03', 'SYS-04']
 [2026-10-20 15:33:56] Total Pilot Alerts: 20
 [2026-10-20 15:33:56] Model: llama-3.1-8b-instant | Temp: 0.0 | Max Tokens: 4096
