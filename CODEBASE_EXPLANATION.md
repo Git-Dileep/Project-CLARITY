@@ -59,7 +59,7 @@ To establish causal attribution, CLARITY enforces a strict single independent va
 • Multi-Layer Perceptron                • Transformer Encoder
        │                                         │
        ▼                                         ▼
-[2-of-3 Hard Voting Consensus]          [2-of-3 Hard Voting Consensus]
+[Soft Voting Consensus]          [2-of-3 Hard Voting Consensus]
        │                                         │
        ▼                                         ▼
 [shap.TreeExplainer]                    [shap.GradientExplainer]
@@ -73,7 +73,7 @@ To establish causal attribution, CLARITY enforces a strict single independent va
        ┌────────────────────┼────────────────────┐
        ▼                    ▼                    ▼
   [0-Shot Path]       [Local RAG Path]     [Hybrid RAG Path]
-   (Alert Only)       (ChromaDB k=5)       (ChromaDB + Tavily)
+   (Alert Only)       (ChromaDB k=5)       (ChromaDB + Tavily + MITRE ATT&CK)
        │                    │                    │
        └────────────────────┼────────────────────┘
                             ▼
