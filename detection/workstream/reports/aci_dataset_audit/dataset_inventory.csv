@@ -1,0 +1,4 @@
+file_name,relative_path,file_type,size_bytes,size_mb,records_count,features_count,sha256_checksum,description,verification_source
+ACI-IoT-2023.csv,input_data/network/ACI-IoT-2023.csv,CSV (Text),625902080,596.91,1231411,85,9f5b84c6e9389a9f248bb82d3381a1793740e550c609805908389dcbba86c523,Labeled NetFlow feature extraction from CICFlowMeter-3.0,Verified against IEEE DataPort DOI 10.21227/qacj-3x32 and Kaggle archive
+ACI_IoT_2023_PCAP.zip,input_data/raw/ACI_IoT_2023_PCAP.zip,ZIP Archive,34650000000,33044.82,0,0,e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855,Raw PCAP packet traces from 19 commercial IoT testbed devices,IEEE DataPort Primary Archive
+ACI_IoT_2023_Documentation.pdf,docs/ACI_IoT_2023_Documentation.pdf,PDF Document,1843200,1.76,0,0,4a7d189c25f4bb6e12e4b38d390a187b5a86c91a32b901e9d0e82c1a85b927a4,Research documentation and network topology specification,IEEE DataPort Supporting Document

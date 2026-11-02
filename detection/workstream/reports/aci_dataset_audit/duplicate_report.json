@@ -1,0 +1,26 @@
+{
+  "dataset_name": "ACI-IoT-Network-Dataset-2023",
+  "audit_scope": "Full NetFlow CSV (ACI-IoT-2023.csv)",
+  "total_records_inspected": 1231411,
+  "exact_duplicate_rows_count": 60841,
+  "exact_duplicate_percentage": 4.9407,
+  "unique_flows_count": 1170570,
+  "duplicate_distribution_by_class": {
+    "Benign": 42105,
+    "Port Scan": 8412,
+    "SYN Flood": 4920,
+    "Ping Sweep": 3105,
+    "OS Scan": 1560,
+    "Vulnerability Scan": 482,
+    "ICMP Flood": 210,
+    "DNS Flood": 42,
+    "Slowloris": 5,
+    "Dictionary Attack": 0,
+    "UDP Flood": 0,
+    "ARP Spoofing": 0
+  },
+  "deduplication_policy": {
+    "recommended_action": "Preserve flow duplicates in test split if they correspond to distinct timestamps/flow_ids to mirror real-world network operational density; drop strict feature duplicates when training to avoid synthetic over-representation.",
+    "pipeline_rule": "Deterministic deduplication across feature matrices during model preprocessing, retaining earliest timestamp."
+  }
+}

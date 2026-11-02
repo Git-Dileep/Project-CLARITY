@@ -1,0 +1,25 @@
+column_name,data_type,null_count,null_percentage,inf_count,inf_percentage,imputation_rule
+Flow Byts/s,float64,1924,0.1562,1924,0.1562,Replace inf/nan with train median (0.0 for zero duration flows)
+Flow Pkts/s,float64,1924,0.1562,1924,0.1562,Replace inf/nan with train median (0.0 for zero duration flows)
+Flow Duration,float64,0,0.0000,0,0.0000,None (Clean)
+Tot Fwd Pkts,float64,0,0.0000,0,0.0000,None (Clean)
+Tot Bwd Pkts,float64,0,0.0000,0,0.0000,None (Clean)
+TotLen Fwd Pkts,float64,0,0.0000,0,0.0000,None (Clean)
+TotLen Bwd Pkts,float64,0,0.0000,0,0.0000,None (Clean)
+Fwd Pkt Len Max,float64,0,0.0000,0,0.0000,None (Clean)
+Fwd Pkt Len Min,float64,0,0.0000,0,0.0000,None (Clean)
+Fwd Pkt Len Mean,float64,0,0.0000,0,0.0000,None (Clean)
+Fwd Pkt Len Std,float64,0,0.0000,0,0.0000,None (Clean)
+Bwd Pkt Len Max,float64,0,0.0000,0,0.0000,None (Clean)
+Bwd Pkt Len Min,float64,0,0.0000,0,0.0000,None (Clean)
+Bwd Pkt Len Mean,float64,0,0.0000,0,0.0000,None (Clean)
+Bwd Pkt Len Std,float64,0,0.0000,0,0.0000,None (Clean)
+Flow ID,string,0,0.0000,0,0.0000,Excluded identifier
+Src IP,string,0,0.0000,0,0.0000,Excluded identifier
+Src Port,int64,0,0.0000,0,0.0000,Excluded identifier
+Dst IP,string,0,0.0000,0,0.0000,Excluded identifier
+Dst Port,int64,0,0.0000,0,0.0000,Excluded identifier
+Protocol,int64,0,0.0000,0,0.0000,Excluded identifier
+Timestamp,string,0,0.0000,0,0.0000,Excluded identifier
+Label,string,0,0.0000,0,0.0000,Supervised target
+ALL_OTHER_62_COLUMNS,float64,0,0.0000,0,0.0000,None (100% complete)

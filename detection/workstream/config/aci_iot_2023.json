@@ -1,0 +1,70 @@
+{
+  "dataset_name": "ACI-IoT-Network-Dataset-2023",
+  "is_synthetic": false,
+  "input_path": "input_data/network/ACI-IoT-2023.csv",
+  "target_column": "Label",
+  "flow_id_column": "Flow ID",
+  "timestamp_column": "Timestamp",
+  "device_id_column": null,
+  "metadata_columns": [
+    "source_file",
+    "sample_id"
+  ],
+  "drop_columns": [
+    "Flow ID",
+    "Src IP",
+    "Src Port",
+    "Dst IP",
+    "Dst Port",
+    "Protocol",
+    "Timestamp"
+  ],
+  "numeric_columns": null,
+  "categorical_columns": null,
+  "max_rows_per_class": null,
+  "test_size": 0.2,
+  "random_seed": 42,
+  "chunksize": 100000,
+  "traditional": {
+    "rf_n_estimators": 100,
+    "rf_max_depth": 12,
+    "xgb_n_estimators": 100,
+    "xgb_max_depth": 6,
+    "xgb_learning_rate": 0.1,
+    "mlp_hidden_layer_sizes": [
+      128,
+      64
+    ],
+    "mlp_max_iter": 60,
+    "mlp_early_stopping": true
+  },
+  "dl": {
+    "enabled": true,
+    "batch_size": 64,
+    "epochs": 5,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "cnn_channels": 32,
+    "lstm_hidden": 32,
+    "transformer_dim": 32,
+    "transformer_heads": 4,
+    "early_stopping_patience": 2,
+    "device": "auto"
+  },
+  "explainability": {
+    "top_n_features": 10,
+    "background_samples": 50,
+    "traditional_explainer": "TreeExplainer",
+    "dl_explainer": "GradientExplainer"
+  },
+  "pilot": {
+    "pilot_size": 20,
+    "min_classes": 5,
+    "stratified": true
+  },
+  "run_id": "RUN-20261102-ACI-EXPERIMENT",
+  "split_id": "SPLIT-20261102-ACI-SEED42",
+  "reports_dir": "reports/aci_experiment",
+  "models_dir": "models/aci",
+  "data_dir": "data/processed/aci"
+}

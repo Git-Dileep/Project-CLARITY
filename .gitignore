@@ -9,3 +9,7 @@ kb/chroma_db/
 *.pcapng
 .DS_Store
 Thumbs.db
+detection/koushik_workstream/
+retrieval/logs/
+*.joblib
+*.pt

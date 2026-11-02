@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "audit_version": "1.0.0",
+  "dataset_name": "ACI-IoT-Network-Dataset-2023",
+  "doi": "10.21227/qacj-3x32",
+  "total_raw_columns": 85,
+  "total_active_features": 75,
+  "dropped_identifier_columns": 7,
+  "target_column": "Label",
+  "raw_column_inventory": [
+    {"column": "Flow ID", "role": "identifier", "dtype": "string", "reason_for_exclusion": "Unique network session identifier; causes identity memorization"},
+    {"column": "Src IP", "role": "identifier", "dtype": "string", "reason_for_exclusion": "Source IP address; causes network topology leakage"},
+    {"column": "Src Port", "role": "identifier", "dtype": "int64", "reason_for_exclusion": "Ephemeral source port; biased towards testbed device ports"},
+    {"column": "Dst IP", "role": "identifier", "dtype": "string", "reason_for_exclusion": "Destination IP address; target infrastructure leakage"},
+    {"column": "Dst Port", "role": "identifier", "dtype": "int64", "reason_for_exclusion": "Service destination port; biased towards specific attack targets"},
+    {"column": "Protocol", "role": "identifier", "dtype": "int64", "reason_for_exclusion": "IP protocol number; excluded from raw inputs or one-hot encoded"},
+    {"column": "Timestamp", "role": "identifier", "dtype": "string", "reason_for_exclusion": "Capture timestamp; temporal data leakage across splits"},
+    {"column": "Label", "role": "target", "dtype": "string", "reason_for_exclusion": "Supervised learning target label"}
+  ],
+  "active_features_count": 75,
+  "active_feature_names": [
+    "Flow Duration", "Tot Fwd Pkts", "Tot Bwd Pkts", "TotLen Fwd Pkts", "TotLen Bwd Pkts",
+    "Fwd Pkt Len Max", "Fwd Pkt Len Min", "Fwd Pkt Len Mean", "Fwd Pkt Len Std",
+    "Bwd Pkt Len Max", "Bwd Pkt Len Min", "Bwd Pkt Len Mean", "Bwd Pkt Len Std",
+    "Flow Byts/s", "Flow Pkts/s", "Flow IAT Mean", "Flow IAT Std", "Flow IAT Max", "Flow IAT Min",
+    "Fwd IAT Tot", "Fwd IAT Mean", "Fwd IAT Std", "Fwd IAT Max", "Fwd IAT Min",
+    "Bwd IAT Tot", "Bwd IAT Mean", "Bwd IAT Std", "Bwd IAT Max", "Bwd IAT Min",
+    "Fwd PSH Flags", "Bwd PSH Flags", "Fwd URG Flags", "Bwd URG Flags",
+    "Fwd Header Len", "Bwd Header Len", "Fwd Pkts/s", "Bwd Pkts/s",
+    "Pkt Len Min", "Pkt Len Max", "Pkt Len Mean", "Pkt Len Std", "Pkt Len Var",
+    "FIN Flag Cnt", "SYN Flag Cnt", "RST Flag Cnt", "PSH Flag Cnt", "ACK Flag Cnt",
+    "URG Flag Cnt", "CWE Flag Count", "ECE Flag Cnt", "Down/Up Ratio", "Pkt Size Avg",
+    "Fwd Seg Size Avg", "Bwd Seg Size Avg", "Fwd Header Len.1", "Subflow Fwd Pkts",
+    "Subflow Fwd Byts", "Subflow Bwd Pkts", "Subflow Bwd Byts", "Init Fwd Win Byts",
+    "Init Bwd Win Byts", "Fwd Act Data Pkts", "Fwd Seg Size Min", "Active Mean",
+    "Active Std", "Active Max", "Active Min", "Idle Mean", "Idle Std", "Idle Max", "Idle Min"
+  ],
+  "feature_statistics_summary": {
+    "total_numerical": 75,
+    "total_categorical": 0,
+    "features_with_infinite_values": [
+      "Flow Byts/s",
+      "Flow Pkts/s"
+    ],
+    "features_with_null_values": [
+      "Flow Byts/s",
+      "Flow Pkts/s"
+    ]
+  }
+}

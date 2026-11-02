@@ -1,0 +1,48 @@
+{
+  "manifest_version": "1.0.0",
+  "dataset_name": "ACI-IoT-Network-Dataset-2023",
+  "dataset_source": "IEEE DataPort (DOI: 10.21227/qacj-3x32) & Kaggle (emilynack/aci-iot-network-traffic-dataset-2023)",
+  "authors": "Emily Nack, Patrick McKenzie, Nathaniel Bastian",
+  "institution": "Army Cyber Institute at West Point",
+  "license": "Creative Commons Attribution (CC BY 4.0)",
+  "reference_paper": "MILCOM 2024 IEEE Military Communications Conference",
+  "published_year": 2024,
+  "total_records": 1231411,
+  "clean_unique_records": 1170570,
+  "total_columns": 85,
+  "active_model_features": 75,
+  "target_column": "Label",
+  "num_classes": 12,
+  "num_macro_categories": 5,
+  "files": [
+    {
+      "name": "ACI-IoT-2023.csv",
+      "format": "CSV",
+      "size_bytes": 625902080,
+      "size_mb": 596.91,
+      "sha256": "9f5b84c6e9389a9f248bb82d3381a1793740e550c609805908389dcbba86c523"
+    }
+  ],
+  "class_counts": {
+    "Benign": 879027,
+    "Port Scan": 79286,
+    "SYN Flood": 63124,
+    "OS Scan": 52654,
+    "Vulnerability Scan": 46128,
+    "Ping Sweep": 40248,
+    "ICMP Flood": 31520,
+    "DNS Flood": 18290,
+    "Slowloris": 14832,
+    "Dictionary Attack": 5587,
+    "UDP Flood": 710,
+    "ARP Spoofing": 5
+  },
+  "split_configuration": {
+    "random_seed": 42,
+    "train_ratio": 0.8,
+    "test_ratio": 0.2,
+    "stratified": true,
+    "classes_with_100_plus_test_samples": 11,
+    "g1_gate_passed": true
+  }
+}
