@@ -1,0 +1,33 @@
+{
+  "timestamp": "2026-11-02T03:51:44.451534+00:00",
+  "status": "PASSED",
+  "total_errors": 0,
+  "files_validated": {
+    "schema": "C:\\Users\\koush\\Downloads\\Koushik_CLARITY_Workstream\\Koushik_CLARITY_Workstream\\Project-CLARITY\\contracts\\alert_schema_v1.json",
+    "traditional_alerts": "C:\\Users\\koush\\Downloads\\Koushik_CLARITY_Workstream\\Koushik_CLARITY_Workstream\\Project-CLARITY\\detection\\workstream\\reports\\aci_experiment\\pilot_traditional_alerts_10.json",
+    "dl_alerts": "C:\\Users\\koush\\Downloads\\Koushik_CLARITY_Workstream\\Koushik_CLARITY_Workstream\\Project-CLARITY\\detection\\workstream\\reports\\aci_experiment\\pilot_dl_alerts_10.json"
+  },
+  "alerts_count": {
+    "traditional": 10,
+    "dl": 10
+  },
+  "classes_represented": [
+    "Benign",
+    "DNS Flood",
+    "Dictionary Attack",
+    "ICMP Flood",
+    "OS Scan",
+    "Ping Sweep",
+    "Port Scan",
+    "SYN Flood",
+    "UDP Flood",
+    "Vulnerability Scan"
+  ],
+  "errors": {
+    "traditional_schema_errors": [],
+    "traditional_semantic_errors": [],
+    "dl_schema_errors": [],
+    "dl_semantic_errors": [],
+    "cross_detector_errors": []
+  }
+}

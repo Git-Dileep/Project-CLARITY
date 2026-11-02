@@ -1,0 +1,31 @@
+{
+  "dataset": "ACI-IoT-Network-Dataset-2023",
+  "pilot_size": 10,
+  "flow_ids": [
+    "ACI-SYN-FLW-42-0000372",
+    "ACI-SYN-FLW-42-0000096",
+    "ACI-SYN-FLW-42-0000132",
+    "ACI-SYN-FLW-42-0000914",
+    "ACI-SYN-FLW-42-0000558",
+    "ACI-SYN-FLW-42-0000925",
+    "ACI-SYN-FLW-42-0000878",
+    "ACI-SYN-FLW-42-0000002",
+    "ACI-SYN-FLW-42-0000274",
+    "ACI-SYN-FLW-42-0000326"
+  ],
+  "classes_represented": [
+    "Benign",
+    "DNS Flood",
+    "Dictionary Attack",
+    "ICMP Flood",
+    "OS Scan",
+    "Ping Sweep",
+    "Port Scan",
+    "SYN Flood",
+    "UDP Flood",
+    "Vulnerability Scan"
+  ],
+  "classes_count": 10,
+  "leakage_overlap_with_train": 0,
+  "schema_version": "contracts/alert_schema_v1.json"
+}

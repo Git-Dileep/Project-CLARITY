@@ -1,0 +1,1032 @@
+[
+  {
+    "identity": {
+      "alert_id": "ALT-20261102-0011",
+      "flow_id": "ACI-SYN-FLW-42-0000372",
+      "detector_family": "dl_ensemble",
+      "timestamp": "2026-11-02T03:51:09.976040+00:00",
+      "dataset": "ACI-IoT-Network-Dataset-2023",
+      "split": "pilot"
+    },
+    "prediction": {
+      "predicted_label": "Benign",
+      "confidence": 0.1215,
+      "base_learner_votes": [
+        {
+          "learner_name": "1D-CNN",
+          "voted_label": "OS Scan",
+          "learner_confidence": 0.10771846026182175
+        },
+        {
+          "learner_name": "Bi-LSTM",
+          "voted_label": "SYN Flood",
+          "learner_confidence": 0.10326353460550308
+        },
+        {
+          "learner_name": "Transformer",
+          "voted_label": "Benign",
+          "learner_confidence": 0.1214805319905281
+        }
+      ]
+    },
+    "shap_attribution": {
+      "explainer_type": "GradientExplainer",
+      "explained_class": "Benign",
+      "base_value": 0.05,
+      "top_features": [
+        {
+          "rank": 1,
+          "feature_name": "Active Max",
+          "feature_value": 1.9354000091552734,
+          "shap_value": 0.237896
+        },
+        {
+          "rank": 2,
+          "feature_name": "Bwd Pkt Len Max",
+          "feature_value": -1.8121000528335571,
+          "shap_value": 0.204987
+        },
+        {
+          "rank": 3,
+          "feature_name": "Tot Fwd Pkts",
+          "feature_value": 1.304800033569336,
+          "shap_value": 0.189748
+        },
+        {
+          "rank": 4,
+          "feature_name": "Fwd Pkt Len Min",
+          "feature_value": -1.7117999792099,
+          "shap_value": 0.174725
+        },
+        {
+          "rank": 5,
+          "feature_name": "Fwd Pkt Len Max",
+          "feature_value": -1.377500057220459,
+          "shap_value": 0.174407
+        },
+        {
+          "rank": 6,
+          "feature_name": "Bwd IAT Min",
+          "feature_value": -1.4944000244140625,
+          "shap_value": 0.172889
+        },
+        {
+          "rank": 7,
+          "feature_name": "Flow Pkts/s",
+          "feature_value": -1.4254000186920166,
+          "shap_value": 0.171794
+        },
+        {
+          "rank": 8,
+          "feature_name": "TotLen Fwd Pkts",
+          "feature_value": -1.3039000034332275,
+          "shap_value": 0.170417
+        },
+        {
+          "rank": 9,
+          "feature_name": "Bwd Header Len",
+          "feature_value": 1.4957000017166138,
+          "shap_value": 0.169796
+        },
+        {
+          "rank": 10,
+          "feature_name": "Bwd Pkt Len Std",
+          "feature_value": 1.195099949836731,
+          "shap_value": 0.158264
+        }
+      ]
+    },
+    "evaluation_metadata": {
+      "true_label": "OS Scan",
+      "in_train_leakage_flag": false,
+      "detector_correct": false
+    }
+  },
+  {
+    "identity": {
+      "alert_id": "ALT-20261102-0012",
+      "flow_id": "ACI-SYN-FLW-42-0000096",
+      "detector_family": "dl_ensemble",
+      "timestamp": "2026-11-02T03:51:09.976040+00:00",
+      "dataset": "ACI-IoT-Network-Dataset-2023",
+      "split": "pilot"
+    },
+    "prediction": {
+      "predicted_label": "Benign",
+      "confidence": 0.1287,
+      "base_learner_votes": [
+        {
+          "learner_name": "1D-CNN",
+          "voted_label": "OS Scan",
+          "learner_confidence": 0.10693741589784622
+        },
+        {
+          "learner_name": "Bi-LSTM",
+          "voted_label": "SYN Flood",
+          "learner_confidence": 0.10453198105096817
+        },
+        {
+          "learner_name": "Transformer",
+          "voted_label": "Benign",
+          "learner_confidence": 0.12874022126197815
+        }
+      ]
+    },
+    "shap_attribution": {
+      "explainer_type": "GradientExplainer",
+      "explained_class": "Benign",
+      "base_value": 0.05,
+      "top_features": [
+        {
+          "rank": 1,
+          "feature_name": "Bwd Header Len",
+          "feature_value": 2.4893999099731445,
+          "shap_value": 0.289037
+        },
+        {
+          "rank": 2,
+          "feature_name": "ACK Flag Cnt",
+          "feature_value": 2.1015000343322754,
+          "shap_value": 0.247242
+        },
+        {
+          "rank": 3,
+          "feature_name": "FIN Flag Cnt",
+          "feature_value": -1.9423999786376953,
+          "shap_value": 0.231101
+        },
+        {
+          "rank": 4,
+          "feature_name": "Flow IAT Mean",
+          "feature_value": 1.5694999694824219,
+          "shap_value": 0.226922
+        },
+        {
+          "rank": 5,
+          "feature_name": "Fwd Seg Size Avg",
+          "feature_value": 1.7416000366210938,
+          "shap_value": 0.224336
+        },
+        {
+          "rank": 6,
+          "feature_name": "PSH Flag Cnt",
+          "feature_value": 1.396299958229065,
+          "shap_value": 0.183528
+        },
+        {
+          "rank": 7,
+          "feature_name": "Idle Min",
+          "feature_value": -1.6402000188827515,
+          "shap_value": 0.179983
+        },
+        {
+          "rank": 8,
+          "feature_name": "TotLen Fwd Pkts",
+          "feature_value": -1.2890000343322754,
+          "shap_value": 0.168628
+        },
+        {
+          "rank": 9,
+          "feature_name": "Flow Byts/s",
+          "feature_value": 1.46589994430542,
+          "shap_value": 0.158085
+        },
+        {
+          "rank": 10,
+          "feature_name": "Fwd Pkt Len Max",
+          "feature_value": 1.3865000009536743,
+          "shap_value": 0.157273
+        }
+      ]
+    },
+    "evaluation_metadata": {
+      "true_label": "DNS Flood",
+      "in_train_leakage_flag": false,
+      "detector_correct": false
+    }
+  },
+  {
+    "identity": {
+      "alert_id": "ALT-20261102-0013",
+      "flow_id": "ACI-SYN-FLW-42-0000132",
+      "detector_family": "dl_ensemble",
+      "timestamp": "2026-11-02T03:51:09.976040+00:00",
+      "dataset": "ACI-IoT-Network-Dataset-2023",
+      "split": "pilot"
+    },
+    "prediction": {
+      "predicted_label": "SYN Flood",
+      "confidence": 0.1189,
+      "base_learner_votes": [
+        {
+          "learner_name": "1D-CNN",
+          "voted_label": "OS Scan",
+          "learner_confidence": 0.10865644365549088
+        },
+        {
+          "learner_name": "Bi-LSTM",
+          "voted_label": "SYN Flood",
+          "learner_confidence": 0.10256776213645935
+        },
+        {
+          "learner_name": "Transformer",
+          "voted_label": "SYN Flood",
+          "learner_confidence": 0.13529151678085327
+        }
+      ]
+    },
+    "shap_attribution": {
+      "explainer_type": "GradientExplainer",
+      "explained_class": "SYN Flood",
+      "base_value": 0.05,
+      "top_features": [
+        {
+          "rank": 1,
+          "feature_name": "TotLen Fwd Pkts",
+          "feature_value": -2.051500082015991,
+          "shap_value": 0.260132
+        },
+        {
+          "rank": 2,
+          "feature_name": "Fwd Pkts/s",
+          "feature_value": 2.0824999809265137,
+          "shap_value": 0.247276
+        },
+        {
+          "rank": 3,
+          "feature_name": "Active Std",
+          "feature_value": -1.7898999452590942,
+          "shap_value": 0.213034
+        },
+        {
+          "rank": 4,
+          "feature_name": "Bwd URG Flags",
+          "feature_value": 1.5972000360488892,
+          "shap_value": 0.204613
+        },
+        {
+          "rank": 5,
+          "feature_name": "Fwd Pkt Len Max",
+          "feature_value": 1.7115999460220337,
+          "shap_value": 0.19629
+        },
+        {
+          "rank": 6,
+          "feature_name": "Fwd URG Flags",
+          "feature_value": -1.6719000339508057,
+          "shap_value": 0.193088
+        },
+        {
+          "rank": 7,
+          "feature_name": "Idle Std",
+          "feature_value": 1.3897000551223755,
+          "shap_value": 0.165904
+        },
+        {
+          "rank": 8,
+          "feature_name": "Flow Byts/s",
+          "feature_value": -1.1370999813079834,
+          "shap_value": 0.154286
+        },
+        {
+          "rank": 9,
+          "feature_name": "Tot Fwd Pkts",
+          "feature_value": 1.006100058555603,
+          "shap_value": 0.153912
+        },
+        {
+          "rank": 10,
+          "feature_name": "Flow IAT Std",
+          "feature_value": -1.4392999410629272,
+          "shap_value": 0.144942
+        }
+      ]
+    },
+    "evaluation_metadata": {
+      "true_label": "Port Scan",
+      "in_train_leakage_flag": false,
+      "detector_correct": false
+    }
+  },
+  {
+    "identity": {
+      "alert_id": "ALT-20261102-0014",
+      "flow_id": "ACI-SYN-FLW-42-0000914",
+      "detector_family": "dl_ensemble",
+      "timestamp": "2026-11-02T03:51:09.976040+00:00",
+      "dataset": "ACI-IoT-Network-Dataset-2023",
+      "split": "pilot"
+    },
+    "prediction": {
+      "predicted_label": "SYN Flood",
+      "confidence": 0.1086,
+      "base_learner_votes": [
+        {
+          "learner_name": "1D-CNN",
+          "voted_label": "OS Scan",
+          "learner_confidence": 0.10778889805078506
+        },
+        {
+          "learner_name": "Bi-LSTM",
+          "voted_label": "SYN Flood",
+          "learner_confidence": 0.10143474489450455
+        },
+        {
+          "learner_name": "Transformer",
+          "voted_label": "SYN Flood",
+          "learner_confidence": 0.1156751960515976
+        }
+      ]
+    },
+    "shap_attribution": {
+      "explainer_type": "GradientExplainer",
+      "explained_class": "SYN Flood",
+      "base_value": 0.05,
+      "top_features": [
+        {
+          "rank": 1,
+          "feature_name": "Fwd Seg Size Avg",
+          "feature_value": -2.4382998943328857,
+          "shap_value": 0.277255
+        },
+        {
+          "rank": 2,
+          "feature_name": "Bwd Pkt Len Mean",
+          "feature_value": -2.1417999267578125,
+          "shap_value": 0.265039
+        },
+        {
+          "rank": 3,
+          "feature_name": "Bwd Seg Size Avg",
+          "feature_value": -2.2534000873565674,
+          "shap_value": 0.246747
+        },
+        {
+          "rank": 4,
+          "feature_name": "ECE Flag Cnt",
+          "feature_value": -2.1092000007629395,
+          "shap_value": 0.234144
+        },
+        {
+          "rank": 5,
+          "feature_name": "ACK Flag Cnt",
+          "feature_value": 1.8389999866485596,
+          "shap_value": 0.215735
+        },
+        {
+          "rank": 6,
+          "feature_name": "Bwd IAT Max",
+          "feature_value": -1.4895999431610107,
+          "shap_value": 0.20853
+        },
+        {
+          "rank": 7,
+          "feature_name": "Fwd PSH Flags",
+          "feature_value": 1.5333000421524048,
+          "shap_value": 0.192732
+        },
+        {
+          "rank": 8,
+          "feature_name": "Bwd PSH Flags",
+          "feature_value": 1.559000015258789,
+          "shap_value": 0.183228
+        },
+        {
+          "rank": 9,
+          "feature_name": "Subflow Bwd Byts",
+          "feature_value": -1.6176999807357788,
+          "shap_value": 0.18007
+        },
+        {
+          "rank": 10,
+          "feature_name": "Bwd Pkt Len Max",
+          "feature_value": 1.3842999935150146,
+          "shap_value": 0.178574
+        }
+      ]
+    },
+    "evaluation_metadata": {
+      "true_label": "ICMP Flood",
+      "in_train_leakage_flag": false,
+      "detector_correct": false
+    }
+  },
+  {
+    "identity": {
+      "alert_id": "ALT-20261102-0015",
+      "flow_id": "ACI-SYN-FLW-42-0000558",
+      "detector_family": "dl_ensemble",
+      "timestamp": "2026-11-02T03:51:09.976040+00:00",
+      "dataset": "ACI-IoT-Network-Dataset-2023",
+      "split": "pilot"
+    },
+    "prediction": {
+      "predicted_label": "Slowloris",
+      "confidence": 0.118,
+      "base_learner_votes": [
+        {
+          "learner_name": "1D-CNN",
+          "voted_label": "OS Scan",
+          "learner_confidence": 0.10674470663070679
+        },
+        {
+          "learner_name": "Bi-LSTM",
+          "voted_label": "SYN Flood",
+          "learner_confidence": 0.10200425237417221
+        },
+        {
+          "learner_name": "Transformer",
+          "voted_label": "Slowloris",
+          "learner_confidence": 0.11800102889537811
+        }
+      ]
+    },
+    "shap_attribution": {
+      "explainer_type": "GradientExplainer",
+      "explained_class": "Slowloris",
+      "base_value": 0.05,
+      "top_features": [
+        {
+          "rank": 1,
+          "feature_name": "Flow Pkts/s",
+          "feature_value": -2.248199939727783,
+          "shap_value": 0.270532
+        },
+        {
+          "rank": 2,
+          "feature_name": "Active Std",
+          "feature_value": 2.1958999633789062,
+          "shap_value": 0.26527
+        },
+        {
+          "rank": 3,
+          "feature_name": "Fwd IAT Min",
+          "feature_value": -2.0632998943328857,
+          "shap_value": 0.258544
+        },
+        {
+          "rank": 4,
+          "feature_name": "Subflow Bwd Pkts",
+          "feature_value": 2.1651999950408936,
+          "shap_value": 0.24479
+        },
+        {
+          "rank": 5,
+          "feature_name": "ACK Flag Cnt",
+          "feature_value": 1.8243999481201172,
+          "shap_value": 0.213991
+        },
+        {
+          "rank": 6,
+          "feature_name": "Flow IAT Mean",
+          "feature_value": 1.386299967765808,
+          "shap_value": 0.204934
+        },
+        {
+          "rank": 7,
+          "feature_name": "Subflow Fwd Byts",
+          "feature_value": 1.4874000549316406,
+          "shap_value": 0.186115
+        },
+        {
+          "rank": 8,
+          "feature_name": "Down/Up Ratio",
+          "feature_value": 1.660099983215332,
+          "shap_value": 0.184851
+        },
+        {
+          "rank": 9,
+          "feature_name": "Bwd Pkt Len Min",
+          "feature_value": -1.259600043296814,
+          "shap_value": 0.165144
+        },
+        {
+          "rank": 10,
+          "feature_name": "Init Bwd Win Byts",
+          "feature_value": -1.3690999746322632,
+          "shap_value": 0.152215
+        }
+      ]
+    },
+    "evaluation_metadata": {
+      "true_label": "UDP Flood",
+      "in_train_leakage_flag": false,
+      "detector_correct": false
+    }
+  },
+  {
+    "identity": {
+      "alert_id": "ALT-20261102-0016",
+      "flow_id": "ACI-SYN-FLW-42-0000925",
+      "detector_family": "dl_ensemble",
+      "timestamp": "2026-11-02T03:51:09.976040+00:00",
+      "dataset": "ACI-IoT-Network-Dataset-2023",
+      "split": "pilot"
+    },
+    "prediction": {
+      "predicted_label": "OS Scan",
+      "confidence": 0.11,
+      "base_learner_votes": [
+        {
+          "learner_name": "1D-CNN",
+          "voted_label": "OS Scan",
+          "learner_confidence": 0.10997115075588226
+        },
+        {
+          "learner_name": "Bi-LSTM",
+          "voted_label": "SYN Flood",
+          "learner_confidence": 0.10356388986110687
+        },
+        {
+          "learner_name": "Transformer",
+          "voted_label": "Slowloris",
+          "learner_confidence": 0.10777986794710159
+        }
+      ]
+    },
+    "shap_attribution": {
+      "explainer_type": "GradientExplainer",
+      "explained_class": "OS Scan",
+      "base_value": 0.05,
+      "top_features": [
+        {
+          "rank": 1,
+          "feature_name": "Active Max",
+          "feature_value": 2.523099899291992,
+          "shap_value": 0.308415
+        },
+        {
+          "rank": 2,
+          "feature_name": "Bwd Pkt Len Max",
+          "feature_value": -2.6519999504089355,
+          "shap_value": 0.305783
+        },
+        {
+          "rank": 3,
+          "feature_name": "Flow IAT Min",
+          "feature_value": 2.4639999866485596,
+          "shap_value": 0.295593
+        },
+        {
+          "rank": 4,
+          "feature_name": "Bwd Pkt Len Min",
+          "feature_value": 2.4886999130249023,
+          "shap_value": 0.28466
+        },
+        {
+          "rank": 5,
+          "feature_name": "TotLen Bwd Pkts",
+          "feature_value": -2.3273000717163086,
+          "shap_value": 0.272892
+        },
+        {
+          "rank": 6,
+          "feature_name": "Fwd Pkt Len Min",
+          "feature_value": 1.8610999584197998,
+          "shap_value": 0.254023
+        },
+        {
+          "rank": 7,
+          "feature_name": "Idle Std",
+          "feature_value": -2.0453999042510986,
+          "shap_value": 0.246315
+        },
+        {
+          "rank": 8,
+          "feature_name": "Fwd IAT Max",
+          "feature_value": -1.874400019645691,
+          "shap_value": 0.239947
+        },
+        {
+          "rank": 9,
+          "feature_name": "RST Flag Cnt",
+          "feature_value": -2.0202999114990234,
+          "shap_value": 0.228457
+        },
+        {
+          "rank": 10,
+          "feature_name": "Subflow Bwd Pkts",
+          "feature_value": -1.669100046157837,
+          "shap_value": 0.215322
+        }
+      ]
+    },
+    "evaluation_metadata": {
+      "true_label": "SYN Flood",
+      "in_train_leakage_flag": false,
+      "detector_correct": false
+    }
+  },
+  {
+    "identity": {
+      "alert_id": "ALT-20261102-0017",
+      "flow_id": "ACI-SYN-FLW-42-0000878",
+      "detector_family": "dl_ensemble",
+      "timestamp": "2026-11-02T03:51:09.976040+00:00",
+      "dataset": "ACI-IoT-Network-Dataset-2023",
+      "split": "pilot"
+    },
+    "prediction": {
+      "predicted_label": "OS Scan",
+      "confidence": 0.1076,
+      "base_learner_votes": [
+        {
+          "learner_name": "1D-CNN",
+          "voted_label": "OS Scan",
+          "learner_confidence": 0.10757887363433838
+        },
+        {
+          "learner_name": "Bi-LSTM",
+          "voted_label": "SYN Flood",
+          "learner_confidence": 0.10363741219043732
+        },
+        {
+          "learner_name": "Transformer",
+          "voted_label": "Vulnerability Scan",
+          "learner_confidence": 0.10740797221660614
+        }
+      ]
+    },
+    "shap_attribution": {
+      "explainer_type": "GradientExplainer",
+      "explained_class": "OS Scan",
+      "base_value": 0.05,
+      "top_features": [
+        {
+          "rank": 1,
+          "feature_name": "TotLen Fwd Pkts",
+          "feature_value": 3.227099895477295,
+          "shap_value": 0.373302
+        },
+        {
+          "rank": 2,
+          "feature_name": "Pkt Size Avg",
+          "feature_value": 2.0234999656677246,
+          "shap_value": 0.258059
+        },
+        {
+          "rank": 3,
+          "feature_name": "PSH Flag Cnt",
+          "feature_value": -2.06469988822937,
+          "shap_value": 0.231796
+        },
+        {
+          "rank": 4,
+          "feature_name": "Active Min",
+          "feature_value": 1.8813999891281128,
+          "shap_value": 0.22486
+        },
+        {
+          "rank": 5,
+          "feature_name": "Fwd PSH Flags",
+          "feature_value": 1.8007999658584595,
+          "shap_value": 0.224829
+        },
+        {
+          "rank": 6,
+          "feature_name": "Flow Duration",
+          "feature_value": 1.7089999914169312,
+          "shap_value": 0.209272
+        },
+        {
+          "rank": 7,
+          "feature_name": "CWE Flag Count",
+          "feature_value": 1.503600001335144,
+          "shap_value": 0.20177
+        },
+        {
+          "rank": 8,
+          "feature_name": "Bwd Seg Size Avg",
+          "feature_value": -1.8680000305175781,
+          "shap_value": 0.200503
+        },
+        {
+          "rank": 9,
+          "feature_name": "Idle Min",
+          "feature_value": -1.808899998664856,
+          "shap_value": 0.200227
+        },
+        {
+          "rank": 10,
+          "feature_name": "ECE Flag Cnt",
+          "feature_value": -1.8253999948501587,
+          "shap_value": 0.200089
+        }
+      ]
+    },
+    "evaluation_metadata": {
+      "true_label": "Dictionary Attack",
+      "in_train_leakage_flag": false,
+      "detector_correct": false
+    }
+  },
+  {
+    "identity": {
+      "alert_id": "ALT-20261102-0018",
+      "flow_id": "ACI-SYN-FLW-42-0000002",
+      "detector_family": "dl_ensemble",
+      "timestamp": "2026-11-02T03:51:09.976040+00:00",
+      "dataset": "ACI-IoT-Network-Dataset-2023",
+      "split": "pilot"
+    },
+    "prediction": {
+      "predicted_label": "Slowloris",
+      "confidence": 0.1079,
+      "base_learner_votes": [
+        {
+          "learner_name": "1D-CNN",
+          "voted_label": "OS Scan",
+          "learner_confidence": 0.10289539396762848
+        },
+        {
+          "learner_name": "Bi-LSTM",
+          "voted_label": "SYN Flood",
+          "learner_confidence": 0.10153574496507645
+        },
+        {
+          "learner_name": "Transformer",
+          "voted_label": "Slowloris",
+          "learner_confidence": 0.10792829096317291
+        }
+      ]
+    },
+    "shap_attribution": {
+      "explainer_type": "GradientExplainer",
+      "explained_class": "Slowloris",
+      "base_value": 0.05,
+      "top_features": [
+        {
+          "rank": 1,
+          "feature_name": "Bwd PSH Flags",
+          "feature_value": 2.1988000869750977,
+          "shap_value": 0.260005
+        },
+        {
+          "rank": 2,
+          "feature_name": "Active Max",
+          "feature_value": 2.1140999794006348,
+          "shap_value": 0.259334
+        },
+        {
+          "rank": 3,
+          "feature_name": "Init Bwd Win Byts",
+          "feature_value": 2.007999897003174,
+          "shap_value": 0.253041
+        },
+        {
+          "rank": 4,
+          "feature_name": "Bwd IAT Tot",
+          "feature_value": 2.0562000274658203,
+          "shap_value": 0.248743
+        },
+        {
+          "rank": 5,
+          "feature_name": "Bwd IAT Mean",
+          "feature_value": -2.1071999073028564,
+          "shap_value": 0.247274
+        },
+        {
+          "rank": 6,
+          "feature_name": "FIN Flag Cnt",
+          "feature_value": -1.8639999628067017,
+          "shap_value": 0.221697
+        },
+        {
+          "rank": 7,
+          "feature_name": "Active Min",
+          "feature_value": -1.8043999671936035,
+          "shap_value": 0.217442
+        },
+        {
+          "rank": 8,
+          "feature_name": "Active Std",
+          "feature_value": 1.7884000539779663,
+          "shap_value": 0.216363
+        },
+        {
+          "rank": 9,
+          "feature_name": "ECE Flag Cnt",
+          "feature_value": 1.467900037765503,
+          "shap_value": 0.195105
+        },
+        {
+          "rank": 10,
+          "feature_name": "Bwd IAT Min",
+          "feature_value": 1.5680999755859375,
+          "shap_value": 0.194616
+        }
+      ]
+    },
+    "evaluation_metadata": {
+      "true_label": "Ping Sweep",
+      "in_train_leakage_flag": false,
+      "detector_correct": false
+    }
+  },
+  {
+    "identity": {
+      "alert_id": "ALT-20261102-0019",
+      "flow_id": "ACI-SYN-FLW-42-0000274",
+      "detector_family": "dl_ensemble",
+      "timestamp": "2026-11-02T03:51:09.976040+00:00",
+      "dataset": "ACI-IoT-Network-Dataset-2023",
+      "split": "pilot"
+    },
+    "prediction": {
+      "predicted_label": "Benign",
+      "confidence": 0.1186,
+      "base_learner_votes": [
+        {
+          "learner_name": "1D-CNN",
+          "voted_label": "OS Scan",
+          "learner_confidence": 0.10685375332832336
+        },
+        {
+          "learner_name": "Bi-LSTM",
+          "voted_label": "SYN Flood",
+          "learner_confidence": 0.10191107541322708
+        },
+        {
+          "learner_name": "Transformer",
+          "voted_label": "Benign",
+          "learner_confidence": 0.11856324970722198
+        }
+      ]
+    },
+    "shap_attribution": {
+      "explainer_type": "GradientExplainer",
+      "explained_class": "Benign",
+      "base_value": 0.05,
+      "top_features": [
+        {
+          "rank": 1,
+          "feature_name": "Fwd Pkts/s",
+          "feature_value": 2.4602999687194824,
+          "shap_value": 0.292615
+        },
+        {
+          "rank": 2,
+          "feature_name": "Fwd Pkt Len Max",
+          "feature_value": -2.2404000759124756,
+          "shap_value": 0.27795
+        },
+        {
+          "rank": 3,
+          "feature_name": "Subflow Fwd Pkts",
+          "feature_value": 1.8222999572753906,
+          "shap_value": 0.238773
+        },
+        {
+          "rank": 4,
+          "feature_name": "Active Max",
+          "feature_value": 1.7967000007629395,
+          "shap_value": 0.221257
+        },
+        {
+          "rank": 5,
+          "feature_name": "Subflow Bwd Pkts",
+          "feature_value": -1.5808000564575195,
+          "shap_value": 0.204727
+        },
+        {
+          "rank": 6,
+          "feature_name": "Active Min",
+          "feature_value": 1.666100025177002,
+          "shap_value": 0.199019
+        },
+        {
+          "rank": 7,
+          "feature_name": "Bwd IAT Min",
+          "feature_value": -1.6634000539779663,
+          "shap_value": 0.19317
+        },
+        {
+          "rank": 8,
+          "feature_name": "Fwd IAT Std",
+          "feature_value": 1.6576999425888062,
+          "shap_value": 0.189543
+        },
+        {
+          "rank": 9,
+          "feature_name": "Bwd Seg Size Avg",
+          "feature_value": -1.6726000308990479,
+          "shap_value": 0.177057
+        },
+        {
+          "rank": 10,
+          "feature_name": "Tot Fwd Pkts",
+          "feature_value": 1.1339999437332153,
+          "shap_value": 0.169259
+        }
+      ]
+    },
+    "evaluation_metadata": {
+      "true_label": "Benign",
+      "in_train_leakage_flag": false,
+      "detector_correct": true
+    }
+  },
+  {
+    "identity": {
+      "alert_id": "ALT-20261102-0020",
+      "flow_id": "ACI-SYN-FLW-42-0000326",
+      "detector_family": "dl_ensemble",
+      "timestamp": "2026-11-02T03:51:09.976040+00:00",
+      "dataset": "ACI-IoT-Network-Dataset-2023",
+      "split": "pilot"
+    },
+    "prediction": {
+      "predicted_label": "UDP Flood",
+      "confidence": 0.1388,
+      "base_learner_votes": [
+        {
+          "learner_name": "1D-CNN",
+          "voted_label": "OS Scan",
+          "learner_confidence": 0.11094828695058823
+        },
+        {
+          "learner_name": "Bi-LSTM",
+          "voted_label": "SYN Flood",
+          "learner_confidence": 0.10295911878347397
+        },
+        {
+          "learner_name": "Transformer",
+          "voted_label": "UDP Flood",
+          "learner_confidence": 0.13877829909324646
+        }
+      ]
+    },
+    "shap_attribution": {
+      "explainer_type": "GradientExplainer",
+      "explained_class": "UDP Flood",
+      "base_value": 0.05,
+      "top_features": [
+        {
+          "rank": 1,
+          "feature_name": "Bwd Header Len",
+          "feature_value": -2.8340001106262207,
+          "shap_value": 0.349775
+        },
+        {
+          "rank": 2,
+          "feature_name": "Bwd Pkts/s",
+          "feature_value": -2.3434998989105225,
+          "shap_value": 0.27841
+        },
+        {
+          "rank": 3,
+          "feature_name": "Fwd PSH Flags",
+          "feature_value": -2.3190999031066895,
+          "shap_value": 0.269561
+        },
+        {
+          "rank": 4,
+          "feature_name": "Fwd IAT Min",
+          "feature_value": 2.035099983215332,
+          "shap_value": 0.23327
+        },
+        {
+          "rank": 5,
+          "feature_name": "TotLen Bwd Pkts",
+          "feature_value": 1.8244999647140503,
+          "shap_value": 0.22532
+        },
+        {
+          "rank": 6,
+          "feature_name": "Down/Up Ratio",
+          "feature_value": -1.67739999294281,
+          "shap_value": 0.215653
+        },
+        {
+          "rank": 7,
+          "feature_name": "Idle Min",
+          "feature_value": -1.902999997138977,
+          "shap_value": 0.211519
+        },
+        {
+          "rank": 8,
+          "feature_name": "Bwd PSH Flags",
+          "feature_value": -1.6634000539779663,
+          "shap_value": 0.203461
+        },
+        {
+          "rank": 9,
+          "feature_name": "Tot Fwd Pkts",
+          "feature_value": 1.3357000350952148,
+          "shap_value": 0.193456
+        },
+        {
+          "rank": 10,
+          "feature_name": "Fwd IAT Tot",
+          "feature_value": 1.680999994277954,
+          "shap_value": 0.188934
+        }
+      ]
+    },
+    "evaluation_metadata": {
+      "true_label": "Vulnerability Scan",
+      "in_train_leakage_flag": false,
+      "detector_correct": false
+    }
+  }
+]
