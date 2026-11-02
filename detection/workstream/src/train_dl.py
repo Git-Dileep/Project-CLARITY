@@ -72,20 +72,22 @@ class CNN1DModel(nn.Module):
 
 
 class LSTMModel(nn.Module):
-    """Bidirectional LSTM network for flow feature sequences."""
-    def __init__(self, n_features: int, n_classes: int, hidden_size: int = 32):
+    """Standard LSTM network for flow feature representations."""
+    def __init__(self, n_features: int, n_classes: int, hidden_size: int = 32, bidirectional: bool = False):
         super().__init__()
+        self.bidirectional = bidirectional
         self.lstm = nn.LSTM(
             input_size=n_features,
             hidden_size=hidden_size,
             num_layers=2,
             batch_first=True,
-            bidirectional=True,
+            bidirectional=bidirectional,
             dropout=0.1,
         )
+        linear_in = hidden_size * 2 if bidirectional else hidden_size
         self.classifier = nn.Sequential(
             nn.Dropout(0.2),
-            nn.Linear(hidden_size * 2, 32),
+            nn.Linear(linear_in, 32),
             nn.ReLU(),
             nn.Linear(32, n_classes),
         )

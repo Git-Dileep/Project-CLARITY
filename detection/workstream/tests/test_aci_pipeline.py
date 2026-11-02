@@ -135,3 +135,20 @@ def test_aci_leakage_audit_zero_overlap():
     assert audit["leakage_metrics"]["train_traditional_overlap_count"] == 0
     assert audit["leakage_metrics"]["train_dl_overlap_count"] == 0
     assert audit["leakage_metrics"]["cross_detector_flows_identical"] is True
+
+
+def test_aci_dl_architecture_and_learner_votes():
+    from src.train_dl import LSTMModel
+    lstm = LSTMModel(n_features=75, n_classes=12, hidden_size=32)
+    assert lstm.bidirectional is False
+    assert lstm.lstm.bidirectional is False
+
+    dl_file = workstream_dir / "reports" / "aci_experiment" / "pilot_dl_alerts_10.json"
+    with open(dl_file, "r", encoding="utf-8") as f:
+        dl_alerts = json.load(f)
+
+    for alert in dl_alerts:
+        votes = alert["prediction"]["base_learner_votes"]
+        assert len(votes) == 3
+        learner_names = [v["learner_name"] for v in votes]
+        assert learner_names == ["1D-CNN", "LSTM", "Transformer"]

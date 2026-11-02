@@ -94,20 +94,22 @@ class CNN1D(nn.Module):
         return self.net(x)
 
 
-class BiLSTM(nn.Module):
-    def __init__(self, n_features: int, n_classes: int, hidden_size: int = 32):
+class LSTMModel(nn.Module):
+    """Standard unidirectional LSTM network for flow representations."""
+    def __init__(self, n_features: int, n_classes: int, hidden_size: int = 32, bidirectional: bool = False):
         super().__init__()
         self.lstm = nn.LSTM(
             input_size=n_features,
             hidden_size=hidden_size,
             num_layers=2,
             batch_first=True,
-            bidirectional=True,
+            bidirectional=bidirectional,
             dropout=0.1,
         )
+        linear_in = hidden_size * 2 if bidirectional else hidden_size
         self.fc = nn.Sequential(
             nn.Dropout(0.2),
-            nn.Linear(hidden_size * 2, 32),
+            nn.Linear(linear_in, 32),
             nn.ReLU(),
             nn.Linear(32, n_classes),
         )
@@ -283,10 +285,10 @@ def run_pipeline(
     n_classes = len(classes)
 
     cnn = CNN1D(n_features, n_classes).to(device)
-    lstm = BiLSTM(n_features, n_classes).to(device)
+    lstm = LSTMModel(n_features, n_classes, bidirectional=False).to(device)
     trans = TransformerEnc(n_features, n_classes).to(device)
 
-    dl_models = {"CNN": cnn, "BiLSTM": lstm, "Transformer": trans}
+    dl_models = {"CNN": cnn, "LSTM": lstm, "Transformer": trans}
     dl_preds_dict: Dict[str, List[str]] = {}
     dl_confs_dict: Dict[str, List[float]] = {}
 
@@ -322,7 +324,7 @@ def run_pipeline(
     for i in range(len(X_test)):
         sample_votes = [
             LearnerVote("1D-CNN", dl_preds_dict["CNN"][i], dl_confs_dict["CNN"][i]),
-            LearnerVote("Bi-LSTM", dl_preds_dict["BiLSTM"][i], dl_confs_dict["BiLSTM"][i]),
+            LearnerVote("LSTM", dl_preds_dict["LSTM"][i], dl_confs_dict["LSTM"][i]),
             LearnerVote("Transformer", dl_preds_dict["Transformer"][i], dl_confs_dict["Transformer"][i]),
         ]
         dl_votes.append(sample_votes)

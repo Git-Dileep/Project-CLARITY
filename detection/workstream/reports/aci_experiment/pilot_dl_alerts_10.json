@@ -4,34 +4,34 @@
       "alert_id": "ALT-20261102-0011",
       "flow_id": "ACI-SYN-FLW-42-0000372",
       "detector_family": "dl_ensemble",
-      "timestamp": "2026-11-02T03:51:09.976040+00:00",
+      "timestamp": "2026-11-02T04:05:52.708483+00:00",
       "dataset": "ACI-IoT-Network-Dataset-2023",
       "split": "pilot"
     },
     "prediction": {
-      "predicted_label": "Benign",
-      "confidence": 0.1215,
+      "predicted_label": "OS Scan",
+      "confidence": 0.1152,
       "base_learner_votes": [
         {
           "learner_name": "1D-CNN",
           "voted_label": "OS Scan",
-          "learner_confidence": 0.10771846026182175
+          "learner_confidence": 0.10905664414167404
         },
         {
-          "learner_name": "Bi-LSTM",
-          "voted_label": "SYN Flood",
-          "learner_confidence": 0.10326353460550308
+          "learner_name": "LSTM",
+          "voted_label": "OS Scan",
+          "learner_confidence": 0.10718226432800293
         },
         {
           "learner_name": "Transformer",
-          "voted_label": "Benign",
-          "learner_confidence": 0.1214805319905281
+          "voted_label": "OS Scan",
+          "learner_confidence": 0.12930205464363098
         }
       ]
     },
     "shap_attribution": {
       "explainer_type": "GradientExplainer",
-      "explained_class": "Benign",
+      "explained_class": "OS Scan",
       "base_value": 0.05,
       "top_features": [
         {
@@ -99,7 +99,7 @@
     "evaluation_metadata": {
       "true_label": "OS Scan",
       "in_train_leakage_flag": false,
-      "detector_correct": false
+      "detector_correct": true
     }
   },
   {
@@ -107,34 +107,34 @@
       "alert_id": "ALT-20261102-0012",
       "flow_id": "ACI-SYN-FLW-42-0000096",
       "detector_family": "dl_ensemble",
-      "timestamp": "2026-11-02T03:51:09.976040+00:00",
+      "timestamp": "2026-11-02T04:05:52.708483+00:00",
       "dataset": "ACI-IoT-Network-Dataset-2023",
       "split": "pilot"
     },
     "prediction": {
-      "predicted_label": "Benign",
-      "confidence": 0.1287,
+      "predicted_label": "OS Scan",
+      "confidence": 0.1087,
       "base_learner_votes": [
         {
           "learner_name": "1D-CNN",
           "voted_label": "OS Scan",
-          "learner_confidence": 0.10693741589784622
+          "learner_confidence": 0.10998561233282089
         },
         {
-          "learner_name": "Bi-LSTM",
-          "voted_label": "SYN Flood",
-          "learner_confidence": 0.10453198105096817
+          "learner_name": "LSTM",
+          "voted_label": "OS Scan",
+          "learner_confidence": 0.107271209359169
         },
         {
           "learner_name": "Transformer",
-          "voted_label": "Benign",
-          "learner_confidence": 0.12874022126197815
+          "voted_label": "OS Scan",
+          "learner_confidence": 0.10898871719837189
         }
       ]
     },
     "shap_attribution": {
       "explainer_type": "GradientExplainer",
-      "explained_class": "Benign",
+      "explained_class": "OS Scan",
       "base_value": 0.05,
       "top_features": [
         {
@@ -210,34 +210,34 @@
       "alert_id": "ALT-20261102-0013",
       "flow_id": "ACI-SYN-FLW-42-0000132",
       "detector_family": "dl_ensemble",
-      "timestamp": "2026-11-02T03:51:09.976040+00:00",
+      "timestamp": "2026-11-02T04:05:52.708483+00:00",
       "dataset": "ACI-IoT-Network-Dataset-2023",
       "split": "pilot"
     },
     "prediction": {
-      "predicted_label": "SYN Flood",
-      "confidence": 0.1189,
+      "predicted_label": "OS Scan",
+      "confidence": 0.1088,
       "base_learner_votes": [
         {
           "learner_name": "1D-CNN",
           "voted_label": "OS Scan",
-          "learner_confidence": 0.10865644365549088
+          "learner_confidence": 0.11095117032527924
         },
         {
-          "learner_name": "Bi-LSTM",
-          "voted_label": "SYN Flood",
-          "learner_confidence": 0.10256776213645935
+          "learner_name": "LSTM",
+          "voted_label": "OS Scan",
+          "learner_confidence": 0.10656039416790009
         },
         {
           "learner_name": "Transformer",
-          "voted_label": "SYN Flood",
-          "learner_confidence": 0.13529151678085327
+          "voted_label": "Vulnerability Scan",
+          "learner_confidence": 0.10697318613529205
         }
       ]
     },
     "shap_attribution": {
       "explainer_type": "GradientExplainer",
-      "explained_class": "SYN Flood",
+      "explained_class": "OS Scan",
       "base_value": 0.05,
       "top_features": [
         {
@@ -313,34 +313,34 @@
       "alert_id": "ALT-20261102-0014",
       "flow_id": "ACI-SYN-FLW-42-0000914",
       "detector_family": "dl_ensemble",
-      "timestamp": "2026-11-02T03:51:09.976040+00:00",
+      "timestamp": "2026-11-02T04:05:52.708483+00:00",
       "dataset": "ACI-IoT-Network-Dataset-2023",
       "split": "pilot"
     },
     "prediction": {
-      "predicted_label": "SYN Flood",
-      "confidence": 0.1086,
+      "predicted_label": "OS Scan",
+      "confidence": 0.1165,
       "base_learner_votes": [
         {
           "learner_name": "1D-CNN",
           "voted_label": "OS Scan",
-          "learner_confidence": 0.10778889805078506
+          "learner_confidence": 0.11084364354610443
         },
         {
-          "learner_name": "Bi-LSTM",
-          "voted_label": "SYN Flood",
-          "learner_confidence": 0.10143474489450455
+          "learner_name": "LSTM",
+          "voted_label": "OS Scan",
+          "learner_confidence": 0.10657667368650436
         },
         {
           "learner_name": "Transformer",
-          "voted_label": "SYN Flood",
-          "learner_confidence": 0.1156751960515976
+          "voted_label": "OS Scan",
+          "learner_confidence": 0.1320074051618576
         }
       ]
     },
     "shap_attribution": {
       "explainer_type": "GradientExplainer",
-      "explained_class": "SYN Flood",
+      "explained_class": "OS Scan",
       "base_value": 0.05,
       "top_features": [
         {
@@ -416,34 +416,34 @@
       "alert_id": "ALT-20261102-0015",
       "flow_id": "ACI-SYN-FLW-42-0000558",
       "detector_family": "dl_ensemble",
-      "timestamp": "2026-11-02T03:51:09.976040+00:00",
+      "timestamp": "2026-11-02T04:05:52.708483+00:00",
       "dataset": "ACI-IoT-Network-Dataset-2023",
       "split": "pilot"
     },
     "prediction": {
-      "predicted_label": "Slowloris",
-      "confidence": 0.118,
+      "predicted_label": "OS Scan",
+      "confidence": 0.1086,
       "base_learner_votes": [
         {
           "learner_name": "1D-CNN",
           "voted_label": "OS Scan",
-          "learner_confidence": 0.10674470663070679
+          "learner_confidence": 0.1097942590713501
         },
         {
-          "learner_name": "Bi-LSTM",
-          "voted_label": "SYN Flood",
-          "learner_confidence": 0.10200425237417221
+          "learner_name": "LSTM",
+          "voted_label": "OS Scan",
+          "learner_confidence": 0.10745789855718613
         },
         {
           "learner_name": "Transformer",
           "voted_label": "Slowloris",
-          "learner_confidence": 0.11800102889537811
+          "learner_confidence": 0.13037224113941193
         }
       ]
     },
     "shap_attribution": {
       "explainer_type": "GradientExplainer",
-      "explained_class": "Slowloris",
+      "explained_class": "OS Scan",
       "base_value": 0.05,
       "top_features": [
         {
@@ -519,28 +519,28 @@
       "alert_id": "ALT-20261102-0016",
       "flow_id": "ACI-SYN-FLW-42-0000925",
       "detector_family": "dl_ensemble",
-      "timestamp": "2026-11-02T03:51:09.976040+00:00",
+      "timestamp": "2026-11-02T04:05:52.708483+00:00",
       "dataset": "ACI-IoT-Network-Dataset-2023",
       "split": "pilot"
     },
     "prediction": {
       "predicted_label": "OS Scan",
-      "confidence": 0.11,
+      "confidence": 0.1097,
       "base_learner_votes": [
         {
           "learner_name": "1D-CNN",
           "voted_label": "OS Scan",
-          "learner_confidence": 0.10997115075588226
+          "learner_confidence": 0.11349460482597351
         },
         {
-          "learner_name": "Bi-LSTM",
-          "voted_label": "SYN Flood",
-          "learner_confidence": 0.10356388986110687
+          "learner_name": "LSTM",
+          "voted_label": "OS Scan",
+          "learner_confidence": 0.10594576597213745
         },
         {
           "learner_name": "Transformer",
-          "voted_label": "Slowloris",
-          "learner_confidence": 0.10777986794710159
+          "voted_label": "Ping Sweep",
+          "learner_confidence": 0.10949104279279709
         }
       ]
     },
@@ -622,28 +622,28 @@
       "alert_id": "ALT-20261102-0017",
       "flow_id": "ACI-SYN-FLW-42-0000878",
       "detector_family": "dl_ensemble",
-      "timestamp": "2026-11-02T03:51:09.976040+00:00",
+      "timestamp": "2026-11-02T04:05:52.708483+00:00",
       "dataset": "ACI-IoT-Network-Dataset-2023",
       "split": "pilot"
     },
     "prediction": {
       "predicted_label": "OS Scan",
-      "confidence": 0.1076,
+      "confidence": 0.1089,
       "base_learner_votes": [
         {
           "learner_name": "1D-CNN",
           "voted_label": "OS Scan",
-          "learner_confidence": 0.10757887363433838
+          "learner_confidence": 0.11147286742925644
         },
         {
-          "learner_name": "Bi-LSTM",
-          "voted_label": "SYN Flood",
-          "learner_confidence": 0.10363741219043732
+          "learner_name": "LSTM",
+          "voted_label": "OS Scan",
+          "learner_confidence": 0.10628930479288101
         },
         {
           "learner_name": "Transformer",
-          "voted_label": "Vulnerability Scan",
-          "learner_confidence": 0.10740797221660614
+          "voted_label": "Dictionary Attack",
+          "learner_confidence": 0.12481508404016495
         }
       ]
     },
@@ -725,34 +725,34 @@
       "alert_id": "ALT-20261102-0018",
       "flow_id": "ACI-SYN-FLW-42-0000002",
       "detector_family": "dl_ensemble",
-      "timestamp": "2026-11-02T03:51:09.976040+00:00",
+      "timestamp": "2026-11-02T04:05:52.708483+00:00",
       "dataset": "ACI-IoT-Network-Dataset-2023",
       "split": "pilot"
     },
     "prediction": {
-      "predicted_label": "Slowloris",
-      "confidence": 0.1079,
+      "predicted_label": "OS Scan",
+      "confidence": 0.1076,
       "base_learner_votes": [
         {
           "learner_name": "1D-CNN",
           "voted_label": "OS Scan",
-          "learner_confidence": 0.10289539396762848
+          "learner_confidence": 0.1067819595336914
         },
         {
-          "learner_name": "Bi-LSTM",
-          "voted_label": "SYN Flood",
-          "learner_confidence": 0.10153574496507645
+          "learner_name": "LSTM",
+          "voted_label": "OS Scan",
+          "learner_confidence": 0.10832332074642181
         },
         {
           "learner_name": "Transformer",
-          "voted_label": "Slowloris",
-          "learner_confidence": 0.10792829096317291
+          "voted_label": "Port Scan",
+          "learner_confidence": 0.11756298691034317
         }
       ]
     },
     "shap_attribution": {
       "explainer_type": "GradientExplainer",
-      "explained_class": "Slowloris",
+      "explained_class": "OS Scan",
       "base_value": 0.05,
       "top_features": [
         {
@@ -828,34 +828,34 @@
       "alert_id": "ALT-20261102-0019",
       "flow_id": "ACI-SYN-FLW-42-0000274",
       "detector_family": "dl_ensemble",
-      "timestamp": "2026-11-02T03:51:09.976040+00:00",
+      "timestamp": "2026-11-02T04:05:52.708483+00:00",
       "dataset": "ACI-IoT-Network-Dataset-2023",
       "split": "pilot"
     },
     "prediction": {
-      "predicted_label": "Benign",
-      "confidence": 0.1186,
+      "predicted_label": "OS Scan",
+      "confidence": 0.1136,
       "base_learner_votes": [
         {
           "learner_name": "1D-CNN",
           "voted_label": "OS Scan",
-          "learner_confidence": 0.10685375332832336
+          "learner_confidence": 0.10999702662229538
         },
         {
-          "learner_name": "Bi-LSTM",
-          "voted_label": "SYN Flood",
-          "learner_confidence": 0.10191107541322708
+          "learner_name": "LSTM",
+          "voted_label": "OS Scan",
+          "learner_confidence": 0.10579295456409454
         },
         {
           "learner_name": "Transformer",
-          "voted_label": "Benign",
-          "learner_confidence": 0.11856324970722198
+          "voted_label": "OS Scan",
+          "learner_confidence": 0.12499244511127472
         }
       ]
     },
     "shap_attribution": {
       "explainer_type": "GradientExplainer",
-      "explained_class": "Benign",
+      "explained_class": "OS Scan",
       "base_value": 0.05,
       "top_features": [
         {
@@ -923,7 +923,7 @@
     "evaluation_metadata": {
       "true_label": "Benign",
       "in_train_leakage_flag": false,
-      "detector_correct": true
+      "detector_correct": false
     }
   },
   {
@@ -931,34 +931,34 @@
       "alert_id": "ALT-20261102-0020",
       "flow_id": "ACI-SYN-FLW-42-0000326",
       "detector_family": "dl_ensemble",
-      "timestamp": "2026-11-02T03:51:09.976040+00:00",
+      "timestamp": "2026-11-02T04:05:52.708483+00:00",
       "dataset": "ACI-IoT-Network-Dataset-2023",
       "split": "pilot"
     },
     "prediction": {
-      "predicted_label": "UDP Flood",
-      "confidence": 0.1388,
+      "predicted_label": "OS Scan",
+      "confidence": 0.1101,
       "base_learner_votes": [
         {
           "learner_name": "1D-CNN",
           "voted_label": "OS Scan",
-          "learner_confidence": 0.11094828695058823
+          "learner_confidence": 0.11281940340995789
         },
         {
-          "learner_name": "Bi-LSTM",
-          "voted_label": "SYN Flood",
-          "learner_confidence": 0.10295911878347397
+          "learner_name": "LSTM",
+          "voted_label": "OS Scan",
+          "learner_confidence": 0.10730594396591187
         },
         {
           "learner_name": "Transformer",
-          "voted_label": "UDP Flood",
-          "learner_confidence": 0.13877829909324646
+          "voted_label": "ICMP Flood",
+          "learner_confidence": 0.136008158326149
         }
       ]
     },
     "shap_attribution": {
       "explainer_type": "GradientExplainer",
-      "explained_class": "UDP Flood",
+      "explained_class": "OS Scan",
       "base_value": 0.05,
       "top_features": [
         {

@@ -4,7 +4,7 @@
       "alert_id": "ALT-20261102-0001",
       "flow_id": "ACI-SYN-FLW-42-0000372",
       "detector_family": "traditional_ml",
-      "timestamp": "2026-11-02T03:51:09.976040+00:00",
+      "timestamp": "2026-11-02T04:05:52.708483+00:00",
       "dataset": "ACI-IoT-Network-Dataset-2023",
       "split": "pilot"
     },
@@ -107,7 +107,7 @@
       "alert_id": "ALT-20261102-0002",
       "flow_id": "ACI-SYN-FLW-42-0000096",
       "detector_family": "traditional_ml",
-      "timestamp": "2026-11-02T03:51:09.976040+00:00",
+      "timestamp": "2026-11-02T04:05:52.708483+00:00",
       "dataset": "ACI-IoT-Network-Dataset-2023",
       "split": "pilot"
     },
@@ -118,7 +118,7 @@
         {
           "learner_name": "RandomForest",
           "voted_label": "ICMP Flood",
-          "learner_confidence": 0.1448609740195999
+          "learner_confidence": 0.14486097401959994
         },
         {
           "learner_name": "XGBoost",
@@ -210,7 +210,7 @@
       "alert_id": "ALT-20261102-0003",
       "flow_id": "ACI-SYN-FLW-42-0000132",
       "detector_family": "traditional_ml",
-      "timestamp": "2026-11-02T03:51:09.976040+00:00",
+      "timestamp": "2026-11-02T04:05:52.708483+00:00",
       "dataset": "ACI-IoT-Network-Dataset-2023",
       "split": "pilot"
     },
@@ -313,7 +313,7 @@
       "alert_id": "ALT-20261102-0004",
       "flow_id": "ACI-SYN-FLW-42-0000914",
       "detector_family": "traditional_ml",
-      "timestamp": "2026-11-02T03:51:09.976040+00:00",
+      "timestamp": "2026-11-02T04:05:52.708483+00:00",
       "dataset": "ACI-IoT-Network-Dataset-2023",
       "split": "pilot"
     },
@@ -324,7 +324,7 @@
         {
           "learner_name": "RandomForest",
           "voted_label": "OS Scan",
-          "learner_confidence": 0.1349502700123357
+          "learner_confidence": 0.13495027001233567
         },
         {
           "learner_name": "XGBoost",
@@ -416,7 +416,7 @@
       "alert_id": "ALT-20261102-0005",
       "flow_id": "ACI-SYN-FLW-42-0000558",
       "detector_family": "traditional_ml",
-      "timestamp": "2026-11-02T03:51:09.976040+00:00",
+      "timestamp": "2026-11-02T04:05:52.708483+00:00",
       "dataset": "ACI-IoT-Network-Dataset-2023",
       "split": "pilot"
     },
@@ -427,7 +427,7 @@
         {
           "learner_name": "RandomForest",
           "voted_label": "UDP Flood",
-          "learner_confidence": 0.18078947675398424
+          "learner_confidence": 0.18078947675398427
         },
         {
           "learner_name": "XGBoost",
@@ -519,7 +519,7 @@
       "alert_id": "ALT-20261102-0006",
       "flow_id": "ACI-SYN-FLW-42-0000925",
       "detector_family": "traditional_ml",
-      "timestamp": "2026-11-02T03:51:09.976040+00:00",
+      "timestamp": "2026-11-02T04:05:52.708483+00:00",
       "dataset": "ACI-IoT-Network-Dataset-2023",
       "split": "pilot"
     },
@@ -622,7 +622,7 @@
       "alert_id": "ALT-20261102-0007",
       "flow_id": "ACI-SYN-FLW-42-0000878",
       "detector_family": "traditional_ml",
-      "timestamp": "2026-11-02T03:51:09.976040+00:00",
+      "timestamp": "2026-11-02T04:05:52.708483+00:00",
       "dataset": "ACI-IoT-Network-Dataset-2023",
       "split": "pilot"
     },
@@ -633,7 +633,7 @@
         {
           "learner_name": "RandomForest",
           "voted_label": "Benign",
-          "learner_confidence": 0.1361796810151108
+          "learner_confidence": 0.13617968101511077
         },
         {
           "learner_name": "XGBoost",
@@ -725,7 +725,7 @@
       "alert_id": "ALT-20261102-0008",
       "flow_id": "ACI-SYN-FLW-42-0000002",
       "detector_family": "traditional_ml",
-      "timestamp": "2026-11-02T03:51:09.976040+00:00",
+      "timestamp": "2026-11-02T04:05:52.708483+00:00",
       "dataset": "ACI-IoT-Network-Dataset-2023",
       "split": "pilot"
     },
@@ -736,7 +736,7 @@
         {
           "learner_name": "RandomForest",
           "voted_label": "Port Scan",
-          "learner_confidence": 0.12231113434391185
+          "learner_confidence": 0.12231113434391187
         },
         {
           "learner_name": "XGBoost",
@@ -828,7 +828,7 @@
       "alert_id": "ALT-20261102-0009",
       "flow_id": "ACI-SYN-FLW-42-0000274",
       "detector_family": "traditional_ml",
-      "timestamp": "2026-11-02T03:51:09.976040+00:00",
+      "timestamp": "2026-11-02T04:05:52.708483+00:00",
       "dataset": "ACI-IoT-Network-Dataset-2023",
       "split": "pilot"
     },
@@ -839,7 +839,7 @@
         {
           "learner_name": "RandomForest",
           "voted_label": "Slowloris",
-          "learner_confidence": 0.13076089697616144
+          "learner_confidence": 0.1307608969761615
         },
         {
           "learner_name": "XGBoost",
@@ -931,7 +931,7 @@
       "alert_id": "ALT-20261102-0010",
       "flow_id": "ACI-SYN-FLW-42-0000326",
       "detector_family": "traditional_ml",
-      "timestamp": "2026-11-02T03:51:09.976040+00:00",
+      "timestamp": "2026-11-02T04:05:52.708483+00:00",
       "dataset": "ACI-IoT-Network-Dataset-2023",
       "split": "pilot"
     },
@@ -942,7 +942,7 @@
         {
           "learner_name": "RandomForest",
           "voted_label": "Benign",
-          "learner_confidence": 0.14050876336243323
+          "learner_confidence": 0.1405087633624332
         },
         {
           "learner_name": "XGBoost",

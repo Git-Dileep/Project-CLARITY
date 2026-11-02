@@ -6,7 +6,7 @@
   "weighted_precision": 0.1031,
   "weighted_recall": 0.095,
   "weighted_f1": 0.0911,
-  "train_duration_seconds": 4.303,
+  "train_duration_seconds": 4.236,
   "infer_duration_seconds": 0.0,
   "classification_report": {
     "Benign": {

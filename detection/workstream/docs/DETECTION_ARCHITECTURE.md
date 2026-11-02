@@ -67,9 +67,9 @@ To evaluate whether detector capacity impacts downstream LLM reliability in RAG 
 1. **1D-CNN (`CNN1D`):**
    - Convolutional layers with kernel size 3, batch normalization, ReLU activation, adaptive pooling, and dropout (0.2).
    - Designed to detect localized flow feature correlations.
-2. **Bidirectional LSTM (`BiLSTM`):**
-   - 2-layer bidirectional recurrent network with hidden dimension 32 and dropout (0.1).
-   - Captures long-range dependencies across ordered flow statistics.
+2. **Long Short-Term Memory (`LSTMModel`):**
+   - 2-layer standard unidirectional LSTM network with hidden dimension 32 and dropout (0.1).
+   - Captures sequential packet and inter-arrival dynamics across ordered flow metrics.
 3. **Transformer Encoder (`TransformerEnc`):**
    - Linear feature projection to dimension $d_{\text{model}} = 32$, 4-head multi-head self-attention module, feedforward dimension 64, and dropout (0.1).
    - Identifies non-linear cross-feature interactions without positional decay.
