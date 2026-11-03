@@ -20,7 +20,13 @@ models/*.pt
 
 # Transient caches and checkpoints
 checkpoints/
+*.pt.tmp
+*.tmp
 .pytest_cache/
+
+# Kaggle credentials
+kaggle.json
+.kaggle/
 
 # Large prediction dumps and data samples
 reports/**/modeling_sample.csv

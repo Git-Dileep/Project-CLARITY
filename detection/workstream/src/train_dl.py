@@ -11,6 +11,7 @@ import copy
 import json
 import time
 from pathlib import Path
+from dataclasses import asdict
 from typing import Dict, Any, List, Tuple, Optional
 import numpy as np
 import pandas as pd
@@ -148,8 +149,11 @@ def train_single_dl_model(
     lr: float,
     weight_decay: float,
     patience: int = 2,
+    checkpoint_dir: Optional[Path] = None,
+    resume: bool = False,
+    config_dict: Optional[Dict[str, Any]] = None,
 ) -> Tuple[nn.Module, float, List[Dict[str, float]]]:
-    """Train single PyTorch model with early stopping and loss tracking."""
+    """Train single PyTorch model with early stopping, loss tracking, and atomic checkpointing."""
     model.to(device)
     optimizer = torch.optim.AdamW(model.parameters(), lr=lr, weight_decay=weight_decay)
     criterion = nn.CrossEntropyLoss()
@@ -158,45 +162,110 @@ def train_single_dl_model(
     best_weights = copy.deepcopy(model.state_dict())
     patience_counter = 0
     history = []
+    start_epoch = 0
+
+    if checkpoint_dir is not None:
+        checkpoint_dir.mkdir(parents=True, exist_ok=True)
+
+    # Resume from checkpoint if requested
+    if resume and checkpoint_dir is not None:
+        latest_ckpt = checkpoint_dir / f"{name}_latest.pt"
+        if latest_ckpt.exists():
+            print(f"  [{name}] Found existing checkpoint at {latest_ckpt}. Resuming...")
+            ckpt = torch.load(latest_ckpt, map_location=device, weights_only=False)
+            model.load_state_dict(ckpt["model_state_dict"])
+            optimizer.load_state_dict(ckpt["optimizer_state_dict"])
+            best_val_loss = ckpt.get("best_val_loss", float("inf"))
+            history = ckpt.get("history", [])
+            start_epoch = ckpt.get("epoch", 0)
+            if "torch_rng" in ckpt:
+                torch.set_rng_state(ckpt["torch_rng"])
+            if "numpy_rng" in ckpt:
+                np.random.set_state(ckpt["numpy_rng"])
+
+            # Load separate best model weights if available
+            best_ckpt = checkpoint_dir / f"{name}_best.pt"
+            if best_ckpt.exists():
+                best_data = torch.load(best_ckpt, map_location=device, weights_only=False)
+                best_weights = copy.deepcopy(best_data["model_state_dict"])
+                best_val_loss = best_data.get("val_loss", best_val_loss)
+            print(f"  [{name}] Resumed from epoch {start_epoch}/{epochs}. Best val loss so far: {best_val_loss:.4f}")
 
     t0 = time.perf_counter()
-    for ep in range(epochs):
-        model.train()
-        train_loss = 0.0
-        train_count = 0
-        for xb, yb in train_loader:
-            xb, yb = xb.to(device), yb.to(device)
-            optimizer.zero_grad()
-            out = model(xb)
-            loss = criterion(out, yb)
-            loss.backward()
-            optimizer.step()
-            train_loss += loss.item() * len(yb)
-            train_count += len(yb)
-        avg_train_loss = train_loss / max(1, train_count)
-
-        # Validation
-        model.eval()
-        val_loss = 0.0
-        val_count = 0
-        with torch.no_grad():
-            for xb, yb in val_loader:
+    if start_epoch >= epochs:
+        print(f"  [{name}] Already trained to epoch {start_epoch}>={epochs}. Skipping training loop.")
+    else:
+        for ep in range(start_epoch, epochs):
+            model.train()
+            train_loss = 0.0
+            train_count = 0
+            for xb, yb in train_loader:
                 xb, yb = xb.to(device), yb.to(device)
+                optimizer.zero_grad()
                 out = model(xb)
                 loss = criterion(out, yb)
-                val_loss += loss.item() * len(yb)
-                val_count += len(yb)
-        avg_val_loss = val_loss / max(1, val_count)
+                loss.backward()
+                optimizer.step()
+                train_loss += loss.item() * len(yb)
+                train_count += len(yb)
+            avg_train_loss = train_loss / max(1, train_count)
 
-        history.append({"epoch": ep + 1, "train_loss": avg_train_loss, "val_loss": avg_val_loss})
-        print(f"  [{name}] Epoch {ep+1:02d}/{epochs:02d} - Train Loss: {avg_train_loss:.4f} - Val Loss: {avg_val_loss:.4f}")
+            # Validation
+            model.eval()
+            val_loss = 0.0
+            val_count = 0
+            with torch.no_grad():
+                for xb, yb in val_loader:
+                    xb, yb = xb.to(device), yb.to(device)
+                    out = model(xb)
+                    loss = criterion(out, yb)
+                    val_loss += loss.item() * len(yb)
+                    val_count += len(yb)
+            avg_val_loss = val_loss / max(1, val_count)
 
-        if avg_val_loss < best_val_loss:
-            best_val_loss = avg_val_loss
-            best_weights = copy.deepcopy(model.state_dict())
-            patience_counter = 0
-        else:
-            patience_counter += 1
+            history.append({"epoch": ep + 1, "train_loss": avg_train_loss, "val_loss": avg_val_loss})
+            print(f"  [{name}] Epoch {ep+1:02d}/{epochs:02d} - Train Loss: {avg_train_loss:.4f} - Val Loss: {avg_val_loss:.4f}")
+
+            # Check for best model
+            if avg_val_loss < best_val_loss:
+                best_val_loss = avg_val_loss
+                best_weights = copy.deepcopy(model.state_dict())
+                patience_counter = 0
+                if checkpoint_dir is not None:
+                    best_tmp = checkpoint_dir / f"{name}_best.pt.tmp"
+                    best_file = checkpoint_dir / f"{name}_best.pt"
+                    torch.save({
+                        "epoch": ep + 1,
+                        "model_state_dict": best_weights,
+                        "val_loss": best_val_loss,
+                        "history": history
+                    }, best_tmp)
+                    best_tmp.replace(best_file)
+            else:
+                patience_counter += 1
+
+            # Atomic epoch checkpointing
+            if checkpoint_dir is not None:
+                ckpt_payload = {
+                    "epoch": ep + 1,
+                    "model_state_dict": model.state_dict(),
+                    "optimizer_state_dict": optimizer.state_dict(),
+                    "best_val_loss": best_val_loss,
+                    "history": history,
+                    "torch_rng": torch.get_rng_state(),
+                    "numpy_rng": np.random.get_state(),
+                    "config": config_dict or {},
+                }
+                ep_tmp = checkpoint_dir / f"{name}_epoch_{ep+1}.pt.tmp"
+                ep_file = checkpoint_dir / f"{name}_epoch_{ep+1}.pt"
+                torch.save(ckpt_payload, ep_tmp)
+                ep_tmp.replace(ep_file)
+
+                latest_tmp = checkpoint_dir / f"{name}_latest.pt.tmp"
+                latest_file = checkpoint_dir / f"{name}_latest.pt"
+                torch.save(ckpt_payload, latest_tmp)
+                latest_tmp.replace(latest_file)
+
             if patience_counter >= patience and ep >= 2:
                 print(f"  [{name}] Early stopping triggered at epoch {ep+1}.")
                 break
@@ -231,6 +300,8 @@ def train_dl_models(
     split_data: SplitData,
     config: WorkstreamConfig,
     base_dir: Optional[Path] = None,
+    resume: bool = False,
+    checkpoint_dir: Optional[Path] = None,
 ) -> Dict[str, Any]:
     """Train 1D-CNN, LSTM, and Transformer models, and combine into a majority-voting ensemble."""
     if not TORCH_AVAILABLE:
@@ -238,6 +309,11 @@ def train_dl_models(
 
     work_dir = base_dir or Path.cwd()
     reports_dl_dir = config.resolve_path(work_dir, config.reports_dir) / "dl"
+    models_dir = config.resolve_path(work_dir, config.models_dir)
+    ckpt_dir = checkpoint_dir or config.resolve_path(work_dir, config.checkpoint_dir)
+    reports_dl_dir.mkdir(parents=True, exist_ok=True)
+    models_dir.mkdir(parents=True, exist_ok=True)
+    ckpt_dir.mkdir(parents=True, exist_ok=True)
     models_dir = config.resolve_path(work_dir, config.models_dir)
     reports_dl_dir.mkdir(parents=True, exist_ok=True)
     models_dir.mkdir(parents=True, exist_ok=True)
@@ -293,6 +369,9 @@ def train_dl_models(
             lr=config.dl.learning_rate,
             weight_decay=config.dl.weight_decay,
             patience=config.dl.early_stopping_patience,
+            checkpoint_dir=ckpt_dir,
+            resume=resume,
+            config_dict=asdict(config),
         )
         trained_models[name] = fitted_model
         train_durations[name] = tr_time
@@ -417,12 +496,15 @@ def train_dl_models(
 def main():
     parser = argparse.ArgumentParser(description="Train deep learning 3-model ensemble.")
     parser.add_argument("--config", default="config/reference.json", help="Path to config file")
+    parser.add_argument("--resume", action="store_true", help="Resume training from latest valid checkpoint")
+    parser.add_argument("--checkpoint-dir", default=None, help="Directory to save/load checkpoints")
     args = parser.parse_args()
 
     cfg = WorkstreamConfig.load(args.config)
     df, _ = load_dataset(cfg)
     splits = prepare_data_and_splits(df, cfg)
-    train_dl_models(splits, cfg)
+    ckpt_dir = Path(args.checkpoint_dir) if args.checkpoint_dir else None
+    train_dl_models(splits, cfg, resume=args.resume, checkpoint_dir=ckpt_dir)
 
 
 if __name__ == "__main__":

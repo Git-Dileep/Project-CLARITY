@@ -84,6 +84,10 @@ class WorkstreamConfig:
     reports_dir: str = "reports"
     models_dir: str = "models"
     data_dir: str = "data"
+    checkpoint_dir: str = "checkpoints"
+    environment: str = "local"  # "local" or "kaggle"
+    kaggle_input_dir: str = "/kaggle/input/aci-iot-network-traffic-dataset-2023"
+    cache_processed_data: bool = True
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> WorkstreamConfig:
@@ -118,3 +122,26 @@ class WorkstreamConfig:
         if p.is_absolute():
             return p
         return base_dir / p
+
+    def resolve_input_path(self, base_dir: Optional[Path] = None) -> Path:
+        """Resolve input dataset path across local and Kaggle environments."""
+        work_dir = base_dir or Path.cwd()
+        # 1. If explicitly in Kaggle environment or /kaggle/input exists
+        if self.environment == "kaggle" or Path("/kaggle/input").exists():
+            kaggle_candidates = [
+                Path(self.kaggle_input_dir) / "ACI-IoT-2023.csv",
+                Path("/kaggle/input/aci-iot-network-traffic-dataset-2023/ACI-IoT-2023.csv"),
+                Path("../input/aci-iot-network-traffic-dataset-2023/ACI-IoT-2023.csv"),
+            ]
+            for p in kaggle_candidates:
+                if p.exists():
+                    return p
+            # Scan /kaggle/input dynamically
+            if Path("/kaggle/input").exists():
+                for p in Path("/kaggle/input").rglob("*.csv"):
+                    if "aci" in p.name.lower() or "iot" in p.name.lower():
+                        return p
+
+        # 2. Local fallback
+        local_p = self.resolve_path(work_dir, self.input_path)
+        return local_p

@@ -1,0 +1,16 @@
+{
+  "id": "YOUR_KAGGLE_USERNAME/clarity-aci-detection-pipeline",
+  "title": "CLARITY ACI Detection Pipeline",
+  "code_file": "kaggle_aci_pipeline.ipynb",
+  "language": "python",
+  "kernel_type": "notebook",
+  "is_private": "true",
+  "enable_gpu": "true",
+  "enable_tpu": "false",
+  "enable_internet": "true",
+  "dataset_sources": [
+    "emilynack/aci-iot-network-traffic-dataset-2023"
+  ],
+  "competition_sources": [],
+  "kernel_sources": []
+}

@@ -8,6 +8,7 @@ Connects to ACI-IoT-2023.csv, streams chunks, trains traditional (RF+XGB+MLP) an
 from __future__ import annotations
 
 import argparse
+import copy
 from datetime import datetime, timezone
 import json
 import os
@@ -148,6 +149,8 @@ def run_pipeline(
     dataset_path: Optional[str] = None,
     output_dir: str = "reports/aci_experiment",
     models_dir: str = "models/aci",
+    checkpoint_dir: Optional[str] = None,
+    resume: bool = False,
     max_records: Optional[int] = None,
     seed: int = 42,
     use_synthetic_fallback: bool = True,
@@ -157,6 +160,8 @@ def run_pipeline(
     out_path.mkdir(parents=True, exist_ok=True)
     mod_path = Path(models_dir)
     mod_path.mkdir(parents=True, exist_ok=True)
+    ckpt_path = Path(checkpoint_dir) if checkpoint_dir else out_path / "checkpoints"
+    ckpt_path.mkdir(parents=True, exist_ok=True)
 
     print("=" * 70)
     print("Project CLARITY — ACI IoT Network Dataset 2023 Processing Pipeline")
@@ -296,15 +301,74 @@ def run_pipeline(
         print(f"[DL] Training {name}...")
         opt = torch.optim.AdamW(model.parameters(), lr=1e-3, weight_decay=1e-4)
         crit = nn.CrossEntropyLoss()
-        model.train()
-        for epoch in range(3):  # 3 epochs for fast robust convergence
-            for bx, by in train_loader:
-                bx, by = bx.to(device), by.to(device)
-                opt.zero_grad()
-                out = model(bx)
-                loss = crit(out, by)
-                loss.backward()
-                opt.step()
+
+        start_epoch = 0
+        best_loss = float("inf")
+        best_weights = copy.deepcopy(model.state_dict())
+
+        # Resume from checkpoint if requested
+        if resume:
+            latest_file = ckpt_path / f"{name}_latest.pt"
+            if latest_file.exists():
+                print(f"  [DL] Found existing checkpoint at {latest_file}. Resuming...")
+                ckpt = torch.load(latest_file, map_location=device, weights_only=False)
+                model.load_state_dict(ckpt["model_state_dict"])
+                opt.load_state_dict(ckpt["optimizer_state_dict"])
+                start_epoch = ckpt.get("epoch", 0)
+                best_loss = ckpt.get("loss", float("inf"))
+                best_file = ckpt_path / f"{name}_best.pt"
+                if best_file.exists():
+                    best_data = torch.load(best_file, map_location=device, weights_only=False)
+                    best_weights = copy.deepcopy(best_data["model_state_dict"])
+                print(f"  [DL] Resumed {name} from epoch {start_epoch}/3.")
+
+        if start_epoch >= 3:
+            print(f"  [DL] {name} already trained to epoch {start_epoch}>=3. Skipping training loop.")
+        else:
+            model.train()
+            for epoch in range(start_epoch, 3):  # 3 epochs for fast robust convergence
+                epoch_loss = 0.0
+                batches = 0
+                for bx, by in train_loader:
+                    bx, by = bx.to(device), by.to(device)
+                    opt.zero_grad()
+                    out = model(bx)
+                    loss = crit(out, by)
+                    loss.backward()
+                    opt.step()
+                    epoch_loss += loss.item()
+                    batches += 1
+                avg_loss = epoch_loss / max(1, batches)
+                print(f"  [DL] {name} Epoch {epoch+1}/3 Loss: {avg_loss:.4f}")
+
+                # Atomic epoch checkpointing
+                ckpt_data = {
+                    "epoch": epoch + 1,
+                    "model_state_dict": model.state_dict(),
+                    "optimizer_state_dict": opt.state_dict(),
+                    "loss": avg_loss,
+                    "torch_rng": torch.get_rng_state(),
+                    "numpy_rng": np.random.get_state(),
+                }
+                tmp_ckpt = ckpt_path / f"{name}_epoch_{epoch+1}.pt.tmp"
+                final_ckpt = ckpt_path / f"{name}_epoch_{epoch+1}.pt"
+                torch.save(ckpt_data, tmp_ckpt)
+                tmp_ckpt.replace(final_ckpt)
+
+                latest_tmp = ckpt_path / f"{name}_latest.pt.tmp"
+                latest_final = ckpt_path / f"{name}_latest.pt"
+                torch.save(ckpt_data, latest_tmp)
+                latest_tmp.replace(latest_final)
+
+                if avg_loss < best_loss:
+                    best_loss = avg_loss
+                    best_weights = copy.deepcopy(model.state_dict())
+                    best_tmp = ckpt_path / f"{name}_best.pt.tmp"
+                    best_final = ckpt_path / f"{name}_best.pt"
+                    torch.save({"epoch": epoch + 1, "model_state_dict": best_weights, "loss": best_loss}, best_tmp)
+                    best_tmp.replace(best_final)
+
+        model.load_state_dict(best_weights)
 
         # Inference
         model.eval()
@@ -519,6 +583,8 @@ if __name__ == "__main__":
     parser.add_argument("--dataset-path", default=None, help="Path to ACI-IoT-2023.csv")
     parser.add_argument("--output-dir", default="reports/aci_experiment", help="Output directory")
     parser.add_argument("--models-dir", default="models/aci", help="Models directory")
+    parser.add_argument("--checkpoint-dir", default=None, help="Directory to save/load checkpoints")
+    parser.add_argument("--resume", action="store_true", help="Resume deep learning models from checkpoint")
     parser.add_argument("--max-records", type=int, default=None, help="Max records to process")
     parser.add_argument("--seed", type=int, default=42, help="Random seed")
     args = parser.parse_args()
@@ -527,6 +593,8 @@ if __name__ == "__main__":
         dataset_path=args.dataset_path,
         output_dir=args.output_dir,
         models_dir=args.models_dir,
+        checkpoint_dir=args.checkpoint_dir,
+        resume=args.resume,
         max_records=args.max_records,
         seed=args.seed,
     )
