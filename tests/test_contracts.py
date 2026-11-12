@@ -16,6 +16,7 @@ def test_contracts_exist():
     contracts = get_contracts()
     expected_contracts = [
         "alert_schema_v1.json",
+        "alert_schema_v1_1.json",
         "retrieval_schema_v1.json",
         "report_schema_v1.json"
     ]
