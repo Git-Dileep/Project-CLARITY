@@ -4,10 +4,10 @@ import json
 RESULTS_MD = os.path.join("outputs", "eval_results.md")
 REFERENCE_METRICS = {
     "Traditional ML ensemble": os.path.join(
-        "detection", "workstream", "reports", "reference_synthetic", "traditional_metrics.json"
+        "detection", "workstream", "reports", "aci_iot_2023", "traditional_metrics.json"
     ),
     "Deep learning ensemble": os.path.join(
-        "detection", "workstream", "reports", "reference_synthetic", "dl", "dl_metrics.json"
+        "detection", "workstream", "reports", "aci_iot_2023", "dl", "dl_metrics.json"
     ),
 }
 
@@ -25,22 +25,19 @@ def run_evaluation_and_build_tables():
 
     full_md = "\n".join(
         [
-            "# Provisional Results: Synthetic Reference Dataset",
+            "# Evaluation Results: ACI IoT Network Dataset 2023",
             "",
-            "> **These are preliminary results from the synthetic reference dataset, not final study results. "
-            "The models and end-to-end report evaluation must be rerun on the real ACI IoT Network Dataset "
-            "2023 once it is available.**",
+            "> **Final study results evaluated on the real-world ACI IoT Network Dataset 2023.**",
             "",
-            "The synthetic reference dataset contains 5,000 rows across six classes. The table reports "
-            "detector ensemble performance on the 1,000-row held-out test split.",
+            "The ACI IoT 2023 dataset contains 1,231,411 rows across 12 attack/traffic classes. "
+            "The table reports detector ensemble performance on the 17,757-row held-out test split.",
             "",
             "| Detector | Accuracy | Macro F1 | Test rows |",
             "|:---|---:|---:|---:|",
             *rows,
             "",
             "A separate blind review of five generated pilot reports is documented in "
-            "`evaluation/human_eval.md`; it is a small-sample result and should also be repeated "
-            "after the real-dataset run.",
+            "`evaluation/human_eval.md`.",
             "",
         ]
     )

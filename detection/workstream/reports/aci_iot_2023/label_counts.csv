@@ -1,0 +1,13 @@
+class,count,percentage
+Port Scan,441282,35.8355
+Benign,329295,26.7413
+ICMP Flood,225234,18.2907
+Ping Sweep,71928,5.8411
+DNS Flood,46935,3.8115
+Vulnerability Scan,39537,3.2107
+OS Scan,37524,3.0472
+Slowloris,18643,1.514
+SYN Flood,13857,1.1253
+Dictionary Attack,6380,0.5181
+UDP Flood,791,0.0642
+ARP Spoofing,5,0.0004

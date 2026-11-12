@@ -9,3 +9,5 @@ kb/chroma_db/
 *.pcapng
 .DS_Store
 Thumbs.db
+.vscode/
+*.log

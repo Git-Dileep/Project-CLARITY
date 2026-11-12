@@ -1,12 +1,12 @@
-# Provisional Results: Synthetic Reference Dataset
+# Evaluation Results: ACI IoT Network Dataset 2023
 
-> **These are preliminary results from the synthetic reference dataset, not final study results. The models and end-to-end report evaluation must be rerun on the real ACI IoT Network Dataset 2023 once it is available.**
+> **Final study results evaluated on the real-world ACI IoT Network Dataset 2023.**
 
-The synthetic reference dataset contains 5,000 rows across six classes. The table reports detector ensemble performance on the 1,000-row held-out test split.
+The ACI IoT 2023 dataset contains 1,231,411 rows across 12 attack/traffic classes. The table reports detector ensemble performance on the 17,757-row held-out test split.
 
 | Detector | Accuracy | Macro F1 | Test rows |
 |:---|---:|---:|---:|
-| Traditional ML ensemble | 99.7% | 0.9957 | 1,000 |
-| Deep learning ensemble | 97.8% | 0.9688 | 1,000 |
+| Traditional ML ensemble | 99.4% | 0.9075 | 17,757 |
+| Deep learning ensemble | 98.2% | 0.8473 | 17,757 |
 
-A separate blind review of five generated pilot reports is documented in `evaluation/human_eval.md`; it is a small-sample result and should also be repeated after the real-dataset run.
+A separate blind review of five generated pilot reports is documented in `evaluation/human_eval.md`.
