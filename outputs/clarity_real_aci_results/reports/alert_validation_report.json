@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-11-13T14:13:26.966868+00:00",
+  "schema_path": "/kaggle/working/Project-CLARITY/contracts/alert_schema_v1.json",
+  "traditional_alerts_count": 20,
+  "traditional_valid": true,
+  "dl_alerts_count": 20,
+  "dl_valid": true,
+  "errors": []
+}

@@ -1,4 +1,4 @@
-﻿# Project CLARITY: Incident Analysis RAG Reliability Study
+# Project CLARITY: Incident Analysis RAG Reliability Study
 
 > **Evaluating whether SHAP attributions from deep learning vs. traditional ML ensembles impact LLM groundedness and hallucination in RAG incident analysis.**
 
@@ -17,9 +17,10 @@
 In automated Security Operations Center (SOC) pipelines, machine learning detectors generate alerts and feature attributions (SHAP) that feed into Retrieval-Augmented Generation (RAG) models to synthesize human-readable incident reports. **Project CLARITY** executes a controlled evaluation sprint measuring the direct downstream effects on LLM report reliability when altering only the detector architecture.
 
 ### Experimental Controls
-- **Independent Variable:** Detector Subsystem producing the alert payload.
-  - **Traditional ML Baseline:** 3-model ensemble (**Random Forest + XGBoost + MLP**) with 2-of-3 hard voting.
-  - **Deep Learning Ensemble:** 3-model ensemble (**1D-CNN + Bi-LSTM + Transformer Encoder**) with 2-of-3 hard voting.
+- **Independent Variable:** Detector Subsystem producing the alert payload:
+  - **Traditional ML Ensemble:** 3-model ensemble (**Random Forest + XGBoost + MLP**) driven by **Soft Voting** (continuous posterior probability averaging) as the primary consensus mechanism, evaluated alongside **Hard Voting** (majority consensus) as a comparative baseline.
+  - **Deep Learning Ensemble:** 3-model ensemble (**1D-CNN + Bi-LSTM + Transformer Encoder**) driven by **Soft Voting** as the primary consensus mechanism, evaluated alongside **Hard Voting** as a comparative baseline.
+  - **Consensus Architecture:** Soft Voting serves as the core consensus engine, averaging full posterior class probability distributions across learners to preserve uncertainty on ambiguous flows. Hard Voting is retained as a comparative reference baseline to measure the empirical effect of continuous vs. discrete decision aggregation.
 - **Controlled Invariants:** Identical network flows ($1:1$ mapping), reference dataset schema, retrieval engine ($k=5$), LLM generator (`meta-llama/Llama-3.1-8b-instant`), decoding temperature ($0.0$), prompt template, and random seed ($42$).
 
 ---
@@ -43,25 +44,29 @@ In automated Security Operations Center (SOC) pipelines, machine learning detect
              │  - Explainer: TreeExplainer │               │  - Explainer: GradExplainer │
              └─────────────┬───────────────┘               └──────────────┬──────────────┘
                            │                                              │
+                ┌──────────┴──────────┐                        ┌──────────┴──────────┐
+                ▼                     ▼                        ▼                     ▼
+          [ Hard Voting ]       [ Soft Voting ]          [ Hard Voting ]       [ Soft Voting ]
+          (2-of-3 Maj.)         (Prob. Avg.)             (2-of-3 Maj.)         (Prob. Avg.)
+                │                     │                        │                     │
+                └──────────┬──────────┘                        └──────────┬──────────┘
                            ▼                                              ▼
-                [ Hard Voting (2 of 3) ]                       [ Hard Voting (2 of 3) ]
+             [ Schema v1.1 Alert Payload ]                  [ Schema v1.1 Alert Payload ]
                            │                                              │
                            └───────────────────────┬──────────────────────┘
                                                    ▼
-                                     [ Schema v1 JSON Alert Payload ]
-                                                   │
-                   ┌───────────────────────────────┴───────────────────────────────┐
-                   ▼                               ▼                               ▼
-       [ Baseline (0-Shot RAG) ]         [ Standard Local RAG ]          [ Hybrid Local + Web RAG ]
-       - SYS-01 (Trad ML)                - SYS-03 (Trad ML)              - SYS-05 (Trad ML)
-       - SYS-02 (DL Ensemble)            - SYS-04 (DL Ensemble)          - SYS-06 (DL Ensemble)
-                   │                               │                               │
-                   └───────────────────────────────┼───────────────────────────────┘
-                                                   ▼
-                                    [ LLM Incident Report (Llama 3.1) ]
-                                                   │
-                                                   ▼
-                                [ Evaluation Engine (Rubric v0) ]
+                    ┌───────────────────────────────┴───────────────────────────────┐
+                    ▼                               ▼                               ▼
+        [ Baseline (0-Shot RAG) ]         [ Standard Local RAG ]          [ Hybrid Local + Web RAG ]
+        - SYS-01 (Trad ML)                - SYS-03 (Trad ML)              - SYS-05 (Trad ML)
+        - SYS-02 (DL Ensemble)            - SYS-04 (DL Ensemble)          - SYS-06 (DL Ensemble)
+                    │                               │                               │
+                    └───────────────────────────────┼───────────────────────────────┘
+                                                    ▼
+                                     [ LLM Incident Report (Llama 3.1) ]
+                                                    │
+                                                    ▼
+                                 [ Evaluation Engine (Rubric v0) ]
 ```
 
 | System ID | Detector Subsystem | Knowledge Sources | Retrieval Mechanism | Output Artifact |
@@ -182,12 +187,7 @@ All Sprint 1 milestone gates (G1, G3, G5) were evaluated and approved under **GO
 
 | Gate | Scope | Status | Notes |
 | :--- | :--- | :---: | :--- |
-| **G1** | Detection & Alert Schema | **GO** | 20 alerts exported (10 Trad + 10 DL), 0 schema errors, 0 data leakage |
+| **G1** | Detection & Alert Schema | **GO** | Real ACI IoT 2023 validated (17,757 flows). Soft Voting primary achieves 99.57% Acc / 0.9939 F1 on Trad ML ($p < 0.001$), Schema v1.1 validated, 0 data leakage |
 | **G3** | Knowledge Base & Retrieval | **GO** | 25-doc KB, ChromaDB retrieval, MITRE mapping & cached Tavily operational |
 | **G5** | Generation & Evaluation | **GO** | 80 pilot reports scored, LLM judge 10/10 agreement, 4 Rubric v0 metrics synthesized |
 
-### Open Workstream Items (Dataset Dependent)
-The following workstream tickets remain open pending full real-world ACI IoT 2023 dataset access:
-- **Issue #7 [DET-01]:** Switch to real ACI IoT 2023 dataset and audit schema
-- **Issue #8 [DET-02]:** Train traditional ensemble on real ACI IoT 2023
-- **Issue #9 [DET-03]:** Complete deep learning ensemble training on real ACI IoT 2023

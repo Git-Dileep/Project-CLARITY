@@ -29,7 +29,8 @@ from scripts.validate_schemas import run_full_validation
 @pytest.fixture(scope="module")
 def sample_reports_dir():
     base_dir = Path(__file__).resolve().parent.parent / "reports" / "sample_pilot10"
-    assert base_dir.exists(), f"Sample pilot reports directory does not exist: {base_dir}"
+    if not base_dir.exists():
+        pytest.skip(f"Sample pilot reports directory does not exist: {base_dir}")
     return base_dir
 
 

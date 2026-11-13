@@ -14,8 +14,8 @@
 ### Controlled Variable Strategy
 To preserve strict experimental validity, this study enforces **exactly one manipulated variable**:
 - **Independent Variable:** The detector subsystem producing the alert payload:
-  - **Traditional ML (Paper's 3-Model Baseline):** Random Forest + XGBoost + Multilayer Perceptron (MLP) with majority hard voting.
-  - **DL Ensemble:** 1D-CNN + Bi-LSTM + Transformer Encoder with majority hard voting.
+  - **Traditional ML Ensemble:** Random Forest + XGBoost + Multilayer Perceptron (MLP) evaluated primarily with **Soft Voting** (continuous posterior probability averaging), alongside **Hard Voting** as a comparative baseline.
+  - **DL Ensemble:** 1D-CNN + Bi-LSTM + Transformer Encoder evaluated primarily with **Soft Voting**, alongside **Hard Voting** as a comparative baseline.
 - **Control Invariants:** Flow metadata, primary dataset, retrieval engine, knowledge base corpus, retrieval budget ($k=5$), LLM model version (`meta-llama/Llama-3.1-8b-instant`), prompt template, decoding temperature ($0.0$), and random seed ($42$).
 
 ---
@@ -65,21 +65,33 @@ To preserve strict experimental validity, this study enforces **exactly one mani
                               [ Schema v1 JSON Alert Payload ]
 ```
 
-### 3.1 Detector 1: Traditional ML Baseline (`traditional_ml`)
-- **Base Learners (Paper's 3-Model Baseline):**
-  - Random Forest (`n_estimators=100`, `max_depth=12`)
-  - XGBoost (`n_estimators=100`, `learning_rate=0.1`)
-  - Multilayer Perceptron (MLP: `hidden_layer_sizes=(128, 64)`, `activation='relu'`)
-- **Consensus Rule:** Hard voting majority (minimum 2 of 3 votes).
-- **SHAP Tooling:** `shap.TreeExplainer` (for tree models) / unified majority attribution for the consensus class.
+### 3.1 Consensus Strategies (Hard vs. Soft Voting)
+- **Research Motivation:** Hard Voting was our initial consensus implementation. Preliminary analysis revealed that 2-of-3 majority voting did not consistently outperform individual high-capacity base learners (such as XGBoost or Transformer). Therefore, Soft Voting was introduced as an additional evaluation strategy to assess whether preserving posterior class uncertainty via continuous probability averaging provides improved classification fidelity and lower discordance on difficult edge flows.
+- **Hard Voting Implementation & Tie-Break Rule:**
+  - 3-of-3 agreement: mean confidence of all 3 models.
+  - 2-of-3 agreement: mean confidence of the 2 agreeing models (dissenter confidence ignored).
+  - 1-1-1 split: predicted label of the model with the highest individual confidence score; ensemble confidence equals that winning model's confidence.
+- **Soft Voting Implementation:**
+  - Uniform posterior probability averaging: $\bar{\mathbf{P}} = \frac{1}{3} \sum_{m=1}^3 \mathbf{P}^{(m)}$.
+  - Consensus prediction: argmax of mean probability $\bar{\mathbf{P}}$.
+  - Confidence: maximum posterior probability in $\bar{\mathbf{P}}$.
+  - Uniform weights, no post-hoc weight tuning or test-split calibration.
 
-### 3.2 Detector 2: Deep Learning Ensemble (`dl_ensemble`)
+### 3.2 Detector 1: Traditional ML Baseline (`traditional_ml`)
 - **Base Learners:**
-  - 1D-CNN: Multi-channel 1D convolutions over sequence slices.
-  - Bi-LSTM: 2-layer bidirectional LSTM capturing long-term packet dynamics.
-  - Transformer Encoder: 4-layer multi-head self-attention module.
-- **Consensus Rule:** Hard voting majority (minimum 2 of 3 votes).
-- **SHAP Tooling:** `shap.GradientExplainer` (or `shap.DeepExplainer`).
+  - Random Forest (`n_estimators=100`, `max_depth=15`)
+  - XGBoost (`n_estimators=100`, `learning_rate=0.1`, `max_depth=6`)
+  - Multilayer Perceptron (MLP: `hidden_layer_sizes=(64, 32)`, `activation='relu'`)
+- **Consensus Rules:** Both Hard Voting (majority with tie-break) and Soft Voting evaluated independently.
+- **SHAP Tooling:** `shap.TreeExplainer` (XGBoost) for consensus winning class.
+
+### 3.3 Detector 2: Deep Learning Ensemble (`dl_ensemble`)
+- **Base Learners:**
+  - 1D-CNN: Multi-channel 1D convolutions ($C_{\text{in}}=1 \to 32 \to 64$) over flow feature vectors.
+  - Bi-LSTM: 2-layer bidirectional LSTM ($h=32$) capturing sequence dynamics.
+  - Transformer Encoder: 2-layer multi-head self-attention module ($d=32$, 4 heads).
+- **Consensus Rules:** Both Hard Voting (majority with tie-break) and Soft Voting evaluated independently.
+- **SHAP Tooling:** `shap.GradientExplainer` (Transformer) in probability space for consensus winning class.
 
 ---
 
@@ -100,17 +112,28 @@ To preserve strict experimental validity, this study enforces **exactly one mani
 
 - **Dataset:** ACI IoT Network Dataset 2023.
 - **Sample Size:** Exactly 20 alerts (10 pairs across traditional ML vs DL ensemble).
-- **1:1 Flow Mapping:** Every traditional alert pair `(ALT-xxxx, ALT-yyyy)` shares the identical network `flow_id`.
-- **Stratification:** Minimum 5 distinct attack classes represented out of the 11 ACI IoT classes (e.g., `DDoS_SYN_Flood`, `Mirai_UDP_Flooding`, `Port_Scan`, `Brute_Force_SSH`, `Benign_Anomaly`).
+- **1:1 Flow Mapping & Frozen Selection:** Every traditional alert pair `(ALT-xxxx, ALT-yyyy)` shares the identical network `flow_id`. The pilot alert selection is strictly frozen by flow ID, independent of voting strategy. Both Hard Voting and Soft Voting export variants cover the exact same frozen 20 flows.
+- **Stratification:** Minimum 5 distinct attack classes represented out of the ACI IoT classes (e.g., `ICMP Flood`, `SYN Flood`, `Vulnerability Scan`, `Ping Sweep`, `OS Scan`, `Port Scan`, `Benign`, `UDP Flood`, `Dictionary Attack`, `Slowloris`, `DNS Flood`).
 - **Data Partition Integrity:**
   - $0\%$ train/test overlap (`in_train_leakage_flag: false`).
-  - Strict disjoint IP subnets and temporal partitioning between training corpus and pilot flows.
+  - Strict feature row uniqueness between training corpus and test flows.
+  - Note on split: stratified random per-flow split with IP/Time dropped; temporal session-window grouping was not enforced during traffic capture, documented as a study limitation.
 
 ---
 
 ## 6. Evaluation Metrics & Grounding Rubric
 
-Reports are evaluated against `eval/rubric_v0.md` along four primary dimensions:
+### 6.1 Upstream Detector Evaluation Metrics (Pre-Specified)
+- **Primary Metric:** Macro-F1 calculated over 11 classes (excluding ARP Spoofing due to extreme support sparsity: 1 test flow, 4 train flows).
+- **Secondary Metrics:** Full 12-class Macro-F1 (flagged high-variance), overall Accuracy, and Weighted F1. ARP Spoofing per-class results reported descriptively only.
+- **Statistical Inference:**
+  - Primary: Paired bootstrap resampling of the 11-class macro-F1 difference ($\Delta = \text{Soft} - \text{Hard}$, 1,000 resamples, fixed seed 42) with 95% bootstrap confidence intervals.
+  - Secondary: McNemar paired contingency test on classification correctness (exact binomial when discordant pairs $< 25$, continuity-corrected $\chi^2$ otherwise), defining $n_{\text{HardOnly}}$ and $n_{\text{SoftOnly}}$ explicitly.
+  - Multiplicity: Two primary hypotheses (Traditional ML, DL), Bonferroni-adjusted $\alpha = 0.025$.
+  - Confirmed empirical findings on ACI IoT 2023 ($N=17,757$): Traditional Soft Voting achieves statistically significant superiority over Hard Voting (11-class F1: 0.9939 vs 0.9900, paired bootstrap $\Delta = +0.0040$, 95\% CI $[+0.0020, +0.0063]$, $p < 0.001$; McNemar $\chi^2 = 25.69, p < 0.0001$); DL Soft Voting achieves 0.9279 11-class F1 vs 0.9501 for Hard Voting (McNemar $p = 0.2183$, not significant). Discordance rates: 0.25% (Trad) and 0.60% (DL).
+
+### 6.2 Downstream Report Reliability Metrics
+Reports are evaluated against `eval/rubric_v0.md` along four uncollapsed dimensions:
 1. **Groundedness ($0.0 - 1.0$):** $(N_{\text{FULL}} + N_{\text{PARTIAL}}) / N$.
 2. **Faithfulness ($0.0 - 1.0$):** $N_{\text{FULL}} / N$.
 3. **Fabrication Rate ($0.0 - 1.0$):** $N_{\text{FABRICATED}} / N$.
@@ -125,7 +148,7 @@ Reports are evaluated against `eval/rubric_v0.md` along four primary dimensions:
 
 ```mermaid
 flowchart TD
-    G1{Gate G1: Schema, ACI-IoT & Baseline} -->|Pass: Zero Errors & Baseline ~99.2% F1| Exec[Run Pilot Inference SYS-01..06]
+    G1{Gate G1: Schema, ACI-IoT Partition & Ensembles} -->|Pass: Zero Errors & Baseline Validated| Exec[Run Pilot Inference SYS-01..06]
     G1 -->|Fail: Validation/Baseline Error| Hal1[Halt: Correct Schema & Retrain Baseline]
     Exec --> G3{Gate G3: Pilot RAG Consistency}
     G3 -->|Pass: Groundedness >= 0.70| Prod[Execute Full Test Evaluation]

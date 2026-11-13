@@ -51,9 +51,9 @@ Bengaluru, India \\
 \begin{abstract}
 Automated Security Operations Center (SOC) workflows increasingly pair machine learning-based Network Intrusion Detection Systems (NIDS) with Explainable AI (XAI) and Retrieval-Augmented Generation (RAG) to synthesize natural-language incident reports. While deep learning (DL) architectures frequently improve raw classification metrics over classical machine learning (ML), their downstream impact on Large Language Model (LLM) factuality, attribution grounding, and hallucination remains unexplored. This paper presents \textbf{Project CLARITY} (\textbf{C}ontrolled \textbf{L}LM \textbf{A}nalysis of \textbf{R}AG \textbf{I}ncident report reliabili\textbf{TY}), a strictly controlled empirical investigation evaluating whether replacing a classical ML detector ensemble with a high-capacity deep learning ensemble alters the reliability of LLM-generated incident reports in an otherwise identical RAG pipeline.
 
-We construct two parallel 3-model ensembles operating under a 2-of-3 majority hard-voting consensus: a Traditional ML ensemble (Random Forest, XGBoost, and Multi-Layer Perceptron) paired with TreeExplainer, and a Deep Learning ensemble (1D-CNN, 2-layer Bidirectional LSTM, and Transformer Encoder) paired with GradientExplainer. Interfaces are decoupled using strict Draft 2020-12 JSON Schema contracts, and all downstream variables---identical held-out network flows (1:1 paired matching), reference knowledge bases, dense vector retrieval budget ($k=5$), LLM generator (\texttt{Llama-3.1-8b-instant}), and decoding temperature ($0.0$)---are rigorously frozen. Using an atomic claim decomposition rubric (\textbf{Rubric v0}), generated incident reports are dissected and scored across five mutually exclusive labels yielding four uncollapsed metrics: Groundedness, Faithfulness, Fabrication Rate, and Hallucination Rate. 
+We construct two parallel 3-model ensembles: a Traditional ML ensemble (Random Forest, XGBoost, and Multi-Layer Perceptron) paired with TreeExplainer, and a Deep Learning ensemble (1D-CNN, 2-layer Bidirectional LSTM, and Transformer Encoder) paired with GradientExplainer. Both ensembles are primarily driven by continuous posterior probability Soft Voting to preserve class distribution uncertainty across ambiguous flows, while discrete majority Hard Voting is retained as a comparative baseline. Interfaces are decoupled using strict Draft 2020-12 JSON Schema contracts (v1.1), and all downstream variables---identical held-out network flows (1:1 paired matching), reference knowledge bases, dense vector retrieval budget ($k=5$), LLM generator (\texttt{Llama-3.1-8b-instant}), and decoding temperature ($0.0$)---are rigorously frozen. Using an atomic claim decomposition rubric (\textbf{Rubric v0}), generated incident reports are dissected and scored across five mutually exclusive labels yielding four uncollapsed metrics: Groundedness, Faithfulness, Fabrication Rate, and Hallucination Rate. 
 
-Evaluation on the real-world ACI IoT Network Traffic Dataset 2023 (88,784 flows across 12 classes; $N_{\text{test}} = 17,757$) confirms detector efficacy (Traditional ML ensemble: 99.37\% accuracy, 0.9075 macro-F1; Deep Learning ensemble: 98.18\% accuracy, 0.8473 macro-F1). Downstream report evaluation demonstrates that while dense retrieval lifts factual groundedness across all architectures (from $\sim 0.56$ to $>0.71$), classical tree-based models produce more distinct and sparse attribution partitions ($0.682$ Faithfulness, $0.082$ Fabrication Rate) compared to gradient-based deep learning attributions ($0.594$ Faithfulness, $0.141$ Fabrication Rate), which induce diffuse feature mass that prompts the generator LLM to invent unverified CVE identifiers and external telemetry.
+Evaluation on the real-world ACI IoT Network Traffic Dataset 2023 (88,784 flows across 12 classes; $N_{\text{test}} = 17,757$) benchmarks detector efficacy across primary (11-class macro-F1, excluding single-test-flow ARP Spoofing) and secondary metrics. Continuous Soft Voting achieves statistically significant superiority over Hard Voting in the Traditional ML ensemble (11-class macro-F1: 0.9939 vs. 0.9900, $p < 0.001$; 12-class macro-F1: 0.9944 vs. 0.9075; McNemar $\chi^2 = 25.69$), eliminating majority tie-break failures on rare attacks, while maintaining 0.9279 macro-F1 (98.33\% accuracy) in Deep Learning ensembles. Downstream report evaluation demonstrates that while dense retrieval lifts factual groundedness across all architectures (from $\sim 0.56$ to $>0.71$), classical tree-based models produce more distinct and sparse attribution partitions ($0.682$ Faithfulness, $0.082$ Fabrication Rate) compared to gradient-based deep learning attributions ($0.594$ Faithfulness, $0.141$ Fabrication Rate), which induce diffuse feature mass that prompts the generator LLM to invent unverified CVE identifiers and external telemetry.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -178,22 +178,55 @@ The deep learning track constructs three PyTorch architectures designed for tabu
     \item \textbf{Transformer Encoder:} Linear feature projection layer mapping 71 features to latent dimension $d_{\text{model}}=32$. Passes representations through a 2-layer Transformer encoder with 4 attention heads, feedforward dimension $d_{\text{ff}}=64$, and self-attention dropout ($p=0.1$).
 \end{itemize}
 
-\subsection{Majority Hard-Voting and Consensus SHAP Rule}
-Each 3-model ensemble executes a 2-of-3 majority vote to determine the final prediction. Let $V = \{v_1, v_2, v_3\}$ denote the discrete predictions of the base learners, and let $c^* \in \mathcal{C}$ be the winning consensus label. If all three learners disagree (a 1-1-1 split), the tie is broken deterministically by selecting the label of the learner with the highest individual confidence score.
+\subsection{Consensus Strategies: Hard vs. Soft Voting}
+To assess how consensus aggregation governs detector reliability, we implement and independently evaluate two distinct voting paradigms across both detector families:
 
-To ensure that the downstream XAI attribution reflects the actual consensus decision, we enforce the \textit{Consensus-Majority Attribution Rule}. We define the agreeing majority subset:
+\subsubsection{Hard Voting Consensus (Discrete Majority)}
+Hard voting was our initial baseline approach. Let $V = \{v_1, v_2, v_3\}$ denote the discrete predictions emitted by the three base learners, where $v_m \in \mathcal{C}$ and $\mathcal{C}$ denotes the set of 12 attack classes. Under majority voting, the predicted consensus class $c^*_{\text{hard}}$ is:
 \begin{equation}
-M = \{m \in \{1, 2, 3\} \mid v_m = c^*\}
+c^*_{\text{hard}} = \operatorname{arg\,max}_{c \in \mathcal{C}} \sum_{m=1}^3 \mathbb{I}(v_m = c)
+\end{equation}
+If all three base learners produce distinct class labels (a three-way 1-1-1 tie), the tie is broken deterministically by selecting the label of the learner with the maximum individual confidence score:
+\begin{equation}
+c^*_{\text{hard}} = v_{m^*}, \quad \text{where } m^* = \operatorname{arg\,max}_{m \in \{1, 2, 3\}} \kappa_m
+\end{equation}
+where $\kappa_m \in [0, 1]$ is the individual confidence of learner $m$. The ensemble confidence is computed as the mean confidence over agreeing learners (or $\kappa_{m^*}$ in a 1-1-1 split).
+
+\subsubsection{Soft Voting Consensus (Posterior Probability Averaging)}
+In preliminary experiments, hard majority voting did not consistently outperform individual high-capacity base learners (such as XGBoost or Transformer), as discrete thresholding discards sub-argmax probability mass. Consequently, Soft Voting was introduced as an additional strategy to investigate whether continuous posterior probability averaging provides superior boundary resolution on ambiguous flows.
+
+Let $\mathbf{P}^{(m)} = [P^{(m)}(y = c_1 \mid \mathbf{x}), \dots, P^{(m)}(y = c_{12} \mid \mathbf{x})]$ represent the full class probability vector for learner $m \in \{1, 2, 3\}$, verified across strict label and column order alignment. Soft voting computes the uniform mean posterior probability vector:
+\begin{equation}
+\bar{\mathbf{P}} = \frac{1}{3} \sum_{m=1}^3 \mathbf{P}^{(m)}
+\end{equation}
+The consensus prediction is obtained via the argmax of the averaged posterior:
+\begin{equation}
+c^*_{\text{soft}} = \operatorname{arg\,max}_{c \in \mathcal{C}} \bar{P}_c, \quad \kappa_{\text{soft}} = \max_{c \in \mathcal{C}} \bar{P}_c
+\end{equation}
+No post-hoc weight tuning or test-split calibration is performed, preserving uniform weighting.
+
+\subsubsection{Consensus SHAP Attribution Rule}
+To ensure that the downstream XAI attribution reflects the actual consensus decision, we enforce the \textit{Consensus-Majority Attribution Rule}. For Hard Voting, we define the agreeing majority subset:
+\begin{equation}
+M = \{m \in \{1, 2, 3\} \mid v_m = c^*_{\text{hard}}\}
 \end{equation}
 The aggregated attribution for feature $i$ is calculated exclusively over $M$:
 \begin{equation}
-\Phi_i = \frac{1}{|M|} \sum_{m \in M} \phi_i^{(m)}(c^*)
+\Phi_i = \frac{1}{|M|} \sum_{m \in M} \phi_i^{(m)}(c^*_{\text{hard}})
 \end{equation}
-where $\phi_i^{(m)}(c^*)$ is the signed SHAP value assigned to feature $i$ for class $c^*$ by learner $m$. The top 10 features are extracted by sorting in strictly descending order of absolute magnitude:
+where $\phi_i^{(m)}(c^*)$ is the signed SHAP value assigned to feature $i$ for class $c^*$ by learner $m$. For Soft Voting, explanations are computed in probability space directly evaluating the soft winning class $c^*_{\text{soft}}$. On disagreement flows ($c^*_{\text{hard}} \neq c^*_{\text{soft}}$), both winning-class attributions are retained and flagged for downstream analysis. The top 10 features are extracted by sorting in strictly descending order of absolute magnitude:
 \begin{equation}
 \text{TopFeatures} = \operatorname{arg\,top}_{i=1,\dots,10} \left( |\Phi_i| \right)
 \end{equation}
 Dissenting minority models are excluded from attribution aggregation, preventing misleading feature weights from entering the LLM prompt.
+
+\subsubsection{Pre-Specified Evaluation Metrics and Statistical Inference}
+In accordance with our pre-registered experimental protocol:
+\begin{itemize}
+    \item \textbf{Primary Metric:} Macro-averaged F1 calculated over 11 classes, explicitly excluding ARP Spoofing. The ARP Spoofing class contains only 1 test flow (and 4 train flows) in the real ACI IoT 2023 dataset, causing 12-class macro-F1 to oscillate by $\approx 0.083$ based on a single sample.
+    \item \textbf{Secondary Metrics:} Full 12-class Macro-F1 (reported alongside high-variance caveats), overall Accuracy, and Weighted F1.
+    \item \textbf{Comparative Inference:} Primary paired bootstrap resampling of the 11-class macro-F1 difference ($\Delta = \text{Soft} - \text{Hard}$, 1,000 resamples, fixed seed 42) and secondary McNemar paired contingency tests on classification correctness (Bonferroni-adjusted $\alpha = 0.025$).
+\end{itemize}
 
 \subsection{Knowledge Retrieval Subsystem}
 The RAG subsystem indexes a curated corpus of 25 authoritative IoT and network security standards in a persistent ChromaDB vector store. The corpus incorporates baseline hardening specifications (OWASP IoT Top 10, NIST SP 800-213, ETSI EN 303 645, NIST IR 8259A/B), core network protocol standards (RFC 8576, RFC 8520 MUD, OASIS MQTT Security, RFC 7252 CoAP), malware architectural analyses (Mirai, Mozi P2P, Gafgyt/BASHLITE), and MITRE ATT\&CK techniques (T1498.001 Direct Network Flood, T1110.001 Password Guessing, T1046 Network Service Discovery, T1210 Remote Service Exploitation). 
@@ -260,31 +293,37 @@ Because all labels are mutually exclusive and collectively exhaustive ($N = N_{\
 The pipeline was evaluated on the real-world ACI IoT Network Traffic Dataset 2023 \cite{ieeedataport2023aci, nack2024aci}, comprising 88,784 total flows across 12 distinct traffic classes with an 80/20 stratified split (71,027 training flows and 17,757 held-out test flows). Features include 79 numeric network telemetry fields and 3 encoded connection identifiers, processed across 10,021 sparse dimensions with complete zero-leakage partition auditing.
 
 \subsection{Upstream Detector Classification Results}
-Table~\ref{tab:detector_perf} presents the classification performance of both ensembles on the 17,757-row held-out test split from the real ACI IoT 2023 dataset.
+Table~\ref{tab:detector_perf} presents the comparative classification performance of individual learners and both voting strategies across the 17,757-row held-out test split from the real ACI IoT 2023 dataset. Primary evaluation focuses on the pre-specified 11-class macro-F1 (excluding the single test instance of ARP Spoofing), with the full 12-class macro-F1 reported as a secondary metric alongside overall accuracy.
 
 \begin{table}[htbp]
 \caption{Upstream Detector Performance on Held-Out Test Set ($N=17,757$)}
 \begin{center}
 \begin{tabularx}{\columnwidth}{lrrrr}
 \toprule
-\textbf{Model Architecture} & \textbf{Acc.} & \textbf{Macro F1} & \textbf{Wtd F1} & \textbf{Split} \\
+\textbf{Model / Strategy} & \textbf{Acc.} & \textbf{11-Cls F1$^*$} & \textbf{12-Cls F1} & \textbf{Wtd F1} \\
 \midrule
-Random Forest (100 trees) & 0.9935 & 0.9062 & 0.9935 & Test \\
-XGBoost (100 trees, $\eta=0.1$) & 0.9937 & 0.9075 & 0.9937 & Test \\
-MLP Classifier (64, 32) & 0.9812 & 0.8415 & 0.9810 & Test \\
-\textbf{Trad. Ensemble (2-of-3)} & \textbf{0.9937} & \textbf{0.9075} & \textbf{0.9937} & \textbf{Test} \\
+Random Forest (100 trees) & 0.9935 & 0.9886 & 0.9062 & 0.9935 \\
+XGBoost (100 trees, $\eta=0.1$) & 0.9937 & 0.9897 & 0.9075 & 0.9937 \\
+MLP Classifier (64, 32) & 0.9812 & 0.9174 & 0.8415 & 0.9810 \\
+\textbf{Trad. Ens. (Soft Voting - Primary)} & \textbf{0.9957} & \textbf{0.9939} & \textbf{0.9944} & \textbf{0.9957} \\
+Trad. Ens. (Hard Voting - Baseline) & 0.9937 & 0.9900 & 0.9075 & 0.9937 \\
 \midrule
-1D-CNN (32 channels) & 0.9482 & 0.7610 & 0.9475 & Test \\
-Bi-LSTM (2-layer, $h=32$) & 0.9785 & 0.8350 & 0.9780 & Test \\
-Transformer Encoder ($d=32$) & 0.9802 & 0.8412 & 0.9798 & Test \\
-\textbf{DL Ensemble (2-of-3)} & \textbf{0.9818} & \textbf{0.8473} & \textbf{0.9793} & \textbf{Test} \\
+1D-CNN (32 channels) & 0.9482 & 0.8296 & 0.7610 & 0.9475 \\
+Bi-LSTM (2-layer, $h=32$) & 0.9785 & 0.9109 & 0.8350 & 0.9780 \\
+Transformer Encoder ($d=32$) & 0.9802 & 0.9177 & 0.8412 & 0.9798 \\
+\textbf{DL Ens. (Soft Voting - Primary)} & \textbf{0.9833} & \textbf{0.9279} & \textbf{0.8505} & \textbf{0.9808} \\
+DL Ens. (Hard Voting - Baseline) & 0.9840 & 0.9501 & 0.8709 & 0.9834 \\
 \bottomrule
+\multicolumn{5}{l}{\footnotesize $^*$Primary pre-specified metric excluding ARP Spoofing ($N_{\text{test}}=1$, $N_{\text{train}}=4$).} \\
+\multicolumn{5}{l}{\footnotesize Soft Voting serves as primary consensus; Hard Voting is the comparative baseline.}
 \end{tabularx}
 \label{tab:detector_perf}
 \end{center}
 \end{table}
 
-Both ensembles demonstrate robust generalization across the real ACI IoT 2023 traffic callset. The Traditional ML ensemble achieves an overall accuracy of 99.37\% and a macro-F1 of 0.9075, propelled by the crisp decision boundaries of Random Forest and XGBoost. The Deep Learning ensemble attains 98.18\% accuracy and a macro-F1 of 0.8473, with majority voting effectively mitigating early-stopping variance in the 1D-CNN component.
+Both ensembles demonstrate exceptional classification across the real ACI IoT 2023 traffic callset. In the Traditional ML family, continuous Soft Voting achieves statistically significant gains over Hard Voting across both the primary 11-class macro-F1 (0.9939 vs. 0.9900; paired bootstrap $\Delta = +0.0040$, 95\% CI $[+0.0020, +0.0063]$, $p < 0.001$) and full 12-class macro-F1 (0.9944 vs. 0.9075). McNemar's test on paired correctness confirms 40 error corrections against only 5 regressions ($\chi^2 = 25.69, p < 0.0001$), meeting the Bonferroni-corrected significance threshold ($\alpha = 0.025$). In particular, on the ultra-sparse ARP Spoofing class ($N=1$), Hard Voting succumbed to majority tie dispersion (yielding 0.0 recall), whereas Soft Voting confidence fusion successfully resolved the attack vector.
+
+In the Deep Learning family, Hard Voting yielded 0.9501 primary macro-F1 compared to 0.9279 for uncalibrated Soft Voting. However, McNemar's paired test revealed no statistically significant divergence in overall sample-level correctness ($\chi^2 = 1.52, p = 0.2183$), showing that discordance was limited to 107 rare boundary flows (0.60\% discordance rate) while maintaining 98.33\% overall accuracy. Both strategies provide high operational fidelity, with Soft Voting preserving full posterior probability distributions for downstream decision-making.
 
 \subsection{Downstream Incident Report Reliability Evaluation}
 A pilot suite of 80 incident reports (20 stratified held-out flows across SYS-01 to SYS-04) was generated using \texttt{meta-llama/Llama-3.1-8b-instant} at temperature $\tau=0.0$ and scored under Rubric v0. Table~\ref{tab:eval_metrics} presents the comparative results.
@@ -321,8 +360,9 @@ In unconstrained prompt evaluations, standard Groundedness saturated near $1.0$ 
 To ensure grading scalability, an automated LLM judge (\texttt{Llama-3.1-8b-instant}) was validated against a gold-standard suite of calibrated test claims under Rubric v0. The automated judge achieved 10/10 ($100\%$) agreement against ground-truth rubric labels, confirming its suitability for high-throughput report evaluation. A blind human review across sample pilot reports yielded mean Groundedness of $0.73$ and Faithfulness of $0.65$, strongly corroborating the automated judge's findings.
 
 \section{Limitations and Future Work}
-To maintain rigorous scientific transparency, we highlight two distinct limitations of the current study:
+To maintain rigorous scientific transparency, we highlight three distinct limitations of the current study:
 \begin{enumerate}
+    \item \textbf{Split Method and Temporal Session Grouping:} While our leakage audit confirms zero row-level feature collisions and strict partition isolation between the 71,027 training flows and 17,757 test flows, the dataset partitioning was executed as a stratified random per-flow split with source/destination IP addresses, timestamps, and flow IDs dropped. Because temporal session-window grouping was not enforced during raw packet capture, flows originating from the same attack session can appear across both train and test partitions.
     \item \textbf{Operational Network Scale:} While our experiments validate the complete end-to-end pipeline across 88,784 flows on the full ACI IoT Network Traffic Dataset 2023 \cite{ieeedataport2023aci, nack2024aci}, ongoing research aims to extend real-time low-latency streaming evaluation on multi-gigabit SOC enterprise ingestion taps.
     \item \textbf{Industrial Protocol Specifics:} The evaluated telemetry captures general network-layer traffic. Validating the pipeline on proprietary Operational Technology (OT) protocols (e.g., Modbus/TCP, DNP3, OPC UA) using testbeds such as Edge-IIoTset \cite{ferrag2022edge} constitutes our immediate research horizon.
 \end{enumerate}

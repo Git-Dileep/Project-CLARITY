@@ -14,11 +14,14 @@ from jsonschema import Draft202012Validator
 def find_schema_path(base_dir: Path | None = None) -> Path:
     """Locate contracts/alert_schema_v1.json by walking up directories if needed."""
     start = base_dir or Path.cwd()
+    repo_anchor = Path(__file__).resolve().parent.parent.parent.parent
     candidates = [
         start / "contracts" / "alert_schema_v1.json",
         start.parent / "contracts" / "alert_schema_v1.json",
         start.parent.parent / "contracts" / "alert_schema_v1.json",
         start.parent.parent.parent / "contracts" / "alert_schema_v1.json",
+        repo_anchor / "contracts" / "alert_schema_v1.json",
+        repo_anchor / "contracts" / "alert_schema_v1_1.json",
     ]
     for c in candidates:
         if c.exists():

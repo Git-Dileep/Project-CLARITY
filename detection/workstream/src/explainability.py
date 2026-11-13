@@ -119,6 +119,7 @@ def explain_dl_gradient(
 ) -> List[Dict[str, Any]]:
     """Generate SHAP GradientExplainer explanations for deep learning model."""
     model.eval()
+    model.to(device)
     bg_tensor = torch.tensor(background_samples, dtype=torch.float32).to(device)
     ex_tensor = torch.tensor(X_samples, dtype=torch.float32).to(device)
 
