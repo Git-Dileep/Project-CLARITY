@@ -1,0 +1,13 @@
+,ARP Spoofing,Benign,DNS Flood,Dictionary Attack,ICMP Flood,OS Scan,Ping Sweep,Port Scan,SYN Flood,Slowloris,UDP Flood,Vulnerability Scan
+ARP Spoofing,0,1,0,0,0,0,0,0,0,0,0,0
+Benign,0,4893,0,4,2,0,52,8,0,0,0,1
+DNS Flood,0,1,999,0,0,0,0,0,0,0,0,0
+Dictionary Attack,0,0,0,1000,0,0,0,0,0,0,0,0
+ICMP Flood,0,1,0,0,999,0,0,0,0,0,0,0
+OS Scan,0,1,0,0,0,997,0,1,0,0,0,1
+Ping Sweep,0,0,0,0,0,0,1861,0,0,0,0,0
+Port Scan,0,10,0,0,0,2,0,2987,0,0,0,1
+SYN Flood,0,1,0,0,0,0,0,0,999,0,0,0
+Slowloris,0,0,0,0,0,0,0,0,0,1777,0,0
+UDP Flood,0,19,2,0,0,0,0,0,0,0,137,0
+Vulnerability Scan,0,2,0,0,0,1,0,0,0,0,0,997

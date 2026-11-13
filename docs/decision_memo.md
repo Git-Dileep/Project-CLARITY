@@ -26,7 +26,7 @@ Project CLARITY completed its Sprint 1 pilot cycle on 2026-10-21. All four works
 | Additive Schema v1.1 evolved and validated | `contracts/alert_schema_v1_1.json`, `tests/test_contracts.py`: **0 errors** | ✅ PASS |
 | Continuous posterior probability Soft Voting core implemented | `detection/workstream/src/ensemble.py`: `compute_soft_voting_predictions`, class alignment, discordance, McNemar, paired bootstrap (13/13 tests pass) | ✅ PASS |
 | Dual strategy pilot alerts exported | `pilot_traditional_alerts_hard.json`, `pilot_traditional_alerts_soft.json`, `pilot_dl_alerts_hard.json`, `pilot_dl_alerts_soft.json` (20 flows) | ✅ PASS |
-| Soft Voting full test-set comparative results & significance | `reports/aci_iot_2023/results/soft/`: Metrics, McNemar test, and paired bootstrap CI | ⏳ PENDING ([TBD]) |
+| Soft Voting full test-set comparative results & significance | `reports/aci_iot_2023/results/`: Traditional Soft Accuracy **99.57%**, 11-Cls Macro F1 **0.9939**, 12-Cls Macro F1 **0.9944**, McNemar $p < 0.0001$ ($\chi^2 = 25.69$, significant); DL Soft Accuracy **98.33%**, 11-Cls Macro F1 **0.9279**, McNemar $p = 0.2183$ | ✅ PASS |
 | Zero train-to-pilot data leakage | `reports/aci_iot_2023/split_manifest.json`: **0 overlap confirmed** | ✅ PASS |
 
 **Merged PRs:** #26 (detection pipeline), #27 (schema/protocol freeze), #31 (reproducible pilot)

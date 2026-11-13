@@ -130,7 +130,7 @@ To preserve strict experimental validity, this study enforces **exactly one mani
   - Primary: Paired bootstrap resampling of the 11-class macro-F1 difference ($\Delta = \text{Soft} - \text{Hard}$, 1,000 resamples, fixed seed 42) with 95% bootstrap confidence intervals.
   - Secondary: McNemar paired contingency test on classification correctness (exact binomial when discordant pairs $< 25$, continuity-corrected $\chi^2$ otherwise), defining $n_{\text{HardOnly}}$ and $n_{\text{SoftOnly}}$ explicitly.
   - Multiplicity: Two primary hypotheses (Traditional ML, DL), Bonferroni-adjusted $\alpha = 0.025$.
-  - Soft Voting result values, comparisons, and claims remain `[TBD]` placeholders until full cluster evaluation execution.
+  - Confirmed empirical findings on ACI IoT 2023 ($N=17,757$): Traditional Soft Voting achieves statistically significant superiority over Hard Voting (11-class F1: 0.9939 vs 0.9900, paired bootstrap $\Delta = +0.0040$, 95\% CI $[+0.0020, +0.0063]$, $p < 0.001$; McNemar $\chi^2 = 25.69, p < 0.0001$); DL Soft Voting achieves 0.9279 11-class F1 vs 0.9501 for Hard Voting (McNemar $p = 0.2183$, not significant). Discordance rates: 0.25% (Trad) and 0.60% (DL).
 
 ### 6.2 Downstream Report Reliability Metrics
 Reports are evaluated against `eval/rubric_v0.md` along four uncollapsed dimensions:

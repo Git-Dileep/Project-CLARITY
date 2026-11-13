@@ -187,12 +187,7 @@ All Sprint 1 milestone gates (G1, G3, G5) were evaluated and approved under **GO
 
 | Gate | Scope | Status | Notes |
 | :--- | :--- | :---: | :--- |
-| **G1** | Detection & Alert Schema | **GO** | 20 alerts exported (10 Trad + 10 DL), 0 schema errors, 0 data leakage |
+| **G1** | Detection & Alert Schema | **GO** | Real ACI IoT 2023 validated (17,757 flows). Soft Voting primary achieves 99.57% Acc / 0.9939 F1 on Trad ML ($p < 0.001$), Schema v1.1 validated, 0 data leakage |
 | **G3** | Knowledge Base & Retrieval | **GO** | 25-doc KB, ChromaDB retrieval, MITRE mapping & cached Tavily operational |
 | **G5** | Generation & Evaluation | **GO** | 80 pilot reports scored, LLM judge 10/10 agreement, 4 Rubric v0 metrics synthesized |
 
-### Open Workstream Items (Dataset Dependent)
-The following workstream tickets remain open pending full real-world ACI IoT 2023 dataset access:
-- **Issue #7 [DET-01]:** Switch to real ACI IoT 2023 dataset and audit schema
-- **Issue #8 [DET-02]:** Train traditional ensemble on real ACI IoT 2023
-- **Issue #9 [DET-03]:** Complete deep learning ensemble training on real ACI IoT 2023

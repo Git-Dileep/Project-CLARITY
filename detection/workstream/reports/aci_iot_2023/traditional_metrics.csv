@@ -1,5 +1,6 @@
 model,accuracy,macro_f1,weighted_f1,train_duration_seconds,infer_duration_seconds
-Ensemble (Hard Voting),0.9937,0.9075,0.9937,1215.11,0.982
-RandomForest,0.9731,0.8381,0.9703,37.929,0.201
-XGBoost,0.9981,0.9156,0.9981,681.599,0.505
-MLP,0.9914,0.985,0.9914,495.582,0.276
+Ensemble (Hard Voting),0.9937,0.9075,0.9937,1154.491,0.947
+Ensemble (Soft Voting),0.9957,0.9944,0.9957,1154.491,0.947
+RandomForest,0.9731,0.8381,0.9703,36.856,0.187
+XGBoost,0.9981,0.9156,0.9981,656.437,0.51
+MLP,0.9914,0.985,0.9914,461.197,0.25

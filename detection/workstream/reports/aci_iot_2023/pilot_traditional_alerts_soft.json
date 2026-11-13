@@ -1,48 +1,38 @@
 [
   {
     "identity": {
-      "alert_id": "ALT-20261107-0001",
+      "alert_id": "ALT-20261113-0001",
       "flow_id": "16.202.249.199-192.168.1.183-0-0-0",
       "detector_family": "traditional_ml",
-      "timestamp": "2026-11-07T18:02:57.958417+00:00",
+      "timestamp": "2023-01-11 09:33:49",
       "dataset": "ACI-IoT-Network-2023",
       "split": "pilot"
     },
     "prediction": {
-      "predicted_label": "ICMP Flood",
-      "confidence": 0.9596530040191315,
+      "predicted_label": "Vulnerability Scan",
+      "confidence": 0.8230100267230572,
       "base_learner_votes": [
         {
           "learner_name": "RandomForest",
           "voted_label": "ICMP Flood",
-          "learner_confidence": 0.8792253852148956
+          "learner_confidence": 0.8792
         },
         {
           "learner_name": "XGBoost",
           "voted_label": "ICMP Flood",
-          "learner_confidence": 0.9997337460517883
+          "learner_confidence": 0.9997
         },
         {
           "learner_name": "MLP",
           "voted_label": "ICMP Flood",
-          "learner_confidence": 0.9999998807907104
+          "learner_confidence": 1.0
         }
       ],
       "voting_strategy": "soft_voting",
       "hard_pred": "ICMP Flood",
-      "soft_pred": "ICMP Flood",
-      "agreement": true,
-      "disagreement": false,
-      "model_predictions": {
-        "RandomForest": "ICMP Flood",
-        "XGBoost": "ICMP Flood",
-        "MLP": "ICMP Flood"
-      },
-      "model_confidences": {
-        "RandomForest": 0.8792253852148956,
-        "XGBoost": 0.9997337460517883,
-        "MLP": 0.9999998807907104
-      }
+      "soft_pred": "Vulnerability Scan",
+      "agreement": false,
+      "disagreement": true
     },
     "shap_attribution": {
       "explainer_type": "TreeExplainer",
@@ -114,53 +104,43 @@
     "evaluation_metadata": {
       "true_label": "ICMP Flood",
       "in_train_leakage_flag": false,
-      "detector_correct": true
+      "detector_correct": false
     }
   },
   {
     "identity": {
-      "alert_id": "ALT-20261107-0002",
+      "alert_id": "ALT-20261113-0002",
       "flow_id": "192.168.1.25-148.137.98.179-80-51132-6",
       "detector_family": "traditional_ml",
-      "timestamp": "2026-11-07T18:02:57.958417+00:00",
+      "timestamp": "2023-01-11 10:42:22",
       "dataset": "ACI-IoT-Network-2023",
       "split": "pilot"
     },
     "prediction": {
-      "predicted_label": "SYN Flood",
-      "confidence": 0.966553869946547,
+      "predicted_label": "Slowloris",
+      "confidence": 0.8400371762731785,
       "base_learner_votes": [
         {
           "learner_name": "RandomForest",
           "voted_label": "SYN Flood",
-          "learner_confidence": 0.8998212310783498
+          "learner_confidence": 0.8998
         },
         {
           "learner_name": "XGBoost",
           "voted_label": "SYN Flood",
-          "learner_confidence": 0.999841570854187
+          "learner_confidence": 0.9998
         },
         {
           "learner_name": "MLP",
           "voted_label": "SYN Flood",
-          "learner_confidence": 0.9999988079071045
+          "learner_confidence": 1.0
         }
       ],
       "voting_strategy": "soft_voting",
       "hard_pred": "SYN Flood",
-      "soft_pred": "SYN Flood",
-      "agreement": true,
-      "disagreement": false,
-      "model_predictions": {
-        "RandomForest": "SYN Flood",
-        "XGBoost": "SYN Flood",
-        "MLP": "SYN Flood"
-      },
-      "model_confidences": {
-        "RandomForest": 0.8998212310783498,
-        "XGBoost": 0.999841570854187,
-        "MLP": 0.9999988079071045
-      }
+      "soft_pred": "Slowloris",
+      "agreement": false,
+      "disagreement": true
     },
     "shap_attribution": {
       "explainer_type": "TreeExplainer",
@@ -232,53 +212,43 @@
     "evaluation_metadata": {
       "true_label": "SYN Flood",
       "in_train_leakage_flag": false,
-      "detector_correct": true
+      "detector_correct": false
     }
   },
   {
     "identity": {
-      "alert_id": "ALT-20261107-0003",
+      "alert_id": "ALT-20261113-0003",
       "flow_id": "192.168.1.112-192.168.1.45-443-48452-6",
       "detector_family": "traditional_ml",
-      "timestamp": "2026-11-07T18:02:57.958417+00:00",
+      "timestamp": "2023-10-30 12:13:09",
       "dataset": "ACI-IoT-Network-2023",
       "split": "pilot"
     },
     "prediction": {
-      "predicted_label": "Vulnerability Scan",
-      "confidence": 0.8206798667433176,
+      "predicted_label": "Ping Sweep",
+      "confidence": 0.8539989430089255,
       "base_learner_votes": [
         {
           "learner_name": "RandomForest",
           "voted_label": "Benign",
-          "learner_confidence": 0.48818088612625404
+          "learner_confidence": 0.4882
         },
         {
           "learner_name": "XGBoost",
           "voted_label": "Vulnerability Scan",
-          "learner_confidence": 0.9932258725166321
+          "learner_confidence": 0.9932
         },
         {
           "learner_name": "MLP",
           "voted_label": "Vulnerability Scan",
-          "learner_confidence": 0.9806328415870667
+          "learner_confidence": 0.9806
         }
       ],
       "voting_strategy": "soft_voting",
       "hard_pred": "Vulnerability Scan",
-      "soft_pred": "Vulnerability Scan",
-      "agreement": true,
-      "disagreement": false,
-      "model_predictions": {
-        "RandomForest": "Benign",
-        "XGBoost": "Vulnerability Scan",
-        "MLP": "Vulnerability Scan"
-      },
-      "model_confidences": {
-        "RandomForest": 0.48818088612625404,
-        "XGBoost": 0.9932258725166321,
-        "MLP": 0.9806328415870667
-      }
+      "soft_pred": "Ping Sweep",
+      "agreement": false,
+      "disagreement": true
     },
     "shap_attribution": {
       "explainer_type": "TreeExplainer",
@@ -350,53 +320,43 @@
     "evaluation_metadata": {
       "true_label": "Vulnerability Scan",
       "in_train_leakage_flag": false,
-      "detector_correct": true
+      "detector_correct": false
     }
   },
   {
     "identity": {
-      "alert_id": "ALT-20261107-0004",
+      "alert_id": "ALT-20261113-0004",
       "flow_id": "192.168.1.45-192.168.1.153-40729-9071-6",
       "detector_family": "traditional_ml",
-      "timestamp": "2026-11-07T18:02:57.958417+00:00",
+      "timestamp": "2023-10-30 09:12:47",
       "dataset": "ACI-IoT-Network-2023",
       "split": "pilot"
     },
     "prediction": {
-      "predicted_label": "Ping Sweep",
-      "confidence": 0.8534635008843443,
+      "predicted_label": "Benign",
+      "confidence": 0.9712426996844185,
       "base_learner_votes": [
         {
           "learner_name": "RandomForest",
           "voted_label": "Ping Sweep",
-          "learner_confidence": 0.561748415670306
+          "learner_confidence": 0.5617
         },
         {
           "learner_name": "XGBoost",
           "voted_label": "Ping Sweep",
-          "learner_confidence": 0.9998006224632263
+          "learner_confidence": 0.9998
         },
         {
           "learner_name": "MLP",
           "voted_label": "Ping Sweep",
-          "learner_confidence": 0.9988414645195007
+          "learner_confidence": 0.9988
         }
       ],
       "voting_strategy": "soft_voting",
       "hard_pred": "Ping Sweep",
-      "soft_pred": "Ping Sweep",
-      "agreement": true,
-      "disagreement": false,
-      "model_predictions": {
-        "RandomForest": "Ping Sweep",
-        "XGBoost": "Ping Sweep",
-        "MLP": "Ping Sweep"
-      },
-      "model_confidences": {
-        "RandomForest": 0.561748415670306,
-        "XGBoost": 0.9998006224632263,
-        "MLP": 0.9988414645195007
-      }
+      "soft_pred": "Benign",
+      "agreement": false,
+      "disagreement": true
     },
     "shap_attribution": {
       "explainer_type": "TreeExplainer",
@@ -468,53 +428,43 @@
     "evaluation_metadata": {
       "true_label": "Ping Sweep",
       "in_train_leakage_flag": false,
-      "detector_correct": true
+      "detector_correct": false
     }
   },
   {
     "identity": {
-      "alert_id": "ALT-20261107-0005",
+      "alert_id": "ALT-20261113-0005",
       "flow_id": "192.168.1.45-192.168.1.86-59094-4-6",
       "detector_family": "traditional_ml",
-      "timestamp": "2026-11-07T18:02:57.958417+00:00",
+      "timestamp": "2023-10-30 11:08:27",
       "dataset": "ACI-IoT-Network-2023",
       "split": "pilot"
     },
     "prediction": {
-      "predicted_label": "OS Scan",
-      "confidence": 0.77582869290008,
+      "predicted_label": "Port Scan",
+      "confidence": 0.8864528263606176,
       "base_learner_votes": [
         {
           "learner_name": "RandomForest",
           "voted_label": "OS Scan",
-          "learner_confidence": 0.32769606586378375
+          "learner_confidence": 0.3277
         },
         {
           "learner_name": "XGBoost",
           "voted_label": "OS Scan",
-          "learner_confidence": 0.9998072981834412
+          "learner_confidence": 0.9998
         },
         {
           "learner_name": "MLP",
           "voted_label": "OS Scan",
-          "learner_confidence": 0.9999827146530151
+          "learner_confidence": 1.0
         }
       ],
       "voting_strategy": "soft_voting",
       "hard_pred": "OS Scan",
-      "soft_pred": "OS Scan",
-      "agreement": true,
-      "disagreement": false,
-      "model_predictions": {
-        "RandomForest": "OS Scan",
-        "XGBoost": "OS Scan",
-        "MLP": "OS Scan"
-      },
-      "model_confidences": {
-        "RandomForest": 0.32769606586378375,
-        "XGBoost": 0.9998072981834412,
-        "MLP": 0.9999827146530151
-      }
+      "soft_pred": "Port Scan",
+      "agreement": false,
+      "disagreement": true
     },
     "shap_attribution": {
       "explainer_type": "TreeExplainer",
@@ -586,53 +536,43 @@
     "evaluation_metadata": {
       "true_label": "OS Scan",
       "in_train_leakage_flag": false,
-      "detector_correct": true
+      "detector_correct": false
     }
   },
   {
     "identity": {
-      "alert_id": "ALT-20261107-0006",
+      "alert_id": "ALT-20261113-0006",
       "flow_id": "192.168.1.45-192.168.1.1-55295-42368-6",
       "detector_family": "traditional_ml",
-      "timestamp": "2026-11-07T18:02:57.958417+00:00",
+      "timestamp": "2023-10-30 12:20:58",
       "dataset": "ACI-IoT-Network-2023",
       "split": "pilot"
     },
     "prediction": {
-      "predicted_label": "Port Scan",
-      "confidence": 0.9762847939417547,
+      "predicted_label": "DNS Flood",
+      "confidence": 0.9598203750050506,
       "base_learner_votes": [
         {
           "learner_name": "RandomForest",
           "voted_label": "Port Scan",
-          "learner_confidence": 0.9290541765945513
+          "learner_confidence": 0.9291
         },
         {
           "learner_name": "XGBoost",
           "voted_label": "Port Scan",
-          "learner_confidence": 0.9998706579208374
+          "learner_confidence": 0.9999
         },
         {
           "learner_name": "MLP",
           "voted_label": "Port Scan",
-          "learner_confidence": 0.9999295473098755
+          "learner_confidence": 0.9999
         }
       ],
       "voting_strategy": "soft_voting",
       "hard_pred": "Port Scan",
-      "soft_pred": "Port Scan",
-      "agreement": true,
-      "disagreement": false,
-      "model_predictions": {
-        "RandomForest": "Port Scan",
-        "XGBoost": "Port Scan",
-        "MLP": "Port Scan"
-      },
-      "model_confidences": {
-        "RandomForest": 0.9290541765945513,
-        "XGBoost": 0.9998706579208374,
-        "MLP": 0.9999295473098755
-      }
+      "soft_pred": "DNS Flood",
+      "agreement": false,
+      "disagreement": true
     },
     "shap_attribution": {
       "explainer_type": "TreeExplainer",
@@ -704,31 +644,31 @@
     "evaluation_metadata": {
       "true_label": "Port Scan",
       "in_train_leakage_flag": false,
-      "detector_correct": true
+      "detector_correct": false
     }
   },
   {
     "identity": {
-      "alert_id": "ALT-20261107-0007",
+      "alert_id": "ALT-20261113-0007",
       "flow_id": "192.168.1.214-162.159.200.1-55823-123-17",
       "detector_family": "traditional_ml",
-      "timestamp": "2026-11-07T18:02:57.958417+00:00",
+      "timestamp": "31/10/2023 09:33:43 AM",
       "dataset": "ACI-IoT-Network-2023",
       "split": "pilot"
     },
     "prediction": {
-      "predicted_label": "Benign",
-      "confidence": 0.9620497585187765,
+      "predicted_label": "Ping Sweep",
+      "confidence": 0.8564386303689414,
       "base_learner_votes": [
         {
           "learner_name": "RandomForest",
           "voted_label": "Benign",
-          "learner_confidence": 0.8862362983377016
+          "learner_confidence": 0.8862
         },
         {
           "learner_name": "XGBoost",
           "voted_label": "Benign",
-          "learner_confidence": 0.9999129772186279
+          "learner_confidence": 0.9999
         },
         {
           "learner_name": "MLP",
@@ -738,19 +678,9 @@
       ],
       "voting_strategy": "soft_voting",
       "hard_pred": "Benign",
-      "soft_pred": "Benign",
-      "agreement": true,
-      "disagreement": false,
-      "model_predictions": {
-        "RandomForest": "Benign",
-        "XGBoost": "Benign",
-        "MLP": "Benign"
-      },
-      "model_confidences": {
-        "RandomForest": 0.8862362983377016,
-        "XGBoost": 0.9999129772186279,
-        "MLP": 1.0
-      }
+      "soft_pred": "Ping Sweep",
+      "agreement": false,
+      "disagreement": true
     },
     "shap_attribution": {
       "explainer_type": "TreeExplainer",
@@ -822,53 +752,43 @@
     "evaluation_metadata": {
       "true_label": "Benign",
       "in_train_leakage_flag": false,
-      "detector_correct": true
+      "detector_correct": false
     }
   },
   {
     "identity": {
-      "alert_id": "ALT-20261107-0008",
+      "alert_id": "ALT-20261113-0008",
       "flow_id": "192.168.1.45-192.168.1.184-40729-1443-6",
       "detector_family": "traditional_ml",
-      "timestamp": "2026-11-07T18:02:57.958417+00:00",
+      "timestamp": "2023-10-30 09:13:19",
       "dataset": "ACI-IoT-Network-2023",
       "split": "pilot"
     },
     "prediction": {
-      "predicted_label": "Ping Sweep",
-      "confidence": 0.8560368045474182,
+      "predicted_label": "DNS Flood",
+      "confidence": 0.9577071247508445,
       "base_learner_votes": [
         {
           "learner_name": "RandomForest",
           "voted_label": "Ping Sweep",
-          "learner_confidence": 0.5685252619698915
+          "learner_confidence": 0.5685
         },
         {
           "learner_name": "XGBoost",
           "voted_label": "Ping Sweep",
-          "learner_confidence": 0.9997861981391907
+          "learner_confidence": 0.9998
         },
         {
           "learner_name": "MLP",
           "voted_label": "Ping Sweep",
-          "learner_confidence": 0.9997989535331726
+          "learner_confidence": 0.9998
         }
       ],
       "voting_strategy": "soft_voting",
       "hard_pred": "Ping Sweep",
-      "soft_pred": "Ping Sweep",
-      "agreement": true,
-      "disagreement": false,
-      "model_predictions": {
-        "RandomForest": "Ping Sweep",
-        "XGBoost": "Ping Sweep",
-        "MLP": "Ping Sweep"
-      },
-      "model_confidences": {
-        "RandomForest": 0.5685252619698915,
-        "XGBoost": 0.9997861981391907,
-        "MLP": 0.9997989535331726
-      }
+      "soft_pred": "DNS Flood",
+      "agreement": false,
+      "disagreement": true
     },
     "shap_attribution": {
       "explainer_type": "TreeExplainer",
@@ -940,53 +860,43 @@
     "evaluation_metadata": {
       "true_label": "Ping Sweep",
       "in_train_leakage_flag": false,
-      "detector_correct": true
+      "detector_correct": false
     }
   },
   {
     "identity": {
-      "alert_id": "ALT-20261107-0009",
+      "alert_id": "ALT-20261113-0009",
       "flow_id": "192.168.1.211-192.168.1.1-39348-53-17",
       "detector_family": "traditional_ml",
-      "timestamp": "2026-11-07T18:02:57.958417+00:00",
+      "timestamp": "2023-01-11 11:04:43",
       "dataset": "ACI-IoT-Network-2023",
       "split": "pilot"
     },
     "prediction": {
-      "predicted_label": "UDP Flood",
-      "confidence": 0.7704686424807137,
+      "predicted_label": "DNS Flood",
+      "confidence": 0.9557106498180442,
       "base_learner_votes": [
         {
           "learner_name": "RandomForest",
           "voted_label": "Benign",
-          "learner_confidence": 0.5629684632049279
+          "learner_confidence": 0.563
         },
         {
           "learner_name": "XGBoost",
           "voted_label": "UDP Flood",
-          "learner_confidence": 0.9992400407791138
+          "learner_confidence": 0.9992
         },
         {
           "learner_name": "MLP",
           "voted_label": "UDP Flood",
-          "learner_confidence": 0.7491974234580994
+          "learner_confidence": 0.7492
         }
       ],
       "voting_strategy": "soft_voting",
       "hard_pred": "UDP Flood",
-      "soft_pred": "UDP Flood",
-      "agreement": true,
-      "disagreement": false,
-      "model_predictions": {
-        "RandomForest": "Benign",
-        "XGBoost": "UDP Flood",
-        "MLP": "UDP Flood"
-      },
-      "model_confidences": {
-        "RandomForest": 0.5629684632049279,
-        "XGBoost": 0.9992400407791138,
-        "MLP": 0.7491974234580994
-      }
+      "soft_pred": "DNS Flood",
+      "agreement": false,
+      "disagreement": true
     },
     "shap_attribution": {
       "explainer_type": "TreeExplainer",
@@ -1058,53 +968,43 @@
     "evaluation_metadata": {
       "true_label": "UDP Flood",
       "in_train_leakage_flag": false,
-      "detector_correct": true
+      "detector_correct": false
     }
   },
   {
     "identity": {
-      "alert_id": "ALT-20261107-0010",
+      "alert_id": "ALT-20261113-0010",
       "flow_id": "192.168.1.45-192.168.1.20-40729-7200-6",
       "detector_family": "traditional_ml",
-      "timestamp": "2026-11-07T18:02:57.958417+00:00",
+      "timestamp": "2023-10-30 09:12:46",
       "dataset": "ACI-IoT-Network-2023",
       "split": "pilot"
     },
     "prediction": {
-      "predicted_label": "Ping Sweep",
-      "confidence": 0.8538089814541513,
+      "predicted_label": "DNS Flood",
+      "confidence": 0.7600947307608251,
       "base_learner_votes": [
         {
           "learner_name": "RandomForest",
           "voted_label": "Ping Sweep",
-          "learner_confidence": 0.5633390613668487
+          "learner_confidence": 0.5633
         },
         {
           "learner_name": "XGBoost",
           "voted_label": "Ping Sweep",
-          "learner_confidence": 0.9997928738594055
+          "learner_confidence": 0.9998
         },
         {
           "learner_name": "MLP",
           "voted_label": "Ping Sweep",
-          "learner_confidence": 0.9982950091362
+          "learner_confidence": 0.9983
         }
       ],
       "voting_strategy": "soft_voting",
       "hard_pred": "Ping Sweep",
-      "soft_pred": "Ping Sweep",
-      "agreement": true,
-      "disagreement": false,
-      "model_predictions": {
-        "RandomForest": "Ping Sweep",
-        "XGBoost": "Ping Sweep",
-        "MLP": "Ping Sweep"
-      },
-      "model_confidences": {
-        "RandomForest": 0.5633390613668487,
-        "XGBoost": 0.9997928738594055,
-        "MLP": 0.9982950091362
-      }
+      "soft_pred": "DNS Flood",
+      "agreement": false,
+      "disagreement": true
     },
     "shap_attribution": {
       "explainer_type": "TreeExplainer",
@@ -1176,53 +1076,43 @@
     "evaluation_metadata": {
       "true_label": "Ping Sweep",
       "in_train_leakage_flag": false,
-      "detector_correct": true
+      "detector_correct": false
     }
   },
   {
     "identity": {
-      "alert_id": "ALT-20261107-0011",
+      "alert_id": "ALT-20261113-0011",
       "flow_id": "192.168.1.212-192.168.1.45-22-47182-6",
       "detector_family": "traditional_ml",
-      "timestamp": "2026-11-07T18:02:57.958417+00:00",
+      "timestamp": "2023-02-11 11:29:06",
       "dataset": "ACI-IoT-Network-2023",
       "split": "pilot"
     },
     "prediction": {
-      "predicted_label": "Dictionary Attack",
-      "confidence": 0.8492231221380336,
+      "predicted_label": "Benign",
+      "confidence": 0.9270580754549053,
       "base_learner_votes": [
         {
           "learner_name": "RandomForest",
           "voted_label": "Dictionary Attack",
-          "learner_confidence": 0.5480068479128191
+          "learner_confidence": 0.548
         },
         {
           "learner_name": "XGBoost",
           "voted_label": "Dictionary Attack",
-          "learner_confidence": 0.9996631145477295
+          "learner_confidence": 0.9997
         },
         {
           "learner_name": "MLP",
           "voted_label": "Dictionary Attack",
-          "learner_confidence": 0.9999994039535522
+          "learner_confidence": 1.0
         }
       ],
       "voting_strategy": "soft_voting",
       "hard_pred": "Dictionary Attack",
-      "soft_pred": "Dictionary Attack",
-      "agreement": true,
-      "disagreement": false,
-      "model_predictions": {
-        "RandomForest": "Dictionary Attack",
-        "XGBoost": "Dictionary Attack",
-        "MLP": "Dictionary Attack"
-      },
-      "model_confidences": {
-        "RandomForest": 0.5480068479128191,
-        "XGBoost": 0.9996631145477295,
-        "MLP": 0.9999994039535522
-      }
+      "soft_pred": "Benign",
+      "agreement": false,
+      "disagreement": true
     },
     "shap_attribution": {
       "explainer_type": "TreeExplainer",
@@ -1294,53 +1184,43 @@
     "evaluation_metadata": {
       "true_label": "Dictionary Attack",
       "in_train_leakage_flag": false,
-      "detector_correct": true
+      "detector_correct": false
     }
   },
   {
     "identity": {
-      "alert_id": "ALT-20261107-0012",
+      "alert_id": "ALT-20261113-0012",
       "flow_id": "192.168.1.45-192.168.1.1-55295-59350-6",
       "detector_family": "traditional_ml",
-      "timestamp": "2026-11-07T18:02:57.958417+00:00",
+      "timestamp": "2023-10-30 12:20:57",
       "dataset": "ACI-IoT-Network-2023",
       "split": "pilot"
     },
     "prediction": {
       "predicted_label": "Port Scan",
-      "confidence": 0.8994888351821664,
+      "confidence": 0.8844446857665172,
       "base_learner_votes": [
         {
           "learner_name": "RandomForest",
           "voted_label": "Port Scan",
-          "learner_confidence": 0.6987307925414331
+          "learner_confidence": 0.6987
         },
         {
           "learner_name": "XGBoost",
           "voted_label": "Port Scan",
-          "learner_confidence": 0.9998884201049805
+          "learner_confidence": 0.9999
         },
         {
           "learner_name": "MLP",
           "voted_label": "Port Scan",
-          "learner_confidence": 0.9998472929000854
+          "learner_confidence": 0.9998
         }
       ],
       "voting_strategy": "soft_voting",
       "hard_pred": "Port Scan",
       "soft_pred": "Port Scan",
       "agreement": true,
-      "disagreement": false,
-      "model_predictions": {
-        "RandomForest": "Port Scan",
-        "XGBoost": "Port Scan",
-        "MLP": "Port Scan"
-      },
-      "model_confidences": {
-        "RandomForest": 0.6987307925414331,
-        "XGBoost": 0.9998884201049805,
-        "MLP": 0.9998472929000854
-      }
+      "disagreement": false
     },
     "shap_attribution": {
       "explainer_type": "TreeExplainer",
@@ -1417,48 +1297,38 @@
   },
   {
     "identity": {
-      "alert_id": "ALT-20261107-0013",
+      "alert_id": "ALT-20261113-0013",
       "flow_id": "192.168.1.45-192.168.1.86-34464-617-6",
       "detector_family": "traditional_ml",
-      "timestamp": "2026-11-07T18:02:57.958417+00:00",
+      "timestamp": "2023-10-30 12:11:47",
       "dataset": "ACI-IoT-Network-2023",
       "split": "pilot"
     },
     "prediction": {
-      "predicted_label": "Vulnerability Scan",
-      "confidence": 0.8146974705235687,
+      "predicted_label": "ICMP Flood",
+      "confidence": 0.9566749806609661,
       "base_learner_votes": [
         {
           "learner_name": "RandomForest",
           "voted_label": "Vulnerability Scan",
-          "learner_confidence": 0.44432087617412996
+          "learner_confidence": 0.4443
         },
         {
           "learner_name": "XGBoost",
           "voted_label": "Vulnerability Scan",
-          "learner_confidence": 0.9998161196708679
+          "learner_confidence": 0.9998
         },
         {
           "learner_name": "MLP",
           "voted_label": "Vulnerability Scan",
-          "learner_confidence": 0.999955415725708
+          "learner_confidence": 1.0
         }
       ],
       "voting_strategy": "soft_voting",
       "hard_pred": "Vulnerability Scan",
-      "soft_pred": "Vulnerability Scan",
-      "agreement": true,
-      "disagreement": false,
-      "model_predictions": {
-        "RandomForest": "Vulnerability Scan",
-        "XGBoost": "Vulnerability Scan",
-        "MLP": "Vulnerability Scan"
-      },
-      "model_confidences": {
-        "RandomForest": 0.44432087617412996,
-        "XGBoost": 0.9998161196708679,
-        "MLP": 0.999955415725708
-      }
+      "soft_pred": "ICMP Flood",
+      "agreement": false,
+      "disagreement": true
     },
     "shap_attribution": {
       "explainer_type": "TreeExplainer",
@@ -1530,53 +1400,43 @@
     "evaluation_metadata": {
       "true_label": "Vulnerability Scan",
       "in_train_leakage_flag": false,
-      "detector_correct": true
+      "detector_correct": false
     }
   },
   {
     "identity": {
-      "alert_id": "ALT-20261107-0014",
+      "alert_id": "ALT-20261113-0014",
       "flow_id": "192.168.1.45-192.168.1.27-33910-80-6",
       "detector_family": "traditional_ml",
-      "timestamp": "2026-11-07T18:02:57.958417+00:00",
+      "timestamp": "2023-01-11 10:01:47",
       "dataset": "ACI-IoT-Network-2023",
       "split": "pilot"
     },
     "prediction": {
-      "predicted_label": "Slowloris",
-      "confidence": 0.9543987965474717,
+      "predicted_label": "Dictionary Attack",
+      "confidence": 0.9780746864210048,
       "base_learner_votes": [
         {
           "learner_name": "RandomForest",
           "voted_label": "Slowloris",
-          "learner_confidence": 0.8636607098252154
+          "learner_confidence": 0.8637
         },
         {
           "learner_name": "XGBoost",
           "voted_label": "Slowloris",
-          "learner_confidence": 0.9997614026069641
+          "learner_confidence": 0.9998
         },
         {
           "learner_name": "MLP",
           "voted_label": "Slowloris",
-          "learner_confidence": 0.9997742772102356
+          "learner_confidence": 0.9998
         }
       ],
       "voting_strategy": "soft_voting",
       "hard_pred": "Slowloris",
-      "soft_pred": "Slowloris",
-      "agreement": true,
-      "disagreement": false,
-      "model_predictions": {
-        "RandomForest": "Slowloris",
-        "XGBoost": "Slowloris",
-        "MLP": "Slowloris"
-      },
-      "model_confidences": {
-        "RandomForest": 0.8636607098252154,
-        "XGBoost": 0.9997614026069641,
-        "MLP": 0.9997742772102356
-      }
+      "soft_pred": "Dictionary Attack",
+      "agreement": false,
+      "disagreement": true
     },
     "shap_attribution": {
       "explainer_type": "TreeExplainer",
@@ -1648,53 +1508,43 @@
     "evaluation_metadata": {
       "true_label": "Slowloris",
       "in_train_leakage_flag": false,
-      "detector_correct": true
+      "detector_correct": false
     }
   },
   {
     "identity": {
-      "alert_id": "ALT-20261107-0015",
+      "alert_id": "ALT-20261113-0015",
       "flow_id": "192.168.1.45-192.168.1.133-52796-80-6",
       "detector_family": "traditional_ml",
-      "timestamp": "2026-11-07T18:02:57.958417+00:00",
+      "timestamp": "2023-01-11 10:14:43",
       "dataset": "ACI-IoT-Network-2023",
       "split": "pilot"
     },
     "prediction": {
-      "predicted_label": "Slowloris",
-      "confidence": 0.9790515605812861,
+      "predicted_label": "Ping Sweep",
+      "confidence": 0.8482575360161083,
       "base_learner_votes": [
         {
           "learner_name": "RandomForest",
           "voted_label": "Slowloris",
-          "learner_confidence": 0.9373058391230086
+          "learner_confidence": 0.9373
         },
         {
           "learner_name": "XGBoost",
           "voted_label": "Slowloris",
-          "learner_confidence": 0.9998511075973511
+          "learner_confidence": 0.9999
         },
         {
           "learner_name": "MLP",
           "voted_label": "Slowloris",
-          "learner_confidence": 0.9999977350234985
+          "learner_confidence": 1.0
         }
       ],
       "voting_strategy": "soft_voting",
       "hard_pred": "Slowloris",
-      "soft_pred": "Slowloris",
-      "agreement": true,
-      "disagreement": false,
-      "model_predictions": {
-        "RandomForest": "Slowloris",
-        "XGBoost": "Slowloris",
-        "MLP": "Slowloris"
-      },
-      "model_confidences": {
-        "RandomForest": 0.9373058391230086,
-        "XGBoost": 0.9998511075973511,
-        "MLP": 0.9999977350234985
-      }
+      "soft_pred": "Ping Sweep",
+      "agreement": false,
+      "disagreement": true
     },
     "shap_attribution": {
       "explainer_type": "TreeExplainer",
@@ -1766,53 +1616,43 @@
     "evaluation_metadata": {
       "true_label": "Slowloris",
       "in_train_leakage_flag": false,
-      "detector_correct": true
+      "detector_correct": false
     }
   },
   {
     "identity": {
-      "alert_id": "ALT-20261107-0016",
+      "alert_id": "ALT-20261113-0016",
       "flow_id": "192.168.1.211-192.168.1.1-58686-53-17",
       "detector_family": "traditional_ml",
-      "timestamp": "2026-11-07T18:02:57.958417+00:00",
+      "timestamp": "2023-10-30 14:58:03",
       "dataset": "ACI-IoT-Network-2023",
       "split": "pilot"
     },
     "prediction": {
-      "predicted_label": "Benign",
-      "confidence": 0.9349398724797643,
+      "predicted_label": "Ping Sweep",
+      "confidence": 0.8533810165477683,
       "base_learner_votes": [
         {
           "learner_name": "RandomForest",
           "voted_label": "Benign",
-          "learner_confidence": 0.8050298430214156
+          "learner_confidence": 0.805
         },
         {
           "learner_name": "XGBoost",
           "voted_label": "Benign",
-          "learner_confidence": 0.9997972846031189
+          "learner_confidence": 0.9998
         },
         {
           "learner_name": "MLP",
           "voted_label": "Benign",
-          "learner_confidence": 0.9999924898147583
+          "learner_confidence": 1.0
         }
       ],
       "voting_strategy": "soft_voting",
       "hard_pred": "Benign",
-      "soft_pred": "Benign",
-      "agreement": true,
-      "disagreement": false,
-      "model_predictions": {
-        "RandomForest": "Benign",
-        "XGBoost": "Benign",
-        "MLP": "Benign"
-      },
-      "model_confidences": {
-        "RandomForest": 0.8050298430214156,
-        "XGBoost": 0.9997972846031189,
-        "MLP": 0.9999924898147583
-      }
+      "soft_pred": "Ping Sweep",
+      "agreement": false,
+      "disagreement": true
     },
     "shap_attribution": {
       "explainer_type": "TreeExplainer",
@@ -1884,53 +1724,43 @@
     "evaluation_metadata": {
       "true_label": "Benign",
       "in_train_leakage_flag": false,
-      "detector_correct": true
+      "detector_correct": false
     }
   },
   {
     "identity": {
-      "alert_id": "ALT-20261107-0017",
+      "alert_id": "ALT-20261113-0017",
       "flow_id": "192.168.1.211-192.168.1.1-56749-53-17",
       "detector_family": "traditional_ml",
-      "timestamp": "2026-11-07T18:02:57.958417+00:00",
+      "timestamp": "2023-10-30 09:31:37",
       "dataset": "ACI-IoT-Network-2023",
       "split": "pilot"
     },
     "prediction": {
-      "predicted_label": "Benign",
-      "confidence": 0.9549181168868618,
+      "predicted_label": "Port Scan",
+      "confidence": 0.9734086607835143,
       "base_learner_votes": [
         {
           "learner_name": "RandomForest",
           "voted_label": "Benign",
-          "learner_confidence": 0.8649082498533954
+          "learner_confidence": 0.8649
         },
         {
           "learner_name": "XGBoost",
           "voted_label": "Benign",
-          "learner_confidence": 0.9998550415039062
+          "learner_confidence": 0.9999
         },
         {
           "learner_name": "MLP",
           "voted_label": "Benign",
-          "learner_confidence": 0.9999910593032837
+          "learner_confidence": 1.0
         }
       ],
       "voting_strategy": "soft_voting",
       "hard_pred": "Benign",
-      "soft_pred": "Benign",
-      "agreement": true,
-      "disagreement": false,
-      "model_predictions": {
-        "RandomForest": "Benign",
-        "XGBoost": "Benign",
-        "MLP": "Benign"
-      },
-      "model_confidences": {
-        "RandomForest": 0.8649082498533954,
-        "XGBoost": 0.9998550415039062,
-        "MLP": 0.9999910593032837
-      }
+      "soft_pred": "Port Scan",
+      "agreement": false,
+      "disagreement": true
     },
     "shap_attribution": {
       "explainer_type": "TreeExplainer",
@@ -2002,53 +1832,43 @@
     "evaluation_metadata": {
       "true_label": "Benign",
       "in_train_leakage_flag": false,
-      "detector_correct": true
+      "detector_correct": false
     }
   },
   {
     "identity": {
-      "alert_id": "ALT-20261107-0018",
+      "alert_id": "ALT-20261113-0018",
       "flow_id": "192.168.1.211-192.168.1.1-45548-53-17",
       "detector_family": "traditional_ml",
-      "timestamp": "2026-11-07T18:02:57.958417+00:00",
+      "timestamp": "2023-01-11 11:35:10",
       "dataset": "ACI-IoT-Network-2023",
       "split": "pilot"
     },
     "prediction": {
-      "predicted_label": "DNS Flood",
-      "confidence": 0.9587459713754156,
+      "predicted_label": "Port Scan",
+      "confidence": 0.8896277344986814,
       "base_learner_votes": [
         {
           "learner_name": "RandomForest",
           "voted_label": "DNS Flood",
-          "learner_confidence": 0.8864608855656084
+          "learner_confidence": 0.8865
         },
         {
           "learner_name": "XGBoost",
           "voted_label": "DNS Flood",
-          "learner_confidence": 0.9998111128807068
+          "learner_confidence": 0.9998
         },
         {
           "learner_name": "MLP",
           "voted_label": "DNS Flood",
-          "learner_confidence": 0.9899659156799316
+          "learner_confidence": 0.99
         }
       ],
       "voting_strategy": "soft_voting",
       "hard_pred": "DNS Flood",
-      "soft_pred": "DNS Flood",
-      "agreement": true,
-      "disagreement": false,
-      "model_predictions": {
-        "RandomForest": "DNS Flood",
-        "XGBoost": "DNS Flood",
-        "MLP": "DNS Flood"
-      },
-      "model_confidences": {
-        "RandomForest": 0.8864608855656084,
-        "XGBoost": 0.9998111128807068,
-        "MLP": 0.9899659156799316
-      }
+      "soft_pred": "Port Scan",
+      "agreement": false,
+      "disagreement": true
     },
     "shap_attribution": {
       "explainer_type": "TreeExplainer",
@@ -2120,53 +1940,43 @@
     "evaluation_metadata": {
       "true_label": "DNS Flood",
       "in_train_leakage_flag": false,
-      "detector_correct": true
+      "detector_correct": false
     }
   },
   {
     "identity": {
-      "alert_id": "ALT-20261107-0019",
+      "alert_id": "ALT-20261113-0019",
       "flow_id": "192.168.1.129-192.168.1.183-0-0-0",
       "detector_family": "traditional_ml",
-      "timestamp": "2026-11-07T18:02:57.958417+00:00",
+      "timestamp": "2023-02-11 12:35:04",
       "dataset": "ACI-IoT-Network-2023",
       "split": "pilot"
     },
     "prediction": {
       "predicted_label": "Benign",
-      "confidence": 0.713474153653083,
+      "confidence": 0.9729621066770133,
       "base_learner_votes": [
         {
           "learner_name": "RandomForest",
           "voted_label": "Benign",
-          "learner_confidence": 0.34102904550819924
+          "learner_confidence": 0.341
         },
         {
           "learner_name": "XGBoost",
           "voted_label": "Benign",
-          "learner_confidence": 0.8419007062911987
+          "learner_confidence": 0.8419
         },
         {
           "learner_name": "MLP",
           "voted_label": "ARP Spoofing",
-          "learner_confidence": 0.9574927091598511
+          "learner_confidence": 0.9575
         }
       ],
       "voting_strategy": "soft_voting",
       "hard_pred": "Benign",
       "soft_pred": "Benign",
       "agreement": true,
-      "disagreement": false,
-      "model_predictions": {
-        "RandomForest": "Benign",
-        "XGBoost": "Benign",
-        "MLP": "ARP Spoofing"
-      },
-      "model_confidences": {
-        "RandomForest": 0.34102904550819924,
-        "XGBoost": 0.8419007062911987,
-        "MLP": 0.9574927091598511
-      }
+      "disagreement": false
     },
     "shap_attribution": {
       "explainer_type": "TreeExplainer",
@@ -2243,26 +2053,26 @@
   },
   {
     "identity": {
-      "alert_id": "ALT-20261107-0020",
+      "alert_id": "ALT-20261113-0020",
       "flow_id": "192.168.1.48-162.159.61.4-46612-443-6",
       "detector_family": "traditional_ml",
-      "timestamp": "2026-11-07T18:02:57.958417+00:00",
+      "timestamp": "2023-01-11 10:14:28",
       "dataset": "ACI-IoT-Network-2023",
       "split": "pilot"
     },
     "prediction": {
-      "predicted_label": "Benign",
-      "confidence": 0.9689474538912775,
+      "predicted_label": "OS Scan",
+      "confidence": 0.7746611810731218,
       "base_learner_votes": [
         {
           "learner_name": "RandomForest",
           "voted_label": "Benign",
-          "learner_confidence": 0.9069779026360517
+          "learner_confidence": 0.907
         },
         {
           "learner_name": "XGBoost",
           "voted_label": "Benign",
-          "learner_confidence": 0.9998644590377808
+          "learner_confidence": 0.9999
         },
         {
           "learner_name": "MLP",
@@ -2272,19 +2082,9 @@
       ],
       "voting_strategy": "soft_voting",
       "hard_pred": "Benign",
-      "soft_pred": "Benign",
-      "agreement": true,
-      "disagreement": false,
-      "model_predictions": {
-        "RandomForest": "Benign",
-        "XGBoost": "Benign",
-        "MLP": "Benign"
-      },
-      "model_confidences": {
-        "RandomForest": 0.9069779026360517,
-        "XGBoost": 0.9998644590377808,
-        "MLP": 1.0
-      }
+      "soft_pred": "OS Scan",
+      "agreement": false,
+      "disagreement": true
     },
     "shap_attribution": {
       "explainer_type": "TreeExplainer",
@@ -2356,7 +2156,7 @@
     "evaluation_metadata": {
       "true_label": "Benign",
       "in_train_leakage_flag": false,
-      "detector_correct": true
+      "detector_correct": false
     }
   }
 ]
