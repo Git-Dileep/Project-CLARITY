@@ -1,0 +1,11 @@
+{
+  "status": "PENDING_EVALUATION",
+  "strategy": "soft_voting",
+  "note": "Full test set evaluation on ACI IoT 2023 will be updated upon execution of inference pipeline with saved probabilities.",
+  "metrics": {
+    "macro_f1_11class_primary": "[TBD]",
+    "macro_f1_12class_secondary": "[TBD]",
+    "accuracy": "[TBD]",
+    "weighted_f1": "[TBD]"
+  }
+}

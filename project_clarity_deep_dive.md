@@ -23,10 +23,13 @@ Even if a DL detector is more accurate, its gradient-based SHAP explanations may
 
 | | Traditional ML Ensemble | Deep Learning Ensemble |
 |---|---|---|
-| **Models** | Random Forest (100 trees) + XGBoost (100 estimators, LR=0.1) + MLP (hidden=[128,64]) | 1D-CNN (32 channels) + Bi-LSTM (2-layer, hidden=32) + Transformer Encoder (d=32, 4 heads) |
-| **Consensus** | Hard voting: 2-of-3 majority | Hard voting: 2-of-3 majority |
-| **SHAP explainer** | `shap.TreeExplainer` | `shap.GradientExplainer` |
-| **SHAP budget** | Exactly 10 features, sorted by descending \|φ\| | Same |
+| **Models** | Random Forest (100 trees) + XGBoost (100 estimators, LR=0.1) + MLP (hidden=[64, 32]) | 1D-CNN (32 channels) + Bi-LSTM (2-layer, hidden=32) + Transformer Encoder (d=32, 4 heads) |
+| **Consensus Strategies** | **Hard Voting:** 2-of-3 majority (confidence tie-break)<br>**Soft Voting:** Uniform posterior probability average | **Hard Voting:** 2-of-3 majority (confidence tie-break)<br>**Soft Voting:** Uniform posterior probability average |
+| **SHAP Explainer** | `shap.TreeExplainer` (probability space) | `shap.GradientExplainer` (probability space) |
+| **SHAP Budget** | Exactly 10 features, sorted by descending \|φ\| | Same |
+
+> **Research Motivation for Soft Voting:**  
+> Hard Voting was our initial approach. Preliminary empirical analysis revealed that majority voting did not consistently outperform individual high-capacity base learners (such as XGBoost or Transformer). Therefore, Soft Voting was introduced as an additional evaluation strategy to assess whether preserving posterior class uncertainty via continuous probability averaging provides improved classification fidelity and lower discordance on difficult edge flows. Result values stay `[TBD]` pending final cluster execution.
 
 ### 2.2 Frozen Control Invariants (Everything Else Is Identical)
 

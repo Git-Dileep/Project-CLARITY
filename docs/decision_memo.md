@@ -1,4 +1,4 @@
-﻿# Project CLARITY — Gate Decision Memo
+# Project CLARITY — Gate Decision Memo
 
 **Version:** 1.0  
 **Document Owner:** Project CLARITY
@@ -20,12 +20,14 @@ Project CLARITY completed its Sprint 1 pilot cycle on 2026-10-21. All four works
 
 | Criterion | Evidence | Status |
 |:---|:---|:---:|
-| Traditional ML ensemble trained (RF, XGBoost, MLP) | `traditional_metrics.csv`: Ensemble Accuracy **99.7%**, Macro F1 **0.9957** | ✅ PASS |
-| Deep Learning ensemble trained (CNN1D, LSTM, Transformer) | `dl_metrics.csv`: Ensemble Accuracy **97.8%**, Macro F1 **0.9688** | ✅ PASS |
-| 20 alerts exported (10 Trad + 10 DL) sharing identical 10 held-out flow IDs | `pilot_manifest.json`: 10 shared flows across 6 classes | ✅ PASS |
-| All alerts conform to `contracts/alert_schema_v1.json` (Draft 2020-12) | `schema_and_semantic_validation_report.json`: **0 schema errors, 0 semantic errors** | ✅ PASS |
-| SHAP attributions: 10 features per alert, monotonically sorted by \|φ\| | `SHAP_EXPLANATION_PROTOCOL.md` + verification (Issue #17) | ✅ PASS |
-| Zero train-to-pilot data leakage | `leakage_audit_report.json`: **0 overlap, pilot ⊆ test confirmed** | ✅ PASS |
+| Traditional ML ensemble trained (RF, XGBoost, MLP) | `reports/aci_iot_2023/traditional_metrics.csv`: Accuracy **99.37%**, 11-Cls Macro F1 **0.9897** | ✅ PASS |
+| Deep Learning ensemble trained (CNN1D, LSTM, Transformer) | `reports/aci_iot_2023/dl/dl_metrics.csv`: Accuracy **98.18%**, 11-Cls Macro F1 **0.9244** | ✅ PASS |
+| Hard Voting baseline outputs preserved byte-identical | `tests/test_hard_voting_regression.py`: 100% byte-identity verified | ✅ PASS |
+| Additive Schema v1.1 evolved and validated | `contracts/alert_schema_v1_1.json`, `tests/test_contracts.py`: **0 errors** | ✅ PASS |
+| Continuous posterior probability Soft Voting core implemented | `detection/workstream/src/ensemble.py`: `compute_soft_voting_predictions`, class alignment, discordance, McNemar, paired bootstrap (13/13 tests pass) | ✅ PASS |
+| Dual strategy pilot alerts exported | `pilot_traditional_alerts_hard.json`, `pilot_traditional_alerts_soft.json`, `pilot_dl_alerts_hard.json`, `pilot_dl_alerts_soft.json` (20 flows) | ✅ PASS |
+| Soft Voting full test-set comparative results & significance | `reports/aci_iot_2023/results/soft/`: Metrics, McNemar test, and paired bootstrap CI | ⏳ PENDING ([TBD]) |
+| Zero train-to-pilot data leakage | `reports/aci_iot_2023/split_manifest.json`: **0 overlap confirmed** | ✅ PASS |
 
 **Merged PRs:** #26 (detection pipeline), #27 (schema/protocol freeze), #31 (reproducible pilot)
 **Closed Issues:** #2, #3, #4, #10, #11, #12  
@@ -84,24 +86,27 @@ Project CLARITY completed its Sprint 1 pilot cycle on 2026-10-21. All four works
 | #30 | DL ensemble training logs and metrics artifacts | #23 |
 | #31 | Reproducible 10-flow pilot, SHAP explanations, leakage audit | #10, #11 |
 
-### Open Issues (Remaining)
+### GitHub Issues Status Ledger
 
 | Issue | Title | Status | Notes |
 |:---|:---|:---|:---|
-| #7 | [DET-01] Switch to ACI IoT 2023 and audit it | Open | Blocked on dataset access |
-| #8 | [DET-02] Train traditional ensemble on ACI | Open | Blocked on #7 |
-| #9 | [DET-03] Complete DL ensemble on ACI | Open | Blocked on #7 |
-
-These three issues form the **ACI real-data validation chain** and remain blocked pending dataset procurement. They do not gate Sprint 1 closure, which operates on the synthetic reference baseline.
+| #7 | [DET-01] Switch to ACI IoT 2023 and audit it | Closed | Completed on real ACI IoT 2023 dataset (88,784 flows) |
+| #8 | [DET-02] Train traditional ensemble on ACI | Closed | Completed on real ACI IoT 2023 (17,757 test flows; 99.37% acc) |
+| #9 | [DET-03] Complete DL ensemble on ACI | Closed | Completed on real ACI IoT 2023 (17,757 test flows; 98.18% acc) |
+| #32 | [SOFT-01] Continuous Posterior Probability Soft Voting in `ensemble.py` | Closed | Core math, tests, and metrics complete (13/13 unit tests pass) |
+| #33 | [SOFT-02] Integrate Soft Voting in `train_traditional.py` | Closed | Class alignment assertion, prob saving, dual export integrated |
+| #34 | [SOFT-03] Integrate Soft Voting in `train_dl.py` | Closed | PyTorch prob extraction, dual export, run manifest integrated |
+| #35 | [SOFT-04] Export Dual Hard and Soft Voting Pilot Alerts | Closed | `_hard.json` and `_soft.json` exported over frozen flow IDs; Schema v1.1 validated |
+| #36 | [SOFT-05] Update Results Aggregator and Evaluation Tables | Closed | `eval/build_results.py` and `outputs/eval_results.md` updated with `[TBD]` placeholders |
+| #37 | [SOFT-06] Update Documentation, Protocol, and Paper Draft | Closed | Neutral phrasing, research motivation documented, all Soft result values `[TBD]` |
 
 ---
 
 ## Caveats & Limitations
 
-1. **Sample Size:** The 20-alert pilot (10 flows × 2 detectors) provides directional signal only. Statistical significance requires the full ACI dataset run (DET-01/02/03).
-2. **Synthetic Dataset:** All detection metrics (99.7% Trad, 97.8% DL accuracy) are on `data/reference_synthetic.csv` (5,000 rows, 6 classes). Real-world ACI IoT 2023 performance may differ materially.
-3. **Human Eval Coverage:** The blind review covered 5 of the planned 10 reports from `generation/sample_reports.json`. The remaining samples will be evaluated once multi-system generation is finalized.
-4. **Feature Placeholders:** Human review identified that early pilot reports used raw index placeholders (`Feature_1..10`) instead of canonical feature column names. This was resolved in the detection pipeline (PR #31) which exports real column names.
+1. **Split Method & Temporal Session Overlap:** Split is stratified random per-flow with flow identifiers dropped. Temporal/session-window grouping was not enforced during traffic capture, so flows from the same scan activity can appear in both train and test splits.
+2. **Soft Voting Empirical Status:** Soft Voting is introduced as an additional evaluation strategy to assess potential improvements over majority voting. All comparative result numbers and significance tests are marked `[TBD]` pending final cluster execution.
+3. **Hard Voting Preservation:** Existing Hard Voting outputs, metrics, and baseline pilot alerts remain 100% byte-identical to pre-change snapshots.
 
 ---
 

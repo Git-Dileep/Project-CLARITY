@@ -1,0 +1,2362 @@
+[
+  {
+    "identity": {
+      "alert_id": "ALT-20261107-0101",
+      "flow_id": "16.202.249.199-192.168.1.183-0-0-0",
+      "detector_family": "dl_ensemble",
+      "timestamp": "2026-11-07T18:02:57.958417+00:00",
+      "dataset": "ACI-IoT-Network-2023",
+      "split": "pilot"
+    },
+    "prediction": {
+      "predicted_label": "ICMP Flood",
+      "confidence": 0.8197975158691406,
+      "base_learner_votes": [
+        {
+          "learner_name": "CNN1D",
+          "voted_label": "ICMP Flood",
+          "learner_confidence": 0.4596801698207855
+        },
+        {
+          "learner_name": "LSTM",
+          "voted_label": "ICMP Flood",
+          "learner_confidence": 0.9997476935386658
+        },
+        {
+          "learner_name": "Transformer",
+          "voted_label": "ICMP Flood",
+          "learner_confidence": 0.9999645948410034
+        }
+      ],
+      "voting_strategy": "hard_voting",
+      "hard_pred": "ICMP Flood",
+      "soft_pred": "ICMP Flood",
+      "agreement": true,
+      "disagreement": false,
+      "model_predictions": {
+        "CNN1D": "ICMP Flood",
+        "LSTM": "ICMP Flood",
+        "Transformer": "ICMP Flood"
+      },
+      "model_confidences": {
+        "CNN1D": 0.4596801698207855,
+        "LSTM": 0.9997476935386658,
+        "Transformer": 0.9999645948410034
+      }
+    },
+    "shap_attribution": {
+      "explainer_type": "GradientExplainer",
+      "explained_class": "ICMP Flood",
+      "base_value": 0.08,
+      "top_features": [
+        {
+          "rank": 1,
+          "feature_name": "Protocol",
+          "feature_value": -1.6276,
+          "shap_value": 3.19461
+        },
+        {
+          "rank": 2,
+          "feature_name": "Flow IAT Min",
+          "feature_value": 4.3621,
+          "shap_value": 2.279059
+        },
+        {
+          "rank": 3,
+          "feature_name": "Idle Max",
+          "feature_value": 0.7261,
+          "shap_value": 2.162371
+        },
+        {
+          "rank": 4,
+          "feature_name": "Fwd Seg Size Min",
+          "feature_value": -2.0687,
+          "shap_value": 1.5864
+        },
+        {
+          "rank": 5,
+          "feature_name": "Src Port",
+          "feature_value": -1.7832,
+          "shap_value": -0.715448
+        },
+        {
+          "rank": 6,
+          "feature_name": "Src IP_192.168.1.45",
+          "feature_value": 0.0,
+          "shap_value": 0.539132
+        },
+        {
+          "rank": 7,
+          "feature_name": "Flow IAT Mean",
+          "feature_value": 3.8546,
+          "shap_value": 0.516567
+        },
+        {
+          "rank": 8,
+          "feature_name": "Packet Length Min",
+          "feature_value": -0.2616,
+          "shap_value": 0.455506
+        },
+        {
+          "rank": 9,
+          "feature_name": "Dst IP_192.168.1.183",
+          "feature_value": 1.0,
+          "shap_value": -0.411861
+        },
+        {
+          "rank": 10,
+          "feature_name": "FWD Init Win Bytes",
+          "feature_value": -0.5346,
+          "shap_value": 0.396785
+        }
+      ]
+    },
+    "evaluation_metadata": {
+      "true_label": "ICMP Flood",
+      "in_train_leakage_flag": false,
+      "detector_correct": true
+    }
+  },
+  {
+    "identity": {
+      "alert_id": "ALT-20261107-0102",
+      "flow_id": "192.168.1.25-148.137.98.179-80-51132-6",
+      "detector_family": "dl_ensemble",
+      "timestamp": "2026-11-07T18:02:57.958417+00:00",
+      "dataset": "ACI-IoT-Network-2023",
+      "split": "pilot"
+    },
+    "prediction": {
+      "predicted_label": "SYN Flood",
+      "confidence": 0.7557831406593323,
+      "base_learner_votes": [
+        {
+          "learner_name": "CNN1D",
+          "voted_label": "Benign",
+          "learner_confidence": 0.26762649416923523
+        },
+        {
+          "learner_name": "LSTM",
+          "voted_label": "SYN Flood",
+          "learner_confidence": 0.9998425245285034
+        },
+        {
+          "learner_name": "Transformer",
+          "voted_label": "SYN Flood",
+          "learner_confidence": 0.9998804330825806
+        }
+      ],
+      "voting_strategy": "hard_voting",
+      "hard_pred": "SYN Flood",
+      "soft_pred": "SYN Flood",
+      "agreement": true,
+      "disagreement": false,
+      "model_predictions": {
+        "CNN1D": "Benign",
+        "LSTM": "SYN Flood",
+        "Transformer": "SYN Flood"
+      },
+      "model_confidences": {
+        "CNN1D": 0.26762649416923523,
+        "LSTM": 0.9998425245285034,
+        "Transformer": 0.9998804330825806
+      }
+    },
+    "shap_attribution": {
+      "explainer_type": "GradientExplainer",
+      "explained_class": "SYN Flood",
+      "base_value": 0.08,
+      "top_features": [
+        {
+          "rank": 1,
+          "feature_name": "SYN Flag Count",
+          "feature_value": 2.3827,
+          "shap_value": 3.260275
+        },
+        {
+          "rank": 2,
+          "feature_name": "Idle Max",
+          "feature_value": 0.7666,
+          "shap_value": 2.519915
+        },
+        {
+          "rank": 3,
+          "feature_name": "Src IP_192.168.1.25",
+          "feature_value": 1.0,
+          "shap_value": 1.694607
+        },
+        {
+          "rank": 4,
+          "feature_name": "Connection Type_wired",
+          "feature_value": 1.0,
+          "shap_value": 0.828773
+        },
+        {
+          "rank": 5,
+          "feature_name": "FWD Init Win Bytes",
+          "feature_value": 0.7228,
+          "shap_value": -0.645539
+        },
+        {
+          "rank": 6,
+          "feature_name": "Fwd Seg Size Min",
+          "feature_value": 0.1979,
+          "shap_value": 0.570387
+        },
+        {
+          "rank": 7,
+          "feature_name": "Packet Length Min",
+          "feature_value": -0.223,
+          "shap_value": 0.491719
+        },
+        {
+          "rank": 8,
+          "feature_name": "Src IP_192.168.1.45",
+          "feature_value": 0.0,
+          "shap_value": 0.490357
+        },
+        {
+          "rank": 9,
+          "feature_name": "RST Flag Count",
+          "feature_value": -0.8174,
+          "shap_value": 0.472808
+        },
+        {
+          "rank": 10,
+          "feature_name": "Subflow Fwd Packets",
+          "feature_value": 1.9232,
+          "shap_value": 0.467227
+        }
+      ]
+    },
+    "evaluation_metadata": {
+      "true_label": "SYN Flood",
+      "in_train_leakage_flag": false,
+      "detector_correct": true
+    }
+  },
+  {
+    "identity": {
+      "alert_id": "ALT-20261107-0103",
+      "flow_id": "192.168.1.112-192.168.1.45-443-48452-6",
+      "detector_family": "dl_ensemble",
+      "timestamp": "2026-11-07T18:02:57.958417+00:00",
+      "dataset": "ACI-IoT-Network-2023",
+      "split": "pilot"
+    },
+    "prediction": {
+      "predicted_label": "Vulnerability Scan",
+      "confidence": 0.5648373365402222,
+      "base_learner_votes": [
+        {
+          "learner_name": "CNN1D",
+          "voted_label": "Benign",
+          "learner_confidence": 0.38658249378204346
+        },
+        {
+          "learner_name": "LSTM",
+          "voted_label": "Vulnerability Scan",
+          "learner_confidence": 0.6331159472465515
+        },
+        {
+          "learner_name": "Transformer",
+          "voted_label": "Vulnerability Scan",
+          "learner_confidence": 0.6748136281967163
+        }
+      ],
+      "voting_strategy": "hard_voting",
+      "hard_pred": "Vulnerability Scan",
+      "soft_pred": "Vulnerability Scan",
+      "agreement": true,
+      "disagreement": false,
+      "model_predictions": {
+        "CNN1D": "Benign",
+        "LSTM": "Vulnerability Scan",
+        "Transformer": "Vulnerability Scan"
+      },
+      "model_confidences": {
+        "CNN1D": 0.38658249378204346,
+        "LSTM": 0.6331159472465515,
+        "Transformer": 0.6748136281967163
+      }
+    },
+    "shap_attribution": {
+      "explainer_type": "GradientExplainer",
+      "explained_class": "Vulnerability Scan",
+      "base_value": 0.04,
+      "top_features": [
+        {
+          "rank": 1,
+          "feature_name": "Idle Max",
+          "feature_value": -0.8814,
+          "shap_value": 5.069801
+        },
+        {
+          "rank": 2,
+          "feature_name": "Dst IP_192.168.1.45",
+          "feature_value": 1.0,
+          "shap_value": 1.29762
+        },
+        {
+          "rank": 3,
+          "feature_name": "FIN Flag Count",
+          "feature_value": 2.0272,
+          "shap_value": 1.136504
+        },
+        {
+          "rank": 4,
+          "feature_name": "SYN Flag Count",
+          "feature_value": -0.8721,
+          "shap_value": 0.867264
+        },
+        {
+          "rank": 5,
+          "feature_name": "Connection Type_wired",
+          "feature_value": 0.0,
+          "shap_value": 0.582932
+        },
+        {
+          "rank": 6,
+          "feature_name": "Bwd Packet Length Min",
+          "feature_value": -0.3525,
+          "shap_value": -0.509207
+        },
+        {
+          "rank": 7,
+          "feature_name": "RST Flag Count",
+          "feature_value": -0.8174,
+          "shap_value": -0.49563
+        },
+        {
+          "rank": 8,
+          "feature_name": "Fwd Seg Size Min",
+          "feature_value": 0.9534,
+          "shap_value": 0.472701
+        },
+        {
+          "rank": 9,
+          "feature_name": "Src IP_192.168.1.112",
+          "feature_value": 1.0,
+          "shap_value": 0.457544
+        },
+        {
+          "rank": 10,
+          "feature_name": "Subflow Fwd Packets",
+          "feature_value": 1.9232,
+          "shap_value": 0.433428
+        }
+      ]
+    },
+    "evaluation_metadata": {
+      "true_label": "Vulnerability Scan",
+      "in_train_leakage_flag": false,
+      "detector_correct": true
+    }
+  },
+  {
+    "identity": {
+      "alert_id": "ALT-20261107-0104",
+      "flow_id": "192.168.1.45-192.168.1.153-40729-9071-6",
+      "detector_family": "dl_ensemble",
+      "timestamp": "2026-11-07T18:02:57.958417+00:00",
+      "dataset": "ACI-IoT-Network-2023",
+      "split": "pilot"
+    },
+    "prediction": {
+      "predicted_label": "Ping Sweep",
+      "confidence": 0.7897231578826904,
+      "base_learner_votes": [
+        {
+          "learner_name": "CNN1D",
+          "voted_label": "Port Scan",
+          "learner_confidence": 0.3777790069580078
+        },
+        {
+          "learner_name": "LSTM",
+          "voted_label": "Ping Sweep",
+          "learner_confidence": 0.9956319332122803
+        },
+        {
+          "learner_name": "Transformer",
+          "voted_label": "Ping Sweep",
+          "learner_confidence": 0.9957584738731384
+        }
+      ],
+      "voting_strategy": "hard_voting",
+      "hard_pred": "Ping Sweep",
+      "soft_pred": "Ping Sweep",
+      "agreement": true,
+      "disagreement": false,
+      "model_predictions": {
+        "CNN1D": "Port Scan",
+        "LSTM": "Ping Sweep",
+        "Transformer": "Ping Sweep"
+      },
+      "model_confidences": {
+        "CNN1D": 0.3777790069580078,
+        "LSTM": 0.9956319332122803,
+        "Transformer": 0.9957584738731384
+      }
+    },
+    "shap_attribution": {
+      "explainer_type": "GradientExplainer",
+      "explained_class": "Ping Sweep",
+      "base_value": 0.1593,
+      "top_features": [
+        {
+          "rank": 1,
+          "feature_name": "Idle Max",
+          "feature_value": -0.988,
+          "shap_value": 6.606743
+        },
+        {
+          "rank": 2,
+          "feature_name": "Src Port",
+          "feature_value": 0.1325,
+          "shap_value": 1.257447
+        },
+        {
+          "rank": 3,
+          "feature_name": "Src IP_192.168.1.45",
+          "feature_value": 1.0,
+          "shap_value": -0.585302
+        },
+        {
+          "rank": 4,
+          "feature_name": "Connection Type_wired",
+          "feature_value": 0.0,
+          "shap_value": 0.540268
+        },
+        {
+          "rank": 5,
+          "feature_name": "RST Flag Count",
+          "feature_value": 0.9329,
+          "shap_value": -0.503812
+        },
+        {
+          "rank": 6,
+          "feature_name": "SYN Flag Count",
+          "feature_value": 0.2128,
+          "shap_value": 0.429667
+        },
+        {
+          "rank": 7,
+          "feature_name": "Protocol",
+          "feature_value": -0.3357,
+          "shap_value": -0.358326
+        },
+        {
+          "rank": 8,
+          "feature_name": "FWD Init Win Bytes",
+          "feature_value": -0.4905,
+          "shap_value": 0.357386
+        },
+        {
+          "rank": 9,
+          "feature_name": "Src IP_192.168.1.211",
+          "feature_value": 0.0,
+          "shap_value": -0.28721
+        },
+        {
+          "rank": 10,
+          "feature_name": "Packet Length Min",
+          "feature_value": -0.2616,
+          "shap_value": 0.244455
+        }
+      ]
+    },
+    "evaluation_metadata": {
+      "true_label": "Ping Sweep",
+      "in_train_leakage_flag": false,
+      "detector_correct": true
+    }
+  },
+  {
+    "identity": {
+      "alert_id": "ALT-20261107-0105",
+      "flow_id": "192.168.1.45-192.168.1.86-59094-4-6",
+      "detector_family": "dl_ensemble",
+      "timestamp": "2026-11-07T18:02:57.958417+00:00",
+      "dataset": "ACI-IoT-Network-2023",
+      "split": "pilot"
+    },
+    "prediction": {
+      "predicted_label": "OS Scan",
+      "confidence": 0.7729864716529846,
+      "base_learner_votes": [
+        {
+          "learner_name": "CNN1D",
+          "voted_label": "Port Scan",
+          "learner_confidence": 0.3199602961540222
+        },
+        {
+          "learner_name": "LSTM",
+          "voted_label": "OS Scan",
+          "learner_confidence": 0.9992940425872803
+        },
+        {
+          "learner_name": "Transformer",
+          "voted_label": "OS Scan",
+          "learner_confidence": 0.9997050166130066
+        }
+      ],
+      "voting_strategy": "hard_voting",
+      "hard_pred": "OS Scan",
+      "soft_pred": "OS Scan",
+      "agreement": true,
+      "disagreement": false,
+      "model_predictions": {
+        "CNN1D": "Port Scan",
+        "LSTM": "OS Scan",
+        "Transformer": "OS Scan"
+      },
+      "model_confidences": {
+        "CNN1D": 0.3199602961540222,
+        "LSTM": 0.9992940425872803,
+        "Transformer": 0.9997050166130066
+      }
+    },
+    "shap_attribution": {
+      "explainer_type": "GradientExplainer",
+      "explained_class": "OS Scan",
+      "base_value": 0.04,
+      "top_features": [
+        {
+          "rank": 1,
+          "feature_name": "Idle Max",
+          "feature_value": -0.9196,
+          "shap_value": 6.276944
+        },
+        {
+          "rank": 2,
+          "feature_name": "Src Port",
+          "feature_value": 0.9964,
+          "shap_value": 4.261104
+        },
+        {
+          "rank": 3,
+          "feature_name": "Src IP_192.168.1.45",
+          "feature_value": 1.0,
+          "shap_value": -0.570185
+        },
+        {
+          "rank": 4,
+          "feature_name": "Protocol",
+          "feature_value": -0.3357,
+          "shap_value": 0.486631
+        },
+        {
+          "rank": 5,
+          "feature_name": "SYN Flag Count",
+          "feature_value": 0.2128,
+          "shap_value": 0.484994
+        },
+        {
+          "rank": 6,
+          "feature_name": "Subflow Fwd Packets",
+          "feature_value": -0.52,
+          "shap_value": -0.483261
+        },
+        {
+          "rank": 7,
+          "feature_name": "RST Flag Count",
+          "feature_value": 0.9329,
+          "shap_value": -0.478044
+        },
+        {
+          "rank": 8,
+          "feature_name": "FWD Init Win Bytes",
+          "feature_value": -0.4905,
+          "shap_value": 0.439027
+        },
+        {
+          "rank": 9,
+          "feature_name": "Connection Type_wired",
+          "feature_value": 0.0,
+          "shap_value": 0.385388
+        },
+        {
+          "rank": 10,
+          "feature_name": "Fwd Seg Size Min",
+          "feature_value": 0.1979,
+          "shap_value": -0.37625
+        }
+      ]
+    },
+    "evaluation_metadata": {
+      "true_label": "OS Scan",
+      "in_train_leakage_flag": false,
+      "detector_correct": true
+    }
+  },
+  {
+    "identity": {
+      "alert_id": "ALT-20261107-0106",
+      "flow_id": "192.168.1.45-192.168.1.1-55295-42368-6",
+      "detector_family": "dl_ensemble",
+      "timestamp": "2026-11-07T18:02:57.958417+00:00",
+      "dataset": "ACI-IoT-Network-2023",
+      "split": "pilot"
+    },
+    "prediction": {
+      "predicted_label": "Port Scan",
+      "confidence": 0.7936095595359802,
+      "base_learner_votes": [
+        {
+          "learner_name": "CNN1D",
+          "voted_label": "Port Scan",
+          "learner_confidence": 0.38140252232551575
+        },
+        {
+          "learner_name": "LSTM",
+          "voted_label": "Port Scan",
+          "learner_confidence": 0.9996912479400635
+        },
+        {
+          "learner_name": "Transformer",
+          "voted_label": "Port Scan",
+          "learner_confidence": 0.9997348189353943
+        }
+      ],
+      "voting_strategy": "hard_voting",
+      "hard_pred": "Port Scan",
+      "soft_pred": "Port Scan",
+      "agreement": true,
+      "disagreement": false,
+      "model_predictions": {
+        "CNN1D": "Port Scan",
+        "LSTM": "Port Scan",
+        "Transformer": "Port Scan"
+      },
+      "model_confidences": {
+        "CNN1D": 0.38140252232551575,
+        "LSTM": 0.9996912479400635,
+        "Transformer": 0.9997348189353943
+      }
+    },
+    "shap_attribution": {
+      "explainer_type": "GradientExplainer",
+      "explained_class": "Port Scan",
+      "base_value": 0.0601,
+      "top_features": [
+        {
+          "rank": 1,
+          "feature_name": "Idle Max",
+          "feature_value": -0.8768,
+          "shap_value": 4.760458
+        },
+        {
+          "rank": 2,
+          "feature_name": "Dst IP_192.168.1.1",
+          "feature_value": 1.0,
+          "shap_value": 1.046478
+        },
+        {
+          "rank": 3,
+          "feature_name": "Src IP_192.168.1.45",
+          "feature_value": 1.0,
+          "shap_value": 0.862912
+        },
+        {
+          "rank": 4,
+          "feature_name": "Connection Type_wired",
+          "feature_value": 1.0,
+          "shap_value": 0.782828
+        },
+        {
+          "rank": 5,
+          "feature_name": "Connection Type_wireless",
+          "feature_value": 0.0,
+          "shap_value": -0.647796
+        },
+        {
+          "rank": 6,
+          "feature_name": "Protocol",
+          "feature_value": -0.3357,
+          "shap_value": -0.627403
+        },
+        {
+          "rank": 7,
+          "feature_name": "Bwd Packet Length Min",
+          "feature_value": -0.3525,
+          "shap_value": 0.539044
+        },
+        {
+          "rank": 8,
+          "feature_name": "Dst Port",
+          "feature_value": 1.5181,
+          "shap_value": 0.446451
+        },
+        {
+          "rank": 9,
+          "feature_name": "Fwd Seg Size Min",
+          "feature_value": 0.1979,
+          "shap_value": 0.332445
+        },
+        {
+          "rank": 10,
+          "feature_name": "SYN Flag Count",
+          "feature_value": 0.2128,
+          "shap_value": 0.274789
+        }
+      ]
+    },
+    "evaluation_metadata": {
+      "true_label": "Port Scan",
+      "in_train_leakage_flag": false,
+      "detector_correct": true
+    }
+  },
+  {
+    "identity": {
+      "alert_id": "ALT-20261107-0107",
+      "flow_id": "192.168.1.214-162.159.200.1-55823-123-17",
+      "detector_family": "dl_ensemble",
+      "timestamp": "2026-11-07T18:02:57.958417+00:00",
+      "dataset": "ACI-IoT-Network-2023",
+      "split": "pilot"
+    },
+    "prediction": {
+      "predicted_label": "Benign",
+      "confidence": 0.7715485692024231,
+      "base_learner_votes": [
+        {
+          "learner_name": "CNN1D",
+          "voted_label": "Benign",
+          "learner_confidence": 0.3150130808353424
+        },
+        {
+          "learner_name": "LSTM",
+          "voted_label": "Benign",
+          "learner_confidence": 0.9997178912162781
+        },
+        {
+          "learner_name": "Transformer",
+          "voted_label": "Benign",
+          "learner_confidence": 0.9999146461486816
+        }
+      ],
+      "voting_strategy": "hard_voting",
+      "hard_pred": "Benign",
+      "soft_pred": "Benign",
+      "agreement": true,
+      "disagreement": false,
+      "model_predictions": {
+        "CNN1D": "Benign",
+        "LSTM": "Benign",
+        "Transformer": "Benign"
+      },
+      "model_confidences": {
+        "CNN1D": 0.3150130808353424,
+        "LSTM": 0.9997178912162781,
+        "Transformer": 0.9999146461486816
+      }
+    },
+    "shap_attribution": {
+      "explainer_type": "GradientExplainer",
+      "explained_class": "Benign",
+      "base_value": 0.378,
+      "top_features": [
+        {
+          "rank": 1,
+          "feature_name": "Src IP_192.168.1.214",
+          "feature_value": 1.0,
+          "shap_value": 1.478968
+        },
+        {
+          "rank": 2,
+          "feature_name": "Idle Max",
+          "feature_value": -0.1248,
+          "shap_value": -1.276282
+        },
+        {
+          "rank": 3,
+          "feature_name": "Src IP_192.168.1.45",
+          "feature_value": 0.0,
+          "shap_value": 0.864381
+        },
+        {
+          "rank": 4,
+          "feature_name": "Packet Length Min",
+          "feature_value": 0.6649,
+          "shap_value": 0.759188
+        },
+        {
+          "rank": 5,
+          "feature_name": "Dst IP_162.159.200.1",
+          "feature_value": 1.0,
+          "shap_value": 0.475631
+        },
+        {
+          "rank": 6,
+          "feature_name": "Connection Type_wired",
+          "feature_value": 1.0,
+          "shap_value": 0.459159
+        },
+        {
+          "rank": 7,
+          "feature_name": "Protocol",
+          "feature_value": 2.0328,
+          "shap_value": 0.437541
+        },
+        {
+          "rank": 8,
+          "feature_name": "Fwd Packet Length Min",
+          "feature_value": 0.6219,
+          "shap_value": 0.341287
+        },
+        {
+          "rank": 9,
+          "feature_name": "Connection Type_wireless",
+          "feature_value": 0.0,
+          "shap_value": 0.281655
+        },
+        {
+          "rank": 10,
+          "feature_name": "Bwd Packet Length Min",
+          "feature_value": 0.6159,
+          "shap_value": 0.247903
+        }
+      ]
+    },
+    "evaluation_metadata": {
+      "true_label": "Benign",
+      "in_train_leakage_flag": false,
+      "detector_correct": true
+    }
+  },
+  {
+    "identity": {
+      "alert_id": "ALT-20261107-0108",
+      "flow_id": "192.168.1.45-192.168.1.184-40729-1443-6",
+      "detector_family": "dl_ensemble",
+      "timestamp": "2026-11-07T18:02:57.958417+00:00",
+      "dataset": "ACI-IoT-Network-2023",
+      "split": "pilot"
+    },
+    "prediction": {
+      "predicted_label": "Ping Sweep",
+      "confidence": 0.7769269943237305,
+      "base_learner_votes": [
+        {
+          "learner_name": "CNN1D",
+          "voted_label": "Port Scan",
+          "learner_confidence": 0.3384772539138794
+        },
+        {
+          "learner_name": "LSTM",
+          "voted_label": "Ping Sweep",
+          "learner_confidence": 0.9949730634689331
+        },
+        {
+          "learner_name": "Transformer",
+          "voted_label": "Ping Sweep",
+          "learner_confidence": 0.9973306655883789
+        }
+      ],
+      "voting_strategy": "hard_voting",
+      "hard_pred": "Ping Sweep",
+      "soft_pred": "Ping Sweep",
+      "agreement": true,
+      "disagreement": false,
+      "model_predictions": {
+        "CNN1D": "Port Scan",
+        "LSTM": "Ping Sweep",
+        "Transformer": "Ping Sweep"
+      },
+      "model_confidences": {
+        "CNN1D": 0.3384772539138794,
+        "LSTM": 0.9949730634689331,
+        "Transformer": 0.9973306655883789
+      }
+    },
+    "shap_attribution": {
+      "explainer_type": "GradientExplainer",
+      "explained_class": "Ping Sweep",
+      "base_value": 0.1593,
+      "top_features": [
+        {
+          "rank": 1,
+          "feature_name": "Idle Max",
+          "feature_value": -0.9877,
+          "shap_value": 14.056918
+        },
+        {
+          "rank": 2,
+          "feature_name": "Src Port",
+          "feature_value": 0.1325,
+          "shap_value": 2.114707
+        },
+        {
+          "rank": 3,
+          "feature_name": "Src IP_192.168.1.45",
+          "feature_value": 1.0,
+          "shap_value": -1.37922
+        },
+        {
+          "rank": 4,
+          "feature_name": "RST Flag Count",
+          "feature_value": 0.9329,
+          "shap_value": -1.076744
+        },
+        {
+          "rank": 5,
+          "feature_name": "Connection Type_wired",
+          "feature_value": 0.0,
+          "shap_value": 0.880712
+        },
+        {
+          "rank": 6,
+          "feature_name": "Dst IP_192.168.1.184",
+          "feature_value": 1.0,
+          "shap_value": -0.828706
+        },
+        {
+          "rank": 7,
+          "feature_name": "Protocol",
+          "feature_value": -0.3357,
+          "shap_value": -0.766646
+        },
+        {
+          "rank": 8,
+          "feature_name": "Subflow Fwd Packets",
+          "feature_value": -0.52,
+          "shap_value": -0.479556
+        },
+        {
+          "rank": 9,
+          "feature_name": "FWD Init Win Bytes",
+          "feature_value": -0.4905,
+          "shap_value": 0.472672
+        },
+        {
+          "rank": 10,
+          "feature_name": "Src IP_192.168.1.211",
+          "feature_value": 0.0,
+          "shap_value": -0.458426
+        }
+      ]
+    },
+    "evaluation_metadata": {
+      "true_label": "Ping Sweep",
+      "in_train_leakage_flag": false,
+      "detector_correct": true
+    }
+  },
+  {
+    "identity": {
+      "alert_id": "ALT-20261107-0109",
+      "flow_id": "192.168.1.211-192.168.1.1-39348-53-17",
+      "detector_family": "dl_ensemble",
+      "timestamp": "2026-11-07T18:02:57.958417+00:00",
+      "dataset": "ACI-IoT-Network-2023",
+      "split": "pilot"
+    },
+    "prediction": {
+      "predicted_label": "Benign",
+      "confidence": 0.45841240882873535,
+      "base_learner_votes": [
+        {
+          "learner_name": "CNN1D",
+          "voted_label": "Benign",
+          "learner_confidence": 0.3188934624195099
+        },
+        {
+          "learner_name": "LSTM",
+          "voted_label": "Benign",
+          "learner_confidence": 0.5149987936019897
+        },
+        {
+          "learner_name": "Transformer",
+          "voted_label": "UDP Flood",
+          "learner_confidence": 0.541344940662384
+        }
+      ],
+      "voting_strategy": "hard_voting",
+      "hard_pred": "Benign",
+      "soft_pred": "Benign",
+      "agreement": true,
+      "disagreement": false,
+      "model_predictions": {
+        "CNN1D": "Benign",
+        "LSTM": "Benign",
+        "Transformer": "UDP Flood"
+      },
+      "model_confidences": {
+        "CNN1D": 0.3188934624195099,
+        "LSTM": 0.5149987936019897,
+        "Transformer": 0.541344940662384
+      }
+    },
+    "shap_attribution": {
+      "explainer_type": "GradientExplainer",
+      "explained_class": "Benign",
+      "base_value": 0.378,
+      "top_features": [
+        {
+          "rank": 1,
+          "feature_name": "Idle Max",
+          "feature_value": 0.7798,
+          "shap_value": -3.02941
+        },
+        {
+          "rank": 2,
+          "feature_name": "Packet Length Min",
+          "feature_value": 0.5105,
+          "shap_value": 2.042629
+        },
+        {
+          "rank": 3,
+          "feature_name": "Src IP_192.168.1.211",
+          "feature_value": 1.0,
+          "shap_value": -2.007505
+        },
+        {
+          "rank": 4,
+          "feature_name": "Fwd Packet Length Min",
+          "feature_value": 0.4734,
+          "shap_value": 1.308732
+        },
+        {
+          "rank": 5,
+          "feature_name": "Src IP_192.168.1.45",
+          "feature_value": 0.0,
+          "shap_value": 0.832568
+        },
+        {
+          "rank": 6,
+          "feature_name": "Dst IP_192.168.1.1",
+          "feature_value": 1.0,
+          "shap_value": -0.630456
+        },
+        {
+          "rank": 7,
+          "feature_name": "Connection Type_wired",
+          "feature_value": 1.0,
+          "shap_value": 0.600044
+        },
+        {
+          "rank": 8,
+          "feature_name": "Src IP_192.168.1.133",
+          "feature_value": 0.0,
+          "shap_value": 0.394874
+        },
+        {
+          "rank": 9,
+          "feature_name": "Protocol",
+          "feature_value": 2.0328,
+          "shap_value": 0.386306
+        },
+        {
+          "rank": 10,
+          "feature_name": "SYN Flag Count",
+          "feature_value": -0.8721,
+          "shap_value": 0.360554
+        }
+      ]
+    },
+    "evaluation_metadata": {
+      "true_label": "UDP Flood",
+      "in_train_leakage_flag": false,
+      "detector_correct": false
+    }
+  },
+  {
+    "identity": {
+      "alert_id": "ALT-20261107-0110",
+      "flow_id": "192.168.1.45-192.168.1.20-40729-7200-6",
+      "detector_family": "dl_ensemble",
+      "timestamp": "2026-11-07T18:02:57.958417+00:00",
+      "dataset": "ACI-IoT-Network-2023",
+      "split": "pilot"
+    },
+    "prediction": {
+      "predicted_label": "Ping Sweep",
+      "confidence": 0.788962185382843,
+      "base_learner_votes": [
+        {
+          "learner_name": "CNN1D",
+          "voted_label": "Port Scan",
+          "learner_confidence": 0.37521615624427795
+        },
+        {
+          "learner_name": "LSTM",
+          "voted_label": "Ping Sweep",
+          "learner_confidence": 0.995147168636322
+        },
+        {
+          "learner_name": "Transformer",
+          "voted_label": "Ping Sweep",
+          "learner_confidence": 0.9965231418609619
+        }
+      ],
+      "voting_strategy": "hard_voting",
+      "hard_pred": "Ping Sweep",
+      "soft_pred": "Ping Sweep",
+      "agreement": true,
+      "disagreement": false,
+      "model_predictions": {
+        "CNN1D": "Port Scan",
+        "LSTM": "Ping Sweep",
+        "Transformer": "Ping Sweep"
+      },
+      "model_confidences": {
+        "CNN1D": 0.37521615624427795,
+        "LSTM": 0.995147168636322,
+        "Transformer": 0.9965231418609619
+      }
+    },
+    "shap_attribution": {
+      "explainer_type": "GradientExplainer",
+      "explained_class": "Ping Sweep",
+      "base_value": 0.1593,
+      "top_features": [
+        {
+          "rank": 1,
+          "feature_name": "Idle Max",
+          "feature_value": -0.988,
+          "shap_value": 7.863524
+        },
+        {
+          "rank": 2,
+          "feature_name": "Src Port",
+          "feature_value": 0.1325,
+          "shap_value": 1.862549
+        },
+        {
+          "rank": 3,
+          "feature_name": "RST Flag Count",
+          "feature_value": 0.9329,
+          "shap_value": -0.785368
+        },
+        {
+          "rank": 4,
+          "feature_name": "Src IP_192.168.1.45",
+          "feature_value": 1.0,
+          "shap_value": -0.685625
+        },
+        {
+          "rank": 5,
+          "feature_name": "SYN Flag Count",
+          "feature_value": 0.2128,
+          "shap_value": 0.678392
+        },
+        {
+          "rank": 6,
+          "feature_name": "Connection Type_wired",
+          "feature_value": 0.0,
+          "shap_value": 0.652537
+        },
+        {
+          "rank": 7,
+          "feature_name": "Bwd Packet Length Min",
+          "feature_value": -0.3525,
+          "shap_value": 0.359753
+        },
+        {
+          "rank": 8,
+          "feature_name": "Src IP_192.168.1.211",
+          "feature_value": 0.0,
+          "shap_value": -0.324948
+        },
+        {
+          "rank": 9,
+          "feature_name": "Fwd Packet Length Mean",
+          "feature_value": -0.2368,
+          "shap_value": 0.318476
+        },
+        {
+          "rank": 10,
+          "feature_name": "Subflow Fwd Bytes",
+          "feature_value": -0.2932,
+          "shap_value": 0.304171
+        }
+      ]
+    },
+    "evaluation_metadata": {
+      "true_label": "Ping Sweep",
+      "in_train_leakage_flag": false,
+      "detector_correct": true
+    }
+  },
+  {
+    "identity": {
+      "alert_id": "ALT-20261107-0111",
+      "flow_id": "192.168.1.212-192.168.1.45-22-47182-6",
+      "detector_family": "dl_ensemble",
+      "timestamp": "2026-11-07T18:02:57.958417+00:00",
+      "dataset": "ACI-IoT-Network-2023",
+      "split": "pilot"
+    },
+    "prediction": {
+      "predicted_label": "Dictionary Attack",
+      "confidence": 0.7874204516410828,
+      "base_learner_votes": [
+        {
+          "learner_name": "CNN1D",
+          "voted_label": "Benign",
+          "learner_confidence": 0.3631068468093872
+        },
+        {
+          "learner_name": "LSTM",
+          "voted_label": "Dictionary Attack",
+          "learner_confidence": 0.9992840886116028
+        },
+        {
+          "learner_name": "Transformer",
+          "voted_label": "Dictionary Attack",
+          "learner_confidence": 0.9998704195022583
+        }
+      ],
+      "voting_strategy": "hard_voting",
+      "hard_pred": "Dictionary Attack",
+      "soft_pred": "Dictionary Attack",
+      "agreement": true,
+      "disagreement": false,
+      "model_predictions": {
+        "CNN1D": "Benign",
+        "LSTM": "Dictionary Attack",
+        "Transformer": "Dictionary Attack"
+      },
+      "model_confidences": {
+        "CNN1D": 0.3631068468093872,
+        "LSTM": 0.9992840886116028,
+        "Transformer": 0.9998704195022583
+      }
+    },
+    "shap_attribution": {
+      "explainer_type": "GradientExplainer",
+      "explained_class": "Dictionary Attack",
+      "base_value": 0.06,
+      "top_features": [
+        {
+          "rank": 1,
+          "feature_name": "Idle Max",
+          "feature_value": 1.645,
+          "shap_value": 4.792387
+        },
+        {
+          "rank": 2,
+          "feature_name": "Src IP_192.168.1.212",
+          "feature_value": 1.0,
+          "shap_value": 2.348039
+        },
+        {
+          "rank": 3,
+          "feature_name": "Dst IP_192.168.1.45",
+          "feature_value": 1.0,
+          "shap_value": 1.792649
+        },
+        {
+          "rank": 4,
+          "feature_name": "Src Port",
+          "feature_value": -1.7822,
+          "shap_value": -0.902175
+        },
+        {
+          "rank": 5,
+          "feature_name": "Fwd Seg Size Min",
+          "feature_value": 0.9534,
+          "shap_value": 0.725371
+        },
+        {
+          "rank": 6,
+          "feature_name": "Protocol",
+          "feature_value": -0.3357,
+          "shap_value": 0.442526
+        },
+        {
+          "rank": 7,
+          "feature_name": "Src IP_192.168.1.172",
+          "feature_value": 0.0,
+          "shap_value": 0.317051
+        },
+        {
+          "rank": 8,
+          "feature_name": "Connection Type_wired",
+          "feature_value": 0.0,
+          "shap_value": 0.26083
+        },
+        {
+          "rank": 9,
+          "feature_name": "FIN Flag Count",
+          "feature_value": 4.4309,
+          "shap_value": 0.233198
+        },
+        {
+          "rank": 10,
+          "feature_name": "Bwd Packet Length Min",
+          "feature_value": -0.3525,
+          "shap_value": 0.170566
+        }
+      ]
+    },
+    "evaluation_metadata": {
+      "true_label": "Dictionary Attack",
+      "in_train_leakage_flag": false,
+      "detector_correct": true
+    }
+  },
+  {
+    "identity": {
+      "alert_id": "ALT-20261107-0112",
+      "flow_id": "192.168.1.45-192.168.1.1-55295-59350-6",
+      "detector_family": "dl_ensemble",
+      "timestamp": "2026-11-07T18:02:57.958417+00:00",
+      "dataset": "ACI-IoT-Network-2023",
+      "split": "pilot"
+    },
+    "prediction": {
+      "predicted_label": "Port Scan",
+      "confidence": 0.797893762588501,
+      "base_learner_votes": [
+        {
+          "learner_name": "CNN1D",
+          "voted_label": "Port Scan",
+          "learner_confidence": 0.3943184018135071
+        },
+        {
+          "learner_name": "LSTM",
+          "voted_label": "Port Scan",
+          "learner_confidence": 0.9996687173843384
+        },
+        {
+          "learner_name": "Transformer",
+          "voted_label": "Port Scan",
+          "learner_confidence": 0.9996941089630127
+        }
+      ],
+      "voting_strategy": "hard_voting",
+      "hard_pred": "Port Scan",
+      "soft_pred": "Port Scan",
+      "agreement": true,
+      "disagreement": false,
+      "model_predictions": {
+        "CNN1D": "Port Scan",
+        "LSTM": "Port Scan",
+        "Transformer": "Port Scan"
+      },
+      "model_confidences": {
+        "CNN1D": 0.3943184018135071,
+        "LSTM": 0.9996687173843384,
+        "Transformer": 0.9996941089630127
+      }
+    },
+    "shap_attribution": {
+      "explainer_type": "GradientExplainer",
+      "explained_class": "Port Scan",
+      "base_value": 0.0601,
+      "top_features": [
+        {
+          "rank": 1,
+          "feature_name": "Idle Max",
+          "feature_value": -0.8768,
+          "shap_value": 1.996464
+        },
+        {
+          "rank": 2,
+          "feature_name": "Src IP_192.168.1.45",
+          "feature_value": 1.0,
+          "shap_value": 1.119213
+        },
+        {
+          "rank": 3,
+          "feature_name": "Dst IP_192.168.1.1",
+          "feature_value": 1.0,
+          "shap_value": 1.067022
+        },
+        {
+          "rank": 4,
+          "feature_name": "Src Port",
+          "feature_value": 0.8177,
+          "shap_value": 0.79937
+        },
+        {
+          "rank": 5,
+          "feature_name": "Bwd Packet Length Min",
+          "feature_value": -0.3525,
+          "shap_value": 0.781237
+        },
+        {
+          "rank": 6,
+          "feature_name": "Dst Port",
+          "feature_value": 2.3974,
+          "shap_value": 0.777512
+        },
+        {
+          "rank": 7,
+          "feature_name": "SYN Flag Count",
+          "feature_value": 0.2128,
+          "shap_value": 0.568998
+        },
+        {
+          "rank": 8,
+          "feature_name": "Src IP_192.168.1.211",
+          "feature_value": 0.0,
+          "shap_value": 0.494163
+        },
+        {
+          "rank": 9,
+          "feature_name": "FWD Init Win Bytes",
+          "feature_value": -0.4905,
+          "shap_value": 0.439292
+        },
+        {
+          "rank": 10,
+          "feature_name": "Fwd PSH Flags",
+          "feature_value": -0.3097,
+          "shap_value": 0.383838
+        }
+      ]
+    },
+    "evaluation_metadata": {
+      "true_label": "Port Scan",
+      "in_train_leakage_flag": false,
+      "detector_correct": true
+    }
+  },
+  {
+    "identity": {
+      "alert_id": "ALT-20261107-0113",
+      "flow_id": "192.168.1.45-192.168.1.86-34464-617-6",
+      "detector_family": "dl_ensemble",
+      "timestamp": "2026-11-07T18:02:57.958417+00:00",
+      "dataset": "ACI-IoT-Network-2023",
+      "split": "pilot"
+    },
+    "prediction": {
+      "predicted_label": "Vulnerability Scan",
+      "confidence": 0.7311832308769226,
+      "base_learner_votes": [
+        {
+          "learner_name": "CNN1D",
+          "voted_label": "Vulnerability Scan",
+          "learner_confidence": 0.19741062819957733
+        },
+        {
+          "learner_name": "LSTM",
+          "voted_label": "Vulnerability Scan",
+          "learner_confidence": 0.9970654845237732
+        },
+        {
+          "learner_name": "Transformer",
+          "voted_label": "Vulnerability Scan",
+          "learner_confidence": 0.9990733861923218
+        }
+      ],
+      "voting_strategy": "hard_voting",
+      "hard_pred": "Vulnerability Scan",
+      "soft_pred": "Vulnerability Scan",
+      "agreement": true,
+      "disagreement": false,
+      "model_predictions": {
+        "CNN1D": "Vulnerability Scan",
+        "LSTM": "Vulnerability Scan",
+        "Transformer": "Vulnerability Scan"
+      },
+      "model_confidences": {
+        "CNN1D": 0.19741062819957733,
+        "LSTM": 0.9970654845237732,
+        "Transformer": 0.9990733861923218
+      }
+    },
+    "shap_attribution": {
+      "explainer_type": "GradientExplainer",
+      "explained_class": "Vulnerability Scan",
+      "base_value": 0.04,
+      "top_features": [
+        {
+          "rank": 1,
+          "feature_name": "Idle Max",
+          "feature_value": -0.8822,
+          "shap_value": 7.095444
+        },
+        {
+          "rank": 2,
+          "feature_name": "FWD Init Win Bytes",
+          "feature_value": 2.2317,
+          "shap_value": 4.961709
+        },
+        {
+          "rank": 3,
+          "feature_name": "Fwd Seg Size Min",
+          "feature_value": 1.7089,
+          "shap_value": 1.329251
+        },
+        {
+          "rank": 4,
+          "feature_name": "Connection Type_wired",
+          "feature_value": 0.0,
+          "shap_value": 0.917808
+        },
+        {
+          "rank": 5,
+          "feature_name": "Subflow Fwd Packets",
+          "feature_value": -0.52,
+          "shap_value": -0.486262
+        },
+        {
+          "rank": 6,
+          "feature_name": "Protocol",
+          "feature_value": -0.3357,
+          "shap_value": -0.464055
+        },
+        {
+          "rank": 7,
+          "feature_name": "Dst IP_224.0.0.251",
+          "feature_value": 0.0,
+          "shap_value": 0.306228
+        },
+        {
+          "rank": 8,
+          "feature_name": "Src Port",
+          "feature_value": -0.1621,
+          "shap_value": 0.287831
+        },
+        {
+          "rank": 9,
+          "feature_name": "Src IP_192.168.1.45",
+          "feature_value": 1.0,
+          "shap_value": 0.26235
+        },
+        {
+          "rank": 10,
+          "feature_name": "RST Flag Count",
+          "feature_value": 0.9329,
+          "shap_value": 0.234971
+        }
+      ]
+    },
+    "evaluation_metadata": {
+      "true_label": "Vulnerability Scan",
+      "in_train_leakage_flag": false,
+      "detector_correct": true
+    }
+  },
+  {
+    "identity": {
+      "alert_id": "ALT-20261107-0114",
+      "flow_id": "192.168.1.45-192.168.1.27-33910-80-6",
+      "detector_family": "dl_ensemble",
+      "timestamp": "2026-11-07T18:02:57.958417+00:00",
+      "dataset": "ACI-IoT-Network-2023",
+      "split": "pilot"
+    },
+    "prediction": {
+      "predicted_label": "Slowloris",
+      "confidence": 0.7895231246948242,
+      "base_learner_votes": [
+        {
+          "learner_name": "CNN1D",
+          "voted_label": "Benign",
+          "learner_confidence": 0.3687157928943634
+        },
+        {
+          "learner_name": "LSTM",
+          "voted_label": "Slowloris",
+          "learner_confidence": 0.9998612403869629
+        },
+        {
+          "learner_name": "Transformer",
+          "voted_label": "Slowloris",
+          "learner_confidence": 0.9999922513961792
+        }
+      ],
+      "voting_strategy": "hard_voting",
+      "hard_pred": "Slowloris",
+      "soft_pred": "Slowloris",
+      "agreement": true,
+      "disagreement": false,
+      "model_predictions": {
+        "CNN1D": "Benign",
+        "LSTM": "Slowloris",
+        "Transformer": "Slowloris"
+      },
+      "model_confidences": {
+        "CNN1D": 0.3687157928943634,
+        "LSTM": 0.9998612403869629,
+        "Transformer": 0.9999922513961792
+      }
+    },
+    "shap_attribution": {
+      "explainer_type": "GradientExplainer",
+      "explained_class": "Slowloris",
+      "base_value": 0.04,
+      "top_features": [
+        {
+          "rank": 1,
+          "feature_name": "Idle Max",
+          "feature_value": 0.7426,
+          "shap_value": 5.948538
+        },
+        {
+          "rank": 2,
+          "feature_name": "Dst IP_192.168.1.27",
+          "feature_value": 1.0,
+          "shap_value": 2.866281
+        },
+        {
+          "rank": 3,
+          "feature_name": "Src IP_192.168.1.45",
+          "feature_value": 1.0,
+          "shap_value": 1.096024
+        },
+        {
+          "rank": 4,
+          "feature_name": "SYN Flag Count",
+          "feature_value": -0.8721,
+          "shap_value": 0.734374
+        },
+        {
+          "rank": 5,
+          "feature_name": "RST Flag Count",
+          "feature_value": -0.8174,
+          "shap_value": -0.631825
+        },
+        {
+          "rank": 6,
+          "feature_name": "Fwd Seg Size Min",
+          "feature_value": 0.9534,
+          "shap_value": 0.625499
+        },
+        {
+          "rank": 7,
+          "feature_name": "FIN Flag Count",
+          "feature_value": 2.0272,
+          "shap_value": 0.602089
+        },
+        {
+          "rank": 8,
+          "feature_name": "Src IP_192.168.1.211",
+          "feature_value": 0.0,
+          "shap_value": 0.528533
+        },
+        {
+          "rank": 9,
+          "feature_name": "Protocol",
+          "feature_value": -0.3357,
+          "shap_value": 0.526871
+        },
+        {
+          "rank": 10,
+          "feature_name": "Connection Type_wired",
+          "feature_value": 0.0,
+          "shap_value": 0.496731
+        }
+      ]
+    },
+    "evaluation_metadata": {
+      "true_label": "Slowloris",
+      "in_train_leakage_flag": false,
+      "detector_correct": true
+    }
+  },
+  {
+    "identity": {
+      "alert_id": "ALT-20261107-0115",
+      "flow_id": "192.168.1.45-192.168.1.133-52796-80-6",
+      "detector_family": "dl_ensemble",
+      "timestamp": "2026-11-07T18:02:57.958417+00:00",
+      "dataset": "ACI-IoT-Network-2023",
+      "split": "pilot"
+    },
+    "prediction": {
+      "predicted_label": "Slowloris",
+      "confidence": 0.849814236164093,
+      "base_learner_votes": [
+        {
+          "learner_name": "CNN1D",
+          "voted_label": "Benign",
+          "learner_confidence": 0.5494931936264038
+        },
+        {
+          "learner_name": "LSTM",
+          "voted_label": "Slowloris",
+          "learner_confidence": 0.9999568462371826
+        },
+        {
+          "learner_name": "Transformer",
+          "voted_label": "Slowloris",
+          "learner_confidence": 0.9999927282333374
+        }
+      ],
+      "voting_strategy": "hard_voting",
+      "hard_pred": "Slowloris",
+      "soft_pred": "Slowloris",
+      "agreement": true,
+      "disagreement": false,
+      "model_predictions": {
+        "CNN1D": "Benign",
+        "LSTM": "Slowloris",
+        "Transformer": "Slowloris"
+      },
+      "model_confidences": {
+        "CNN1D": 0.5494931936264038,
+        "LSTM": 0.9999568462371826,
+        "Transformer": 0.9999927282333374
+      }
+    },
+    "shap_attribution": {
+      "explainer_type": "GradientExplainer",
+      "explained_class": "Slowloris",
+      "base_value": 0.04,
+      "top_features": [
+        {
+          "rank": 1,
+          "feature_name": "Idle Max",
+          "feature_value": 0.7503,
+          "shap_value": 5.048451
+        },
+        {
+          "rank": 2,
+          "feature_name": "Dst IP_192.168.1.133",
+          "feature_value": 1.0,
+          "shap_value": 1.64111
+        },
+        {
+          "rank": 3,
+          "feature_name": "Src IP_192.168.1.45",
+          "feature_value": 1.0,
+          "shap_value": 1.053865
+        },
+        {
+          "rank": 4,
+          "feature_name": "Fwd Seg Size Min",
+          "feature_value": 0.9534,
+          "shap_value": 0.810305
+        },
+        {
+          "rank": 5,
+          "feature_name": "Flow IAT Max",
+          "feature_value": 2.1411,
+          "shap_value": 0.704084
+        },
+        {
+          "rank": 6,
+          "feature_name": "Bwd IAT Total",
+          "feature_value": 3.1962,
+          "shap_value": 0.661075
+        },
+        {
+          "rank": 7,
+          "feature_name": "Bwd IAT Mean",
+          "feature_value": 3.3087,
+          "shap_value": -0.633535
+        },
+        {
+          "rank": 8,
+          "feature_name": "Fwd IAT Total",
+          "feature_value": 2.6127,
+          "shap_value": 0.551118
+        },
+        {
+          "rank": 9,
+          "feature_name": "Flow Duration",
+          "feature_value": 2.5828,
+          "shap_value": 0.484424
+        },
+        {
+          "rank": 10,
+          "feature_name": "Fwd IAT Std",
+          "feature_value": 3.6246,
+          "shap_value": -0.446936
+        }
+      ]
+    },
+    "evaluation_metadata": {
+      "true_label": "Slowloris",
+      "in_train_leakage_flag": false,
+      "detector_correct": true
+    }
+  },
+  {
+    "identity": {
+      "alert_id": "ALT-20261107-0116",
+      "flow_id": "192.168.1.211-192.168.1.1-58686-53-17",
+      "detector_family": "dl_ensemble",
+      "timestamp": "2026-11-07T18:02:57.958417+00:00",
+      "dataset": "ACI-IoT-Network-2023",
+      "split": "pilot"
+    },
+    "prediction": {
+      "predicted_label": "Benign",
+      "confidence": 0.775580644607544,
+      "base_learner_votes": [
+        {
+          "learner_name": "CNN1D",
+          "voted_label": "Benign",
+          "learner_confidence": 0.34149789810180664
+        },
+        {
+          "learner_name": "LSTM",
+          "voted_label": "Benign",
+          "learner_confidence": 0.9857386350631714
+        },
+        {
+          "learner_name": "Transformer",
+          "voted_label": "Benign",
+          "learner_confidence": 0.9995054006576538
+        }
+      ],
+      "voting_strategy": "hard_voting",
+      "hard_pred": "Benign",
+      "soft_pred": "Benign",
+      "agreement": true,
+      "disagreement": false,
+      "model_predictions": {
+        "CNN1D": "Benign",
+        "LSTM": "Benign",
+        "Transformer": "Benign"
+      },
+      "model_confidences": {
+        "CNN1D": 0.34149789810180664,
+        "LSTM": 0.9857386350631714,
+        "Transformer": 0.9995054006576538
+      }
+    },
+    "shap_attribution": {
+      "explainer_type": "GradientExplainer",
+      "explained_class": "Benign",
+      "base_value": 0.378,
+      "top_features": [
+        {
+          "rank": 1,
+          "feature_name": "Idle Max",
+          "feature_value": -0.784,
+          "shap_value": 1.117749
+        },
+        {
+          "rank": 2,
+          "feature_name": "Src IP_192.168.1.45",
+          "feature_value": 0.0,
+          "shap_value": 0.438715
+        },
+        {
+          "rank": 3,
+          "feature_name": "Dst IP_192.168.1.1",
+          "feature_value": 1.0,
+          "shap_value": -0.339376
+        },
+        {
+          "rank": 4,
+          "feature_name": "Protocol",
+          "feature_value": 2.0328,
+          "shap_value": 0.329421
+        },
+        {
+          "rank": 5,
+          "feature_name": "Connection Type_wired",
+          "feature_value": 1.0,
+          "shap_value": 0.256981
+        },
+        {
+          "rank": 6,
+          "feature_name": "Packet Length Min",
+          "feature_value": 0.2789,
+          "shap_value": 0.21584
+        },
+        {
+          "rank": 7,
+          "feature_name": "Fwd Seg Size Min",
+          "feature_value": -1.3131,
+          "shap_value": 0.198225
+        },
+        {
+          "rank": 8,
+          "feature_name": "FWD Init Win Bytes",
+          "feature_value": -0.5346,
+          "shap_value": 0.166605
+        },
+        {
+          "rank": 9,
+          "feature_name": "RST Flag Count",
+          "feature_value": -0.8174,
+          "shap_value": 0.165647
+        },
+        {
+          "rank": 10,
+          "feature_name": "Connection Type_wireless",
+          "feature_value": 0.0,
+          "shap_value": 0.150441
+        }
+      ]
+    },
+    "evaluation_metadata": {
+      "true_label": "Benign",
+      "in_train_leakage_flag": false,
+      "detector_correct": true
+    }
+  },
+  {
+    "identity": {
+      "alert_id": "ALT-20261107-0117",
+      "flow_id": "192.168.1.211-192.168.1.1-56749-53-17",
+      "detector_family": "dl_ensemble",
+      "timestamp": "2026-11-07T18:02:57.958417+00:00",
+      "dataset": "ACI-IoT-Network-2023",
+      "split": "pilot"
+    },
+    "prediction": {
+      "predicted_label": "Benign",
+      "confidence": 0.7878831028938293,
+      "base_learner_votes": [
+        {
+          "learner_name": "CNN1D",
+          "voted_label": "Benign",
+          "learner_confidence": 0.36637169122695923
+        },
+        {
+          "learner_name": "LSTM",
+          "voted_label": "Benign",
+          "learner_confidence": 0.9976031184196472
+        },
+        {
+          "learner_name": "Transformer",
+          "voted_label": "Benign",
+          "learner_confidence": 0.9996744394302368
+        }
+      ],
+      "voting_strategy": "hard_voting",
+      "hard_pred": "Benign",
+      "soft_pred": "Benign",
+      "agreement": true,
+      "disagreement": false,
+      "model_predictions": {
+        "CNN1D": "Benign",
+        "LSTM": "Benign",
+        "Transformer": "Benign"
+      },
+      "model_confidences": {
+        "CNN1D": 0.36637169122695923,
+        "LSTM": 0.9976031184196472,
+        "Transformer": 0.9996744394302368
+      }
+    },
+    "shap_attribution": {
+      "explainer_type": "GradientExplainer",
+      "explained_class": "Benign",
+      "base_value": 0.378,
+      "top_features": [
+        {
+          "rank": 1,
+          "feature_name": "Idle Max",
+          "feature_value": -0.9768,
+          "shap_value": 1.874203
+        },
+        {
+          "rank": 2,
+          "feature_name": "Protocol",
+          "feature_value": 2.0328,
+          "shap_value": 0.817004
+        },
+        {
+          "rank": 3,
+          "feature_name": "Src IP_192.168.1.45",
+          "feature_value": 0.0,
+          "shap_value": 0.661784
+        },
+        {
+          "rank": 4,
+          "feature_name": "Bwd Packet Length Min",
+          "feature_value": 3.501,
+          "shap_value": 0.492365
+        },
+        {
+          "rank": 5,
+          "feature_name": "Fwd Seg Size Min",
+          "feature_value": -1.3131,
+          "shap_value": 0.386014
+        },
+        {
+          "rank": 6,
+          "feature_name": "Dst IP_192.168.1.1",
+          "feature_value": 1.0,
+          "shap_value": -0.384766
+        },
+        {
+          "rank": 7,
+          "feature_name": "Packet Length Min",
+          "feature_value": 0.6456,
+          "shap_value": 0.355652
+        },
+        {
+          "rank": 8,
+          "feature_name": "RST Flag Count",
+          "feature_value": -0.8174,
+          "shap_value": 0.304476
+        },
+        {
+          "rank": 9,
+          "feature_name": "Bwd Packet Length Mean",
+          "feature_value": 0.6702,
+          "shap_value": 0.272913
+        },
+        {
+          "rank": 10,
+          "feature_name": "Average Packet Size",
+          "feature_value": 0.5573,
+          "shap_value": -0.244263
+        }
+      ]
+    },
+    "evaluation_metadata": {
+      "true_label": "Benign",
+      "in_train_leakage_flag": false,
+      "detector_correct": true
+    }
+  },
+  {
+    "identity": {
+      "alert_id": "ALT-20261107-0118",
+      "flow_id": "192.168.1.211-192.168.1.1-45548-53-17",
+      "detector_family": "dl_ensemble",
+      "timestamp": "2026-11-07T18:02:57.958417+00:00",
+      "dataset": "ACI-IoT-Network-2023",
+      "split": "pilot"
+    },
+    "prediction": {
+      "predicted_label": "DNS Flood",
+      "confidence": 0.7687294483184814,
+      "base_learner_votes": [
+        {
+          "learner_name": "CNN1D",
+          "voted_label": "Benign",
+          "learner_confidence": 0.31625404953956604
+        },
+        {
+          "learner_name": "LSTM",
+          "voted_label": "DNS Flood",
+          "learner_confidence": 0.9906228184700012
+        },
+        {
+          "learner_name": "Transformer",
+          "voted_label": "DNS Flood",
+          "learner_confidence": 0.9993114471435547
+        }
+      ],
+      "voting_strategy": "hard_voting",
+      "hard_pred": "DNS Flood",
+      "soft_pred": "DNS Flood",
+      "agreement": true,
+      "disagreement": false,
+      "model_predictions": {
+        "CNN1D": "Benign",
+        "LSTM": "DNS Flood",
+        "Transformer": "DNS Flood"
+      },
+      "model_confidences": {
+        "CNN1D": 0.31625404953956604,
+        "LSTM": 0.9906228184700012,
+        "Transformer": 0.9993114471435547
+      }
+    },
+    "shap_attribution": {
+      "explainer_type": "GradientExplainer",
+      "explained_class": "DNS Flood",
+      "base_value": 0.0487,
+      "top_features": [
+        {
+          "rank": 1,
+          "feature_name": "Idle Max",
+          "feature_value": 0.7978,
+          "shap_value": 7.466404
+        },
+        {
+          "rank": 2,
+          "feature_name": "Fwd Seg Size Min",
+          "feature_value": -1.3131,
+          "shap_value": 0.869803
+        },
+        {
+          "rank": 3,
+          "feature_name": "Connection Type_wired",
+          "feature_value": 1.0,
+          "shap_value": 0.699037
+        },
+        {
+          "rank": 4,
+          "feature_name": "SYN Flag Count",
+          "feature_value": -0.8721,
+          "shap_value": 0.687669
+        },
+        {
+          "rank": 5,
+          "feature_name": "Src IP_192.168.1.211",
+          "feature_value": 1.0,
+          "shap_value": 0.605318
+        },
+        {
+          "rank": 6,
+          "feature_name": "Fwd Packet Length Mean",
+          "feature_value": -0.0612,
+          "shap_value": 0.433435
+        },
+        {
+          "rank": 7,
+          "feature_name": "Src IP_192.168.1.45",
+          "feature_value": 0.0,
+          "shap_value": -0.433366
+        },
+        {
+          "rank": 8,
+          "feature_name": "Protocol",
+          "feature_value": 2.0328,
+          "shap_value": 0.409409
+        },
+        {
+          "rank": 9,
+          "feature_name": "Fwd Segment Size Avg",
+          "feature_value": -0.0612,
+          "shap_value": 0.409301
+        },
+        {
+          "rank": 10,
+          "feature_name": "Packet Length Variance",
+          "feature_value": -0.0854,
+          "shap_value": 0.364864
+        }
+      ]
+    },
+    "evaluation_metadata": {
+      "true_label": "DNS Flood",
+      "in_train_leakage_flag": false,
+      "detector_correct": true
+    }
+  },
+  {
+    "identity": {
+      "alert_id": "ALT-20261107-0119",
+      "flow_id": "192.168.1.129-192.168.1.183-0-0-0",
+      "detector_family": "dl_ensemble",
+      "timestamp": "2026-11-07T18:02:57.958417+00:00",
+      "dataset": "ACI-IoT-Network-2023",
+      "split": "pilot"
+    },
+    "prediction": {
+      "predicted_label": "ICMP Flood",
+      "confidence": 0.6800029277801514,
+      "base_learner_votes": [
+        {
+          "learner_name": "CNN1D",
+          "voted_label": "Benign",
+          "learner_confidence": 0.3029545545578003
+        },
+        {
+          "learner_name": "LSTM",
+          "voted_label": "ICMP Flood",
+          "learner_confidence": 0.8567113876342773
+        },
+        {
+          "learner_name": "Transformer",
+          "voted_label": "ICMP Flood",
+          "learner_confidence": 0.8803428411483765
+        }
+      ],
+      "voting_strategy": "hard_voting",
+      "hard_pred": "ICMP Flood",
+      "soft_pred": "ICMP Flood",
+      "agreement": true,
+      "disagreement": false,
+      "model_predictions": {
+        "CNN1D": "Benign",
+        "LSTM": "ICMP Flood",
+        "Transformer": "ICMP Flood"
+      },
+      "model_confidences": {
+        "CNN1D": 0.3029545545578003,
+        "LSTM": 0.8567113876342773,
+        "Transformer": 0.8803428411483765
+      }
+    },
+    "shap_attribution": {
+      "explainer_type": "GradientExplainer",
+      "explained_class": "ICMP Flood",
+      "base_value": 0.08,
+      "top_features": [
+        {
+          "rank": 1,
+          "feature_name": "Fwd Seg Size Min",
+          "feature_value": -2.0687,
+          "shap_value": 4.478836
+        },
+        {
+          "rank": 2,
+          "feature_name": "Protocol",
+          "feature_value": -1.6276,
+          "shap_value": 3.409812
+        },
+        {
+          "rank": 3,
+          "feature_name": "Src IP_192.168.1.129",
+          "feature_value": 1.0,
+          "shap_value": -2.897618
+        },
+        {
+          "rank": 4,
+          "feature_name": "Src Port",
+          "feature_value": -1.7832,
+          "shap_value": -1.321396
+        },
+        {
+          "rank": 5,
+          "feature_name": "Packet Length Min",
+          "feature_value": -0.2616,
+          "shap_value": 0.845755
+        },
+        {
+          "rank": 6,
+          "feature_name": "Src IP_192.168.1.45",
+          "feature_value": 0.0,
+          "shap_value": 0.747686
+        },
+        {
+          "rank": 7,
+          "feature_name": "Fwd Packet Length Min",
+          "feature_value": -0.2688,
+          "shap_value": 0.696392
+        },
+        {
+          "rank": 8,
+          "feature_name": "Idle Max",
+          "feature_value": 1.684,
+          "shap_value": 0.675118
+        },
+        {
+          "rank": 9,
+          "feature_name": "RST Flag Count",
+          "feature_value": -0.8174,
+          "shap_value": 0.655936
+        },
+        {
+          "rank": 10,
+          "feature_name": "Bwd Packet Length Min",
+          "feature_value": -0.3525,
+          "shap_value": -0.389746
+        }
+      ]
+    },
+    "evaluation_metadata": {
+      "true_label": "ARP Spoofing",
+      "in_train_leakage_flag": false,
+      "detector_correct": false
+    }
+  },
+  {
+    "identity": {
+      "alert_id": "ALT-20261107-0120",
+      "flow_id": "192.168.1.48-162.159.61.4-46612-443-6",
+      "detector_family": "dl_ensemble",
+      "timestamp": "2026-11-07T18:02:57.958417+00:00",
+      "dataset": "ACI-IoT-Network-2023",
+      "split": "pilot"
+    },
+    "prediction": {
+      "predicted_label": "Benign",
+      "confidence": 0.7927728295326233,
+      "base_learner_votes": [
+        {
+          "learner_name": "CNN1D",
+          "voted_label": "Benign",
+          "learner_confidence": 0.3784436583518982
+        },
+        {
+          "learner_name": "LSTM",
+          "voted_label": "Benign",
+          "learner_confidence": 0.9999622106552124
+        },
+        {
+          "learner_name": "Transformer",
+          "voted_label": "Benign",
+          "learner_confidence": 0.9999127388000488
+        }
+      ],
+      "voting_strategy": "hard_voting",
+      "hard_pred": "Benign",
+      "soft_pred": "Benign",
+      "agreement": true,
+      "disagreement": false,
+      "model_predictions": {
+        "CNN1D": "Benign",
+        "LSTM": "Benign",
+        "Transformer": "Benign"
+      },
+      "model_confidences": {
+        "CNN1D": 0.3784436583518982,
+        "LSTM": 0.9999622106552124,
+        "Transformer": 0.9999127388000488
+      }
+    },
+    "shap_attribution": {
+      "explainer_type": "GradientExplainer",
+      "explained_class": "Benign",
+      "base_value": 0.378,
+      "top_features": [
+        {
+          "rank": 1,
+          "feature_name": "Src IP_192.168.1.48",
+          "feature_value": 1.0,
+          "shap_value": 2.381837
+        },
+        {
+          "rank": 2,
+          "feature_name": "Idle Max",
+          "feature_value": 0.7501,
+          "shap_value": -1.67807
+        },
+        {
+          "rank": 3,
+          "feature_name": "Dst IP_162.159.61.4",
+          "feature_value": 1.0,
+          "shap_value": 1.227864
+        },
+        {
+          "rank": 4,
+          "feature_name": "Src IP_192.168.1.45",
+          "feature_value": 0.0,
+          "shap_value": 0.776479
+        },
+        {
+          "rank": 5,
+          "feature_name": "Fwd PSH Flags",
+          "feature_value": 3.229,
+          "shap_value": 0.587163
+        },
+        {
+          "rank": 6,
+          "feature_name": "Connection Type_wired",
+          "feature_value": 1.0,
+          "shap_value": 0.570816
+        },
+        {
+          "rank": 7,
+          "feature_name": "SYN Flag Count",
+          "feature_value": -0.8721,
+          "shap_value": 0.345092
+        },
+        {
+          "rank": 8,
+          "feature_name": "Fwd Seg Size Min",
+          "feature_value": 0.9534,
+          "shap_value": 0.270434
+        },
+        {
+          "rank": 9,
+          "feature_name": "Connection Type_wireless",
+          "feature_value": 0.0,
+          "shap_value": 0.225853
+        },
+        {
+          "rank": 10,
+          "feature_name": "Src IP_192.168.1.211",
+          "feature_value": 0.0,
+          "shap_value": 0.182744
+        }
+      ]
+    },
+    "evaluation_metadata": {
+      "true_label": "Benign",
+      "in_train_leakage_flag": false,
+      "detector_correct": true
+    }
+  }
+]

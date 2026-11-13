@@ -1,0 +1,5 @@
+model,accuracy,macro_f1,weighted_f1,train_duration_seconds,infer_duration_seconds
+DL Ensemble (Hard Voting),0.9818,0.8473,0.9793,421.07,4.739
+CNN1D,0.4929,0.2139,0.3549,371.681,3.973
+LSTM,0.9819,0.8527,0.98,23.374,0.383
+Transformer,0.9813,0.8708,0.9811,26.014,0.383

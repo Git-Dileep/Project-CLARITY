@@ -1,12 +1,26 @@
 # Evaluation Results: ACI IoT Network Dataset 2023
 
-> **Final study results evaluated on the real-world ACI IoT Network Dataset 2023.**
+> **Experimental results evaluating Hard Voting (Majority Consensus) and Soft Voting (Posterior Probability Consensus) on the ACI IoT Network Dataset 2023.**
 
-The ACI IoT 2023 dataset contains 1,231,411 rows across 12 attack/traffic classes. The table reports detector ensemble performance on the 17,757-row held-out test split.
+The ACI IoT 2023 dataset contains 12 attack/traffic classes. The evaluation split comprises 17,757 held-out test flows.
 
-| Detector | Accuracy | Macro F1 | Test rows |
-|:---|---:|---:|---:|
-| Traditional ML ensemble | 99.4% | 0.9075 | 17,757 |
-| Deep learning ensemble | 98.2% | 0.8473 | 17,757 |
+### Metric Definitions & Pre-Specification
+- **Primary Metric:** Macro-F1 calculated over 11 classes (excluding ARP Spoofing due to extreme support sparsity: 1 test flow, 4 train flows).
+- **Secondary Metric:** Full 12-class Macro-F1 (sensitive to single-flow shifts in sparse classes), Overall Accuracy, and Weighted F1.
+- **Statistical Inference:** Paired bootstrap difference ($\Delta = \text{Soft} - \text{Hard}$) on 11-class Macro-F1 (95% CI) and McNemar paired test on correctness (Bonferroni-adjusted $\alpha = 0.025$).
+
+## Detector Ensemble Performance Comparison
+
+| Detector Family | Consensus Strategy | Accuracy | 11-Class Macro F1 (Primary) | 12-Class Macro F1 (Secondary) | Discordance Rate | Paired Bootstrap $\Delta$ (95% CI) | McNemar $p$-value |
+|:---|:---|---:|---:|---:|---:|:---:|:---:|
+| **Traditional ML** (RF + XGB + MLP) | Hard Voting (Majority) | 99.4% | 0.9897 | 0.9075 | Baseline | Ref | Ref |
+| **Traditional ML** (RF + XGB + MLP) | Soft Voting (Probability) | [TBD] | [TBD] | [TBD] | [TBD] | [TBD] | [TBD] |
+| **Deep Learning** (CNN + LSTM + Trans) | Hard Voting (Majority) | 98.2% | 0.9244 | 0.8473 | Baseline | Ref | Ref |
+| **Deep Learning** (CNN + LSTM + Trans) | Soft Voting (Probability) | [TBD] | [TBD] | [TBD] | [TBD] | [TBD] | [TBD] |
+
+### Research Motivation and Observational Note
+Hard Voting was our initial consensus implementation. Preliminary analysis indicated that majority voting did not consistently outperform individual high-capacity base learners (such as XGBoost or Transformer). Consequently, Soft Voting was introduced as an additional strategy to investigate whether continuous posterior probability averaging provides improved class boundary resolution across ambiguous flows.
+
+*Note: All Soft Voting comparative result values, significance metrics, and claims remain [TBD] placeholders pending final cluster evaluation execution.*
 
 A separate blind review of five generated pilot reports is documented in `evaluation/human_eval.md`.

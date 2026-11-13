@@ -1,0 +1,45 @@
+{
+  "dataset_name": "ACI-IoT-Network-2023",
+  "random_seed": 42,
+  "detector_family": "traditional_ml",
+  "split_method": "stratified_random_80_20",
+  "leakage_limitation_note": "Split is stratified random per-flow with flow identifiers dropped. Temporal/session-window grouping was not enforced during traffic capture, so flows from the same scan activity can appear in both train and test splits.",
+  "discordance_rate": "[TBD]",
+  "discordant_count": "[TBD]",
+  "total_test_samples": 17757,
+  "primary_inference_paired_bootstrap_11class": {
+    "metric": "macro_f1_11class_primary",
+    "mean_difference_soft_minus_hard": "[TBD]",
+    "ci_95_lower": "[TBD]",
+    "ci_95_upper": "[TBD]",
+    "p_value": "[TBD]",
+    "bonferroni_adjusted_alpha": 0.025
+  },
+  "secondary_inference_mcnemar_test": {
+    "n_HardOnly_correct": "[TBD]",
+    "n_SoftOnly_correct": "[TBD]",
+    "statistic": "[TBD]",
+    "p_value": "[TBD]",
+    "test_type": "exact_binomial_or_continuity_corrected_chisquare"
+  },
+  "hard_metrics_summary": {
+    "accuracy": 0.9937,
+    "macro_f1_11class_primary": 0.9897,
+    "macro_f1_12class_secondary": 0.9075,
+    "weighted_f1": 0.9937
+  },
+  "soft_metrics_summary": {
+    "accuracy": "[TBD]",
+    "macro_f1_11class_primary": "[TBD]",
+    "macro_f1_12class_secondary": "[TBD]",
+    "weighted_f1": "[TBD]"
+  },
+  "arp_spoofing_predictions": {
+    "test_actual_count": 1,
+    "rf_predicted_count": 0,
+    "xgb_predicted_count": 0,
+    "mlp_predicted_count": 1,
+    "hard_ensemble_predicted_count": 0,
+    "soft_ensemble_predicted_count": "[TBD]"
+  }
+}

@@ -84,8 +84,38 @@ def build_alert_payload(
     shap_attribution: Dict[str, Any],
     true_label: str,
     in_train_leakage_flag: bool = False,
+    voting_strategy: Optional[str] = None,
+    hard_pred: Optional[str] = None,
+    soft_pred: Optional[str] = None,
+    agreement: Optional[bool] = None,
+    disagreement: Optional[bool] = None,
+    model_predictions: Optional[Dict[str, str]] = None,
+    model_confidences: Optional[Dict[str, float]] = None,
+    soft_probabilities: Optional[Dict[str, float]] = None,
 ) -> Dict[str, Any]:
-    """Assemble single alert conforming strictly to AlertSchemaV1."""
+    """Assemble single alert conforming strictly to AlertSchemaV1 / AlertSchemaV1_1."""
+    pred_dict: Dict[str, Any] = {
+        "predicted_label": str(predicted_label),
+        "confidence": float(np.clip(confidence, 0.0, 1.0)),
+        "base_learner_votes": base_learner_votes,
+    }
+    if voting_strategy is not None:
+        pred_dict["voting_strategy"] = str(voting_strategy)
+    if hard_pred is not None:
+        pred_dict["hard_pred"] = str(hard_pred)
+    if soft_pred is not None:
+        pred_dict["soft_pred"] = str(soft_pred)
+    if agreement is not None:
+        pred_dict["agreement"] = bool(agreement)
+    if disagreement is not None:
+        pred_dict["disagreement"] = bool(disagreement)
+    if model_predictions is not None:
+        pred_dict["model_predictions"] = model_predictions
+    if model_confidences is not None:
+        pred_dict["model_confidences"] = model_confidences
+    if soft_probabilities is not None:
+        pred_dict["soft_probabilities"] = soft_probabilities
+
     return {
         "identity": {
             "alert_id": alert_id,
@@ -95,11 +125,7 @@ def build_alert_payload(
             "dataset": dataset,
             "split": "pilot",
         },
-        "prediction": {
-            "predicted_label": str(predicted_label),
-            "confidence": float(np.clip(confidence, 0.0, 1.0)),
-            "base_learner_votes": base_learner_votes,
-        },
+        "prediction": pred_dict,
         "shap_attribution": shap_attribution,
         "evaluation_metadata": {
             "true_label": str(true_label),
@@ -112,6 +138,9 @@ def build_alert_payload(
 def export_pilot_alerts(
     config: WorkstreamConfig,
     base_dir: Optional[Path] = None,
+    trad_result: Optional[Dict[str, Any]] = None,
+    dl_result: Optional[Dict[str, Any]] = None,
+    splits: Optional[SplitData] = None,
 ) -> Dict[str, Any]:
     """Execute stratified pilot export and strict validation for both detector families."""
     work_dir = base_dir or Path.cwd()
@@ -121,26 +150,28 @@ def export_pilot_alerts(
     reports_dir.mkdir(parents=True, exist_ok=True)
     reports_dl_dir.mkdir(parents=True, exist_ok=True)
 
-    # 1. Load data & splits
-    df, _ = load_dataset(config, work_dir)
-    splits = prepare_data_and_splits(df, config, work_dir)
+    # 1. Load data & splits if not provided
+    if splits is None:
+        df, _ = load_dataset(config, work_dir)
+        splits = prepare_data_and_splits(df, config, work_dir)
 
-    # 2. Train or load traditional models
+    # 2. Train or load traditional models if not provided
     trad_model_path = models_dir / "traditional_ensemble.joblib"
-    if not trad_model_path.exists():
-        print("[PILOT] Training traditional ensemble for pilot export...")
-        trad_result = train_traditional_models(splits, config, work_dir)
-    else:
-        print("[PILOT] Loading existing traditional ensemble...")
-        trad_bundle = joblib.load(trad_model_path)
-        trad_result = train_traditional_models(splits, config, work_dir)
+    if trad_result is None:
+        if not trad_model_path.exists():
+            print("[PILOT] Training traditional ensemble for pilot export...")
+            trad_result = train_traditional_models(splits, config, work_dir)
+        else:
+            print("[PILOT] Loading existing traditional ensemble...")
+            trad_bundle = joblib.load(trad_model_path)
+            trad_result = train_traditional_models(splits, config, work_dir)
 
-    # 3. Train or load DL models
+    # 3. Train or load DL models if not provided
     dl_model_path = models_dir / "dl_ensemble.pt"
-    dl_result = None
-    if TORCH_AVAILABLE and config.dl.enabled:
-        print("[PILOT] Training DL ensemble for pilot export...")
-        dl_result = train_dl_models(splits, config, work_dir)
+    if dl_result is None:
+        if TORCH_AVAILABLE and config.dl.enabled:
+            print("[PILOT] Training DL ensemble for pilot export...")
+            dl_result = train_dl_models(splits, config, work_dir)
 
     # 4. Select 20 stratified pilot samples
     pilot_indices = select_stratified_pilot_indices(
@@ -192,7 +223,7 @@ def export_pilot_alerts(
     trad_confs = [trad_result["test_df"].iloc[i]["ensemble_confidence"] for i in pilot_indices]
 
     # Generate TreeExplainer SHAP
-    trad_model_bundle = joblib.load(trad_model_path)
+    trad_model_bundle = trad_result["models"] if (trad_result and "models" in trad_result) else joblib.load(trad_model_path)
     xgb_learner = trad_model_bundle["xgb"]
     trad_shaps = explain_traditional_tree(
         model=xgb_learner,
@@ -335,6 +366,44 @@ def export_pilot_alerts(
     with trad_alerts_10_path.open("w", encoding="utf-8") as f:
         json.dump(traditional_alerts, f, indent=2)
 
+    # Save dual strategy traditional alerts
+    trad_soft_preds = trad_result.get("soft_preds", trad_preds) if isinstance(trad_result, dict) else trad_preds
+    trad_soft_confs = trad_result.get("soft_confs", trad_confs) if isinstance(trad_result, dict) else trad_confs
+    
+    trad_hard_alerts = []
+    trad_soft_alerts = []
+    for i in range(len(traditional_alerts)):
+        base_a = traditional_alerts[i]
+        hp = trad_preds[i]
+        sp = trad_soft_preds[i] if i < len(trad_soft_preds) else hp
+        ag = (hp == sp)
+        
+        # Hard alert with v1.1 fields
+        h_payload = json.loads(json.dumps(base_a))
+        h_payload["prediction"]["voting_strategy"] = "hard_voting"
+        h_payload["prediction"]["hard_pred"] = hp
+        h_payload["prediction"]["soft_pred"] = sp
+        h_payload["prediction"]["agreement"] = ag
+        h_payload["prediction"]["disagreement"] = not ag
+        trad_hard_alerts.append(h_payload)
+
+        # Soft alert with v1.1 fields
+        s_payload = json.loads(json.dumps(base_a))
+        s_payload["prediction"]["voting_strategy"] = "soft_voting"
+        s_payload["prediction"]["predicted_label"] = sp
+        s_payload["prediction"]["confidence"] = float(trad_soft_confs[i]) if i < len(trad_soft_confs) else float(base_a["prediction"]["confidence"])
+        s_payload["prediction"]["hard_pred"] = hp
+        s_payload["prediction"]["soft_pred"] = sp
+        s_payload["prediction"]["agreement"] = ag
+        s_payload["prediction"]["disagreement"] = not ag
+        s_payload["evaluation_metadata"]["detector_correct"] = bool(sp == y_pilot_true[i])
+        trad_soft_alerts.append(s_payload)
+
+    with (reports_dir / "pilot_traditional_alerts_hard.json").open("w", encoding="utf-8") as f:
+        json.dump(trad_hard_alerts, f, indent=2)
+    with (reports_dir / "pilot_traditional_alerts_soft.json").open("w", encoding="utf-8") as f:
+        json.dump(trad_soft_alerts, f, indent=2)
+
     trad_valid_count = sum(1 for a in traditional_alerts if validate_alert_payload(a, validator)[0])
     validation_results["traditional_alerts_count"] = len(traditional_alerts)
     validation_results["traditional_valid"] = trad_valid_count == len(traditional_alerts)
@@ -348,6 +417,41 @@ def export_pilot_alerts(
         with dl_alerts_10_path.open("w", encoding="utf-8") as f:
             json.dump(dl_alerts, f, indent=2)
 
+        dl_soft_preds = dl_result.get("soft_preds", dl_preds) if isinstance(dl_result, dict) else dl_preds
+        dl_soft_confs = dl_result.get("soft_confs", dl_confs) if isinstance(dl_result, dict) else dl_confs
+
+        dl_hard_alerts = []
+        dl_soft_alerts = []
+        for i in range(len(dl_alerts)):
+            base_a = dl_alerts[i]
+            hp = dl_preds[i]
+            sp = dl_soft_preds[i] if i < len(dl_soft_preds) else hp
+            ag = (hp == sp)
+
+            h_payload = json.loads(json.dumps(base_a))
+            h_payload["prediction"]["voting_strategy"] = "hard_voting"
+            h_payload["prediction"]["hard_pred"] = hp
+            h_payload["prediction"]["soft_pred"] = sp
+            h_payload["prediction"]["agreement"] = ag
+            h_payload["prediction"]["disagreement"] = not ag
+            dl_hard_alerts.append(h_payload)
+
+            s_payload = json.loads(json.dumps(base_a))
+            s_payload["prediction"]["voting_strategy"] = "soft_voting"
+            s_payload["prediction"]["predicted_label"] = sp
+            s_payload["prediction"]["confidence"] = float(dl_soft_confs[i]) if i < len(dl_soft_confs) else float(base_a["prediction"]["confidence"])
+            s_payload["prediction"]["hard_pred"] = hp
+            s_payload["prediction"]["soft_pred"] = sp
+            s_payload["prediction"]["agreement"] = ag
+            s_payload["prediction"]["disagreement"] = not ag
+            s_payload["evaluation_metadata"]["detector_correct"] = bool(sp == y_pilot_true[i])
+            dl_soft_alerts.append(s_payload)
+
+        with (reports_dir / "pilot_dl_alerts_hard.json").open("w", encoding="utf-8") as f:
+            json.dump(dl_hard_alerts, f, indent=2)
+        with (reports_dir / "pilot_dl_alerts_soft.json").open("w", encoding="utf-8") as f:
+            json.dump(dl_soft_alerts, f, indent=2)
+
         dl_valid_count = sum(1 for a in dl_alerts if validate_alert_payload(a, validator)[0])
         validation_results["dl_alerts_count"] = len(dl_alerts)
         validation_results["dl_valid"] = dl_valid_count == len(dl_alerts)
@@ -358,6 +462,8 @@ def export_pilot_alerts(
     tabular_rows = []
     for i in range(len(pilot_test_df)):
         t_alert = traditional_alerts[i]
+        t_hard = trad_hard_alerts[i]
+        t_soft = trad_soft_alerts[i]
         row = {
             "flow_id": flow_ids[i],
             "timestamp": timestamps[i],
@@ -365,13 +471,25 @@ def export_pilot_alerts(
             "alert_id_trad": t_alert["identity"]["alert_id"],
             "traditional_prediction": t_alert["prediction"]["predicted_label"],
             "traditional_confidence": t_alert["prediction"]["confidence"],
+            "traditional_hard_prediction": t_hard["prediction"]["hard_pred"],
+            "traditional_hard_confidence": t_hard["prediction"]["confidence"],
+            "traditional_soft_prediction": t_soft["prediction"]["soft_pred"],
+            "traditional_soft_confidence": t_soft["prediction"]["confidence"],
+            "traditional_voting_agreement": t_hard["prediction"]["agreement"],
             "traditional_correct": t_alert["evaluation_metadata"]["detector_correct"],
         }
         if dl_alerts:
             d_alert = dl_alerts[i]
+            d_hard = dl_hard_alerts[i]
+            d_soft = dl_soft_alerts[i]
             row["alert_id_dl"] = d_alert["identity"]["alert_id"]
             row["dl_prediction"] = d_alert["prediction"]["predicted_label"]
             row["dl_confidence"] = d_alert["prediction"]["confidence"]
+            row["dl_hard_prediction"] = d_hard["prediction"]["hard_pred"]
+            row["dl_hard_confidence"] = d_hard["prediction"]["confidence"]
+            row["dl_soft_prediction"] = d_soft["prediction"]["soft_pred"]
+            row["dl_soft_confidence"] = d_soft["prediction"]["confidence"]
+            row["dl_voting_agreement"] = d_hard["prediction"]["agreement"]
             row["dl_correct"] = d_alert["evaluation_metadata"]["detector_correct"]
         tabular_rows.append(row)
 

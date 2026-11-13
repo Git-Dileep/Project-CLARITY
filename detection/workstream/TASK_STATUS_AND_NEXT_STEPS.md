@@ -1,4 +1,4 @@
-﻿# Detection Tasks — Status and Next Steps
+# Detection Tasks — Status and Next Steps
 
 ## 1. Primary Issue Status Matrix (Real ACI IoT 2023 Dataset)
 

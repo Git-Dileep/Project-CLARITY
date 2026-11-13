@@ -151,7 +151,9 @@ def compute_voting_discordance(
         "total_samples": n_total,
         "agree_count": n_total - discordant_count,
         "disagree_count": discordant_count,
+        "discordant_count": discordant_count,
         "disagreement_rate": round(discordance_rate, 4),
+        "discordance_rate": round(discordance_rate, 4),
         "disagreement_percentage": round(discordance_rate * 100.0, 2),
     }
 

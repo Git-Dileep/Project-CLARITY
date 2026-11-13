@@ -21,8 +21,8 @@ If a complex detector produces noisy, overconfident, or structurally different f
 To establish causal attribution, CLARITY enforces a strict single independent variable:
 
 * **Independent Variable:** The detector subsystem producing the alert payload:
-  * **Traditional ML Ensemble:** Random Forest + XGBoost + Multi-Layer Perceptron (TreeExplainer).
-  * **Deep Learning Ensemble:** 1D-CNN + Bi-LSTM + Transformer Encoder (GradientExplainer).
+  * **Traditional ML Ensemble:** Random Forest + XGBoost + Multi-Layer Perceptron combined primarily via **Soft Voting** (with Hard Voting evaluated as a comparative baseline; TreeExplainer).
+  * **Deep Learning Ensemble:** 1D-CNN + Bi-LSTM + Transformer Encoder combined primarily via **Soft Voting** (with Hard Voting evaluated as a comparative baseline; GradientExplainer).
 * **Controlled Invariants (Frozen):**
   * **LLM Engine:** `meta-llama/Llama-3.1-8b-instant` via Groq.
   * **Decoding Parameters:** Temperature `0.0` (deterministic), Seed `42`.
@@ -58,17 +58,21 @@ To establish causal attribution, CLARITY enforces a strict single independent va
 • XGBoost                               • Bi-LSTM
 • Multi-Layer Perceptron                • Transformer Encoder
        │                                         │
-       ▼                                         ▼
-[Soft Voting Consensus]          [2-of-3 Hard Voting Consensus]
-       │                                         │
-       ▼                                         ▼
-[shap.TreeExplainer]                    [shap.GradientExplainer]
-(Averages majority learners only)       (Averages majority learners only)
-       │                                         │
-       └────────────────────┬────────────────────┘
-                            ▼
-              [Schema v1 JSON Alert Payload]
-      (identity, classification, top-10 signed SHAP, metadata)
+       ├───────────────────┐                     ├───────────────────┐
+       ▼                   ▼                     ▼                   ▼
+[Hard Voting (2-of-3)] [Soft Voting]     [Hard Voting (2-of-3)] [Soft Voting]
+       │                   │                     │                   │
+       └─────────┬─────────┘                     └─────────┬─────────┘
+                 │                                         │
+                 ▼                                         ▼
+       [shap.TreeExplainer]                      [shap.GradientExplainer]
+       (Probability space)                       (Probability space)
+                 │                                         │
+                 └───────────────────┬─────────────────────┘
+                                     ▼
+                       [Schema v1.1 Alert Payload]
+               (identity, classification, top-10 signed SHAP,
+                voting_strategy, hard_pred, soft_pred, agreement)
                             │
        ┌────────────────────┼────────────────────┐
        ▼                    ▼                    ▼
