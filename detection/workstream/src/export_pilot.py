@@ -277,6 +277,7 @@ def export_pilot_alerts(
 
         # Use Transformer model for DL GradientExplainer
         transformer_model = dl_result["models"]["Transformer"]
+        transformer_model.to("cpu")
         bg_samples = splits.X_train[:min(config.explainability.background_samples, len(splits.X_train))]
 
         dl_shaps = explain_dl_gradient(
@@ -286,6 +287,7 @@ def export_pilot_alerts(
             feature_names=splits.feature_names,
             class_names=splits.class_names,
             predicted_classes=dl_preds,
+            device=torch.device("cpu"),
         )
 
         for i in range(len(pilot_test_df)):
